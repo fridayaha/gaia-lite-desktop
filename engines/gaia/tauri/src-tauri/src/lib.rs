@@ -55,31 +55,50 @@ fn sidecar_binary_name() -> String {
 }
 
 fn sidecar_binary_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
-    let bin_name = sidecar_binary_name();
+    // externalBin 打包后 sidecar 落在主 bin 同目录（macOS Contents/MacOS/，
+    // Windows 主 exe 同目录），文件名是 base 名（无 triplet——Tauri externalBin
+    // 打包时去掉 source 的 triplet 后缀）。开发模式 source 带 triplet。
+    let exe_suffix = if cfg!(target_os = "windows") { ".exe" } else { "" };
+    let packed_name = format!("gaia-lite-backend{exe_suffix}");
+
+    // 打包模式：current_exe 拿主 bin 路径，sidecar 在同目录（无 triplet）。
+    if let Ok(exe) = std::env::current_exe() {
+        if let Some(dir) = exe.parent() {
+            let packed = dir.join(&packed_name);
+            if packed.is_file() {
+                return Ok(packed);
+            }
+        }
+    }
+
+    // 开发模式 fallback：tauri/sidecar/gaia-lite-backend-<triplet>（带 triplet，
+    // externalBin 要求 source 文件名含 triplet）。
+    let dev = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("..")
+        .join("sidecar")
+        .join(sidecar_binary_name());
+    if dev.is_file() {
+        return Ok(dev);
+    }
+
+    // resource_dir fallback：兼容旧 resources 目录打包方式（已废弃，externalBin
+    // 为主）。旧 onedir 配置 sidecar 在 resource_dir/gaia-lite-backend/。
     let resource = app
         .path()
         .resource_dir()
         .map_err(|e| format!("resolve resource_dir failed: {e}"))?;
-    let packed = resource.join(&bin_name);
-    if packed.is_file() {
-        return Ok(packed);
-    }
-
-    let dev = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("..")
-        .join("sidecar")
-        .join(&bin_name);
-    if dev.is_file() {
-        return Ok(dev);
+    let legacy = resource.join("gaia-lite-backend").join(&packed_name);
+    if legacy.is_file() {
+        return Ok(legacy);
     }
 
     Err(format!(
         "sidecar binary not found. Tried:\n  {}\n  {}\n\
          开发模式：把 onefile 产物重命名为 {} 放 tauri/sidecar/。\n\
-         打包模式：确认 tauri.conf.json bundle.externalBin 已打进。",
-        packed.display(),
+         打包模式：确认 tauri.conf.json bundle.externalBin 已打进（sidecar 应落 MacOS/ 同主 bin）。",
         dev.display(),
-        bin_name,
+        legacy.display(),
+        sidecar_binary_name(),
     ))
 }
 
