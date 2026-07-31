@@ -28,15 +28,39 @@ fn pick_free_port() -> Result<u16, String> {
     Ok(listener.local_addr().unwrap().port())
 }
 
-/// sidecar 可执行路径。
-/// - 打包模式：app resource_dir/gaia-lite-backend/gaia-lite-backend
-/// - 开发模式：仓库 tauri/sidecar/gaia-lite-backend/gaia-lite-backend（C1 产物拷贝/软链）
+/// sidecar 可执行路径（onefile + externalBin，文件名带平台 triplet）。
+/// - 打包模式：app resource_dir/gaia-lite-backend-<triplet>[.exe]
+/// - 开发模式：仓库 tauri/sidecar/gaia-lite-backend-<triplet>[.exe]
+///
+/// triplet 用 cfg! 宏编译期确定（与 cargo target 一致）：
+///   mac-arm64: aarch64-apple-darwin
+///   win-x64:   x86_64-pc-windows-msvc
+/// externalBin 打包时按此命名，开发模式需把 onefile 产物重命名加 triplet 后缀。
+fn sidecar_binary_name() -> String {
+    let arch = if cfg!(target_arch = "aarch64") {
+        "aarch64"
+    } else if cfg!(target_arch = "x86_64") {
+        "x86_64"
+    } else {
+        "unknown"
+    };
+    let (os, env, exe) = if cfg!(target_os = "macos") {
+        ("apple", "darwin", "")
+    } else if cfg!(target_os = "windows") {
+        ("pc", "windows", ".exe")
+    } else {
+        ("unknown", "unknown", "")
+    };
+    format!("gaia-lite-backend-{arch}-{os}-{env}{exe}")
+}
+
 fn sidecar_binary_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
+    let bin_name = sidecar_binary_name();
     let resource = app
         .path()
         .resource_dir()
         .map_err(|e| format!("resolve resource_dir failed: {e}"))?;
-    let packed = resource.join("gaia-lite-backend").join("gaia-lite-backend");
+    let packed = resource.join(&bin_name);
     if packed.is_file() {
         return Ok(packed);
     }
@@ -44,18 +68,18 @@ fn sidecar_binary_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
     let dev = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("..")
         .join("sidecar")
-        .join("gaia-lite-backend")
-        .join("gaia-lite-backend");
+        .join(&bin_name);
     if dev.is_file() {
         return Ok(dev);
     }
 
     Err(format!(
         "sidecar binary not found. Tried:\n  {}\n  {}\n\
-         开发模式：把 C1 的 dist/gaia-lite-backend 拷贝/软链到 tauri/sidecar/。\n\
-         打包模式：确认 tauri.conf.json bundle.resources.gaia-lite-backend 已打进。",
+         开发模式：把 onefile 产物重命名为 {} 放 tauri/sidecar/。\n\
+         打包模式：确认 tauri.conf.json bundle.externalBin 已打进。",
         packed.display(),
         dev.display(),
+        bin_name,
     ))
 }
 

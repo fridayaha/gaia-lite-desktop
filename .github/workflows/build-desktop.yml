@@ -61,14 +61,16 @@ jobs:
         run: |
           .venv\Scripts\pyinstaller gaia-lite.spec --noconfirm --log-level WARN
 
-      - name: Stage sidecar for Tauri
+      - name: Stage sidecar for Tauri (onefile → externalBin triplet)
         working-directory: engines/gaia
         shell: bash
         run: |
+          # onefile 产物：dist/gaia-lite-backend.exe（Windows）
+          # externalBin 要求：<path>-<triplet><.exe>，放在 tauri/sidecar/
           rm -rf tauri/sidecar
           mkdir -p tauri/sidecar
-          cp -R dist/gaia-lite-backend tauri/sidecar/gaia-lite-backend
-          ls tauri/sidecar/gaia-lite-backend/gaia-lite-backend.exe && echo "sidecar staged ✅"
+          cp dist/gaia-lite-backend.exe tauri/sidecar/gaia-lite-backend-x86_64-pc-windows-msvc.exe
+          ls -la tauri/sidecar/ && echo "sidecar staged ✅"
 
       - name: Generate Windows icons (incl .ico)
         working-directory: engines/gaia

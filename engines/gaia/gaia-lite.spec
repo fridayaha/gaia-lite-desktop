@@ -194,30 +194,25 @@ a = Analysis(
 
 pyz = PYZ(a.pure)
 
+# onefile 模式：单可执行文件（含全部依赖 + native 库），作 Tauri externalBin sidecar。
+# onedir 模式（COLLECT）在 Windows NSIS 上 bundle.resources 打不进去（Tauri 2 NSIS
+# bundler 对 onedir 大目录的 resources 对象映射不稳，sidecar 161MB 丢失）。
+# onefile 单文件 externalBin 跨平台稳定。启动稍慢（解压到临时目录），桌面可接受。
 exe = EXE(
     pyz,
     a.scripts,
+    a.binaries,
+    a.datas,
     [],
-    exclude_binaries=True,
     name="gaia-lite-backend",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
-    upx=False,  # C1 不压缩（C3 再 UPX），便于排查
+    upx=False,  # C3 不压缩（UPX mac arm64 收益有限 + 杀软误报）
     console=True,  # 桌面后端 sidecar，保留 stdout/stderr 给 Tauri 捕获日志
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-)
-
-coll = COLLECT(
-    exe,
-    a.binaries,
-    a.datas,
-    strip=False,
-    upx=False,
-    upx_exclude=[],
-    name="gaia-lite-backend",
 )

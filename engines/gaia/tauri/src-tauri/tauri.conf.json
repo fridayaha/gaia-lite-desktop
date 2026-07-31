@@ -35,8 +35,8 @@
       "icons/icon.ico",
       "icons/icon.png"
     ],
+    "externalBin": ["../sidecar/gaia-lite-backend"],
     "resources": {
-      "../sidecar/gaia-lite-backend": "gaia-lite-backend",
       "../dist": "dist"
     },
     "macOS": {
