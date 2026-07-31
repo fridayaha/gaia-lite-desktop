@@ -16,7 +16,7 @@ stages:
         name: deploy_admin
         displayName: K8S部署管理台前端
         version: v1.31.0
-        certificate: ${GITCODE_K8S_CERT_ID}
+        certificate: "${GITCODE_K8S_CERT_ID}"
         namespace: unionagents
         yaml: ./deploy/ci/deploy-admin.yaml
         isReplace: false

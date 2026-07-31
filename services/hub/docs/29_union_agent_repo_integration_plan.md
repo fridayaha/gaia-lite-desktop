@@ -372,7 +372,7 @@ services/union-agent-hub/
 
 #### 8.2.3 新仓库潜在关注项
 
-- `deploy/k8s/infra/secret.yaml` 含明文开发密钥（`change-me`、`change-me`、`change-me`）——这些是 Kubernetes Secret manifest，应在部署时通过外部注入覆盖，但建议团队评估是否应移入外部密钥管理
+- `deploy/k8s/infra/secret.yaml` 已改为 `${ENV_VAR}` 占位符（原 dev 明文密钥已移除），生产由 deploy/ci/.env.local 注入；本地 dev 需手动填回或走 deploy.sh envsubst
 - `deploy/ci/.env.local.example` 含占位符模板，无真实凭据
 
 #### 8.2.4 防泄露排除策略

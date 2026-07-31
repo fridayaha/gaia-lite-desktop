@@ -33,7 +33,7 @@ if [ -z "$PG_CLUSTER_IP" ]; then
     echo "[$(date '+%H:%M:%S')] WARNING: k3s postgres ClusterIP 未找到，manager DB 测试将跳过" | tee -a "$LOG_FILE"
     export UA_TEST_DATABASE_URL=""
 else
-    export UA_TEST_DATABASE_URL="postgresql+asyncpg://unionagents:change-me@${PG_CLUSTER_IP}:5432/unionagents_test"
+    export UA_TEST_DATABASE_URL="postgresql+asyncpg://unionagents:${PG_PASSWORD}@${PG_CLUSTER_IP}:5432/unionagents_test"
     # 确保测试库存在
     k3s kubectl exec -n unionagents postgres-0 -- psql -U unionagents -d unionagents -tAc "SELECT 1 FROM pg_database WHERE datname='unionagents_test'" 2>/dev/null | grep -q 1 || \
     k3s kubectl exec -n unionagents postgres-0 -- psql -U unionagents -d unionagents -c "CREATE DATABASE unionagents_test" 2>/dev/null || true

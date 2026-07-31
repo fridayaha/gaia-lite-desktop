@@ -19,7 +19,7 @@ async def proxy(request, path):
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
 | `UA_ENGINE_UPSTREAM_URL` | `http://engine-hermes-test:8642` | 上游引擎地址 |
-| `UA_API_SERVER_KEY` | `change-me` | 引擎认证 Key |
+| `UA_API_SERVER_KEY` | `change-me`（占位） | 引擎认证 Key |
 | `UA_JWT_SECRET` | (开发密钥) | 保留字段 |
 
 ## 流式处理

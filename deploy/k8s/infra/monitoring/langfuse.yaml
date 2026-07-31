@@ -5,18 +5,20 @@ metadata:
   namespace: monitoring
 type: Opaque
 stringData:
-  nextauth-secret: "change-me-to-a-random-64-char-hex-string"
-  salt: "change-me-to-another-random-32-char-hex-string"
-  encryption-key: "0000000000000000000000000000000000000000000000000000000000000000"
-  langfuse-database-url: "postgresql://unionagents:change-me@postgres.unionagents:5432/langfuse"
-  clickhouse-password: "ch_dev_2026"
-  langfuse-public-key: "pk-lf-change-me"
-  langfuse-secret-key: "sk-lf-change-me"
-  s3-access-key-id: "unionagents"
-  s3-secret-access-key: "change-me"
+  # 本地 k3s dev 占位——生产由 deploy/ci/.env.local 注入（deploy.sh envsubst）。
+  # 仓库内只放 ${ENV_VAR} 占位符，不含任何真实凭据。
+  nextauth-secret: "${LANGFUSE_NEXTAUTH_SECRET}"
+  salt: "${LANGFUSE_SALT}"
+  encryption-key: "${LANGFUSE_ENCRYPTION_KEY}"
+  langfuse-database-url: "postgresql://${PG_USER:-unionagents}:${PG_PASSWORD}@postgres.unionagents:5432/langfuse"
+  clickhouse-password: "${CLICKHOUSE_PASSWORD}"
+  langfuse-public-key: "${LANGFUSE_PUBLIC_KEY}"
+  langfuse-secret-key: "${LANGFUSE_SECRET_KEY}"
+  s3-access-key-id: "${MINIO_USER:-unionagents}"
+  s3-secret-access-key: "${MINIO_PASSWORD}"
   redis-host: "redis.monitoring"
   redis-port: "6379"
-  redis-auth: "redis_dev_2026"
+  redis-auth: "${REDIS_AUTH}"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -80,7 +82,7 @@ spec:
             - name: CLICKHOUSE_URL
               value: "http://clickhouse.monitoring:8123"
             - name: CLICKHOUSE_MIGRATION_URL
-              value: "clickhouse://langfuse:ch_dev_2026@clickhouse.monitoring:9000/langfuse"
+              value: "clickhouse://langfuse:${CLICKHOUSE_PASSWORD}@clickhouse.monitoring:9000/langfuse"
             - name: CLICKHOUSE_USER
               value: "langfuse"
             - name: CLICKHOUSE_PASSWORD
@@ -221,7 +223,7 @@ spec:
             - name: CLICKHOUSE_URL
               value: "http://clickhouse.monitoring:8123"
             - name: CLICKHOUSE_MIGRATION_URL
-              value: "clickhouse://langfuse:ch_dev_2026@clickhouse.monitoring:9000/langfuse"
+              value: "clickhouse://langfuse:${CLICKHOUSE_PASSWORD}@clickhouse.monitoring:9000/langfuse"
             - name: CLICKHOUSE_USER
               value: "langfuse"
             - name: CLICKHOUSE_PASSWORD

@@ -369,7 +369,7 @@ Pydantic Settings，`UA_` 前缀环境变量：
 | 变量 | 默认 | 说明 |
 |------|------|------|
 | `UA_JWT_SECRET` | dev 默认 | prod 下强制显式设置 |
-| `UA_API_SERVER_KEY` | change-me | 引擎 API key |
+| `UA_API_SERVER_KEY` | change-me（占位） | 引擎 API key |
 | `UA_K8S_NAMESPACE` | unionagents | 引擎 Pod 命名空间 |
 | `UA_ENGINE_PORT` | 8642 | 引擎端口（fallback） |
 | `UA_CONTROLLER_URL` | http://manager:8002 | Controller（已并入 manager） |

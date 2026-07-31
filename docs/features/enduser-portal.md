@@ -528,7 +528,7 @@ Portal 的 nginx 代理 SSE 时，浏览器 `fetch()` 的 `ReadableStream` 在�
 | `UA_MINIO_BUCKET` | `unionagents-archives` | MinIO 备份 Bucket |
 | `UA_IDLE_SUSPEND_MINUTES` | `30` | 空闲多少分钟后休眠 |
 | `UA_IDLE_DESTROY_HOURS` | `24` | 休眠后多少小时清理 |
-| `UA_API_SERVER_KEY` | `change-me` | 引擎 API Key |
+| `UA_API_SERVER_KEY` | `change-me`（占位） | 引擎 API Key |
 | `UA_JWT_SECRET` | (开发密钥) | JWT 签名密钥 |
 | `UA_DATABASE_URL` | (连接串) | PostgreSQL 连接 |
 | `UA_MINIO_ENDPOINT` | `http://minio:9000` | MinIO 地址 |

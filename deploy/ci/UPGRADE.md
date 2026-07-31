@@ -21,8 +21,8 @@
 | k3s | ✅ 已装 | containerd（docker save \| k3s ctr import） |
 | kubectl | ✅ 已装 | mhero 可用 |
 | namespace | `unionagents` | |
-| DB | postgres-0 pod，`unionagents` 库 | `postgresql://unionagents:change-me@postgres:5432/unionagents` |
-| 方舟 ASR Key | `${ASR_VOLC_API_KEY}` | Secret `asr-volc-api-key` |
+| DB | postgres-0 pod，`unionagents` 库 | `postgresql://unionagents:${PG_PASSWORD}@postgres:5432/unionagents` |
+| 方舟 ASR Key | `${ASR_VOLC_API_KEY}`（占位） | Secret `asr-volc-api-key` |
 
 ### 服务清单（升级前确认）
 
