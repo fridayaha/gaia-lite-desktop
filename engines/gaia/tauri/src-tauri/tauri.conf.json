@@ -36,8 +36,8 @@
       "icons/icon.png"
     ],
     "resources": {
-      "../sidecar/gaia-lite-backend/": "gaia-lite-backend/",
-      "../dist/": "dist/"
+      "../sidecar/gaia-lite-backend": "gaia-lite-backend",
+      "../dist": "dist"
     },
     "macOS": {
       "minimumSystemVersion": "12.0"
