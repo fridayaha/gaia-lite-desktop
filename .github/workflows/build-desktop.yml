@@ -41,8 +41,14 @@ jobs:
             ~/.cargo
           key: cargo-windows-${{ hashFiles('engines/gaia/tauri/src-tauri/Cargo.lock') }}
 
-      - name: Install Tauri CLI
+      - name: Install Tauri CLI (npm global — provides `tauri` command)
         run: npm install -g @tauri-apps/cli
+
+      - name: Verify tauri CLI on PATH
+        shell: bash
+        run: |
+          tauri --version
+          which tauri || where tauri
 
       - name: Sync Python deps (lite + dev)
         working-directory: engines/gaia
@@ -73,7 +79,8 @@ jobs:
 
       - name: Build Tauri (Windows)
         working-directory: engines/gaia/tauri/src-tauri
-        run: cargo tauri build
+        shell: bash
+        run: tauri build
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
