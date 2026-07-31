@@ -1,0 +1,60 @@
+# Gaia web-ui（React 19 前端，nginx 托管 + API 反代）
+# NodePort 对外暴露：用 30082（避开 UnionAgents 已用的 30080/30081/30090/30030）。
+# 构建命令：docker build -t unionagents/gaia-web-ui:${VERSION} -f src/web-ui/Dockerfile .
+# （build context 为 engines/gaia/ 仓库根，Dockerfile 在 src/web-ui/）
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gaia-web-ui
+  namespace: gaia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gaia-web-ui
+  template:
+    metadata:
+      labels:
+        app: gaia-web-ui
+    spec:
+      containers:
+        - name: web-ui
+          image: unionagents/gaia-web-ui:${VERSION}
+          imagePullPolicy: ${IMAGE_PULL_POLICY_SERVICES}
+          ports:
+            - containerPort: 80
+              name: http
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gaia-web-ui
+  namespace: gaia
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: ${NODE_PORT_WEB_UI}  # 避开 UA 的 30080(admin)/30081(enduser)/30090(grafana)/30030(langfuse)
+  selector:
+    app: gaia-web-ui

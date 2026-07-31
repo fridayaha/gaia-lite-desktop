@@ -1,0 +1,162 @@
+app:
+  description: 用于测试 UnionAgents gateway workflow node 跟踪的多节点 workflow（Start → LLM → Code → End）。
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: UA Multi-Node Test
+  use_icon_as_answer: false
+kind: app
+version: 0.1.5
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_upload_methods:
+        - local_upload
+        - remote_url
+      enabled: false
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+      - id: 1730000000001-start-llm
+        source: 1730000000000-start
+        sourceHandle: source
+        target: 1730000000002-llm
+        targetHandle: target
+        type: custom
+        data:
+          sourceType: start
+          targetType: llm
+          isInIteration: false
+        zIndex: 0
+        selected: false
+      - id: 1730000000002-llm-code
+        source: 1730000000002-llm
+        sourceHandle: source
+        target: 1730000000003-code
+        targetHandle: target
+        type: custom
+        data:
+          sourceType: llm
+          targetType: code
+          isInIteration: false
+        zIndex: 0
+        selected: false
+      - id: 1730000000003-code-end
+        source: 1730000000003-code
+        sourceHandle: source
+        target: 1730000000004-end
+        targetHandle: target
+        type: custom
+        data:
+          sourceType: code
+          targetType: end
+          isInIteration: false
+        zIndex: 0
+        selected: false
+    nodes:
+      - id: 1730000000000-start
+        type: custom
+        position:
+          x: 80
+          y: 240
+        data:
+          type: start
+          title: Start
+          desc: 接收用户输入
+          variables:
+            - variable: query
+              label: 用户问题
+              type: text-input
+              required: true
+              max_length: 1000
+              default: ''
+              hint: ''
+          selected: false
+          timezone: 'Asia/Shanghai'
+      - id: 1730000000002-llm
+        type: custom
+        position:
+          x: 400
+          y: 240
+        data:
+          type: llm
+          title: LLM 节点
+          desc: 根据 query 生成回复
+          model:
+            provider: langgenius/openai_api_compatible/openai_api_compatible
+            name: gpt-4o-mini
+            mode: chat
+            completion_params:
+              temperature: 0.7
+              max_tokens: 500
+              top_p: 1
+          prompt_template:
+            - role: system
+              text: 你是一个简洁的助手，用一句话回答用户的问题。
+            - role: user
+              text: '{{#start.query#}}'
+          context:
+            enabled: false
+            variable_selector: []
+          vision:
+            enabled: false
+          selected: false
+      - id: 1730000000003-code
+        type: custom
+        position:
+          x: 720
+          y: 240
+        data:
+          type: code
+          title: Code 节点
+          desc: 给 LLM 输出加前缀
+          variables:
+            - variable: llm_output
+              value_selector:
+                - 1730000000002-llm
+                - text
+          code_language: python3
+          code: |-
+            def main(arg1: str) -> dict:
+                return {
+                    "result": "[Processed] " + arg1
+                }
+          outputs:
+            - variable: result
+              type: string
+              children: null
+          selected: false
+      - id: 1730000000004-end
+        type: custom
+        position:
+          x: 1040
+          y: 240
+        data:
+          type: end
+          title: End
+          desc: 输出最终结果
+          outputs:
+            - variable: result
+              value_selector:
+                - 1730000000003-code
+                - result
+          selected: false
+    viewport:
+      x: 0
+      y: 0
+      zoom: 1

@@ -1,0 +1,77 @@
+# ============================================================
+# Hermes Agent 云服务器部署 - Docker Compose 编排文件
+# 目标环境: 腾讯云轻量服务器 (4核/4GB/40GB)
+# 用法: docker compose up -d
+# ============================================================
+
+services:
+  # ==================== Hermes Gateway (核心服务) ====================
+  # 提供 Agent 对话引擎、消息网关和 Dashboard Web UI (通过 HERMES_DASHBOARD=1)
+  hermes-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.profile
+    container_name: hermes-gateway
+    restart: unless-stopped
+    command: ["gateway", "run"]
+    environment:
+      # 容器用户映射 (避免 root 运行)
+      - HERMES_UID=${HERMES_UID:-1000}
+      - HERMES_GID=${HERMES_GID:-1000}
+      # LLM 提供商配置
+      - HERMES_PROVIDER=${HERMES_PROVIDER:-openai}
+      - HERMES_MODEL=${HERMES_MODEL:-gpt-4o}
+      - HERMES_BASE_URL=${HERMES_BASE_URL:-}
+      - HERMES_API_MODE=${HERMES_API_MODE:-chat_completions}
+      - HERMES_CUSTOM_API_KEY=${HERMES_CUSTOM_API_KEY:-}
+      # LLM 提供商 API Key (从 .env 注入)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      # 技能预装
+      - HERMES_PRELOAD_SKILLS=${HERMES_PRELOAD_SKILLS:-}
+      # 日志格式
+      - HERMES_LOG_FORMAT=json
+      # Dashboard (同容器内运行)
+      - HERMES_DASHBOARD=1
+      - HERMES_DASHBOARD_INSECURE=1
+    volumes:
+      # Bind mount (主机可直接读写 Profile 数据)
+      - ./data:/opt/data
+    ports:
+      - "${GATEWAY_PORT:-8642}:8642"
+      - "${DASHBOARD_PORT:-9119}:9119"
+      - "8643-8650:8643-8650"
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f 'hermes' || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    networks:
+      - hermes-net
+    # 资源限制 (适配多 Profile 运行)
+    deploy:
+      resources:
+        limits:
+          cpus: "3.0"
+          memory: 2560M
+        reservations:
+          cpus: "1.5"
+          memory: 1024M
+    # 日志限制 (防止磁盘撑满)
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    # 安全加固
+    security_opt:
+      - no-new-privileges:true
+
+# ==================== 网络定义 ====================
+networks:
+  hermes-net:
+    name: hermes-net
+    driver: bridge

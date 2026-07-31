@@ -1,0 +1,14 @@
+{
+  "name": "unionagents",
+  "private": true,
+  "version": "0.9.2",
+  "description": "UnionAgents - Enterprise AI Agent Platform",
+  "scripts": {
+    "dev:admin": "cd apps/admin && pnpm dev",
+    "build:admin": "cd apps/admin && pnpm build",
+    "dev:docs": "cd apps/docs && pnpm dev",
+    "build:docs": "cd apps/docs && pnpm build",
+    "dev:landing": "cd apps/landing && pnpm dev",
+    "build:landing": "cd apps/landing && pnpm build"
+  }
+}

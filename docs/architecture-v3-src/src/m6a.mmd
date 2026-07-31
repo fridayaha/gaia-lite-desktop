@@ -1,0 +1,15 @@
+erDiagram
+    USER }o--o{ ROLE : "user_roles"
+    ROLE }o--o{ PERMISSION : "role_permissions"
+    USER {
+        uuid id PK
+    }
+    ROLE {
+        uuid id PK
+        string name
+    }
+    PERMISSION {
+        uuid id PK
+        string code
+        string resource_type
+    }

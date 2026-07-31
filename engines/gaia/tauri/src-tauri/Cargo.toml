@@ -1,0 +1,42 @@
+[package]
+name = "gaia-lite"
+version = "0.1.0"
+description = "Gaia Lite — 桌面单机版本体建模 + 数据源连接"
+authors = ["UnionAgents"]
+edition = "2021"
+rust-version = "1.77"
+
+# lib + bin 双目标：main.rs 是桌面壳入口，lib.rs 暴露命令供测试/复用。
+[lib]
+name = "gaia_lite_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-shell = "2"
+# axum 反代：把 webview 同源请求转发到 Python sidecar 动态端口。
+axum = "0.7"
+# reqwest 流式转发 SSE（bytes_stream 禁缓冲）。
+reqwest = { version = "0.12", features = ["stream"] }
+tokio = { version = "1", features = ["full"] }
+tower = "0.5"
+tower-http = { version = "0.6", features = ["fs"] }
+# 空闲端口选取（bind 127.0.0.1:0 拿 OS 分配端口）。
+serde_json = "1"
+serde = { version = "1", features = ["derive"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[features]
+# 默认 customs protocol 关，用 http:// origin（axum 反代同源）。
+default = []
+
+[profile.release]
+# 体积优化：strip + LTO（C3 再 UPX）。
+strip = true
+lto = true
+codegen-units = 1
+panic = "abort"

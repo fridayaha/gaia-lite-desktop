@@ -1,0 +1,31 @@
+# Doris 配置（ConfigMap）
+# 相比 docker-compose 的优化：
+# - priority_networks 从写死的 172.18.0.0/24 改为 k3s Pod 网段 10.42.0.0/16（k3s 默认）
+# - FE/BE 互相发现改用 k8s Service DNS，不再依赖 docker 固定 IP
+# - 开启 FQDN 模式（enable_fqdn_mode=true）：BE 用稳定 hostname 注册而非 Pod IP，
+#   Pod 重建 IP 变化不影响（官方 k8s 部署推荐，见 Doris 4.x FQDN 文档）
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gaia-doris-config
+  namespace: gaia
+data:
+  fe.conf: |
+    http_port = 8030
+    query_port = 9030
+    edit_log_port = 9010
+    log_dir = /opt/apache-doris/fe/log
+    JAVA_OPTS_FOR_JDK_17=-Xmx512m -Xms256m
+    # FQDN 模式：节点间通信用 hostname，Pod 重建 IP 变化不影响
+    enable_fqdn_mode = true
+    priority_networks = ${POD_CIDR}
+  be.conf: |
+    be_port = 9060
+    heartbeat_service_port = 9050
+    webserver_port = 8040
+    log_dir = /opt/apache-doris/be/log
+    storage_root_path = /opt/apache-doris/be/storage
+    priority_networks = ${POD_CIDR}
+    mem_limit = 80%
+    load_mem_limit = 80%

@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermes-gateway-{{INSTANCE_ID}}
+  namespace: hermes
+  labels:
+    app: hermes-gateway
+    instance: {{INSTANCE_ID}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hermes-gateway
+      instance: {{INSTANCE_ID}}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: hermes-gateway
+        instance: {{INSTANCE_ID}}
+    spec:
+      securityContext:
+        runAsNonRoot: false
+        fsGroup: 1000
+      initContainers:
+      - name: init-config
+        image: {{IMAGE}}
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          echo "Initializing instance {{INSTANCE_ID}} configuration..."
+          chmod 755 /opt/data 2>/dev/null || true
+          for file in SOUL.md gateway.json; do
+            echo "Copying $file..."
+            cp /configs/$file /opt/data/$file
+            chown 1000:1000 /opt/data/$file
+          done
+        volumeMounts:
+        - name: hermes-data
+          mountPath: /opt/data
+        - name: hermes-configs
+          mountPath: /configs
+      containers:
+      - name: hermes-gateway
+        image: {{IMAGE}}
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: HERMES_UID
+          value: "1000"
+        - name: HERMES_GID
+          value: "1000"
+        - name: HERMES_GATEWAY_BOOTSTRAP_STATE
+          value: "running"
+        - name: GATEWAY_ALLOW_ALL_USERS
+          value: "true"
+        - name: HERMES_DASHBOARD
+          value: "1"
+        - name: HERMES_DASHBOARD_INSECURE
+          value: "1"
+        envFrom:
+        - configMapRef:
+            name: {{CONFIGMAP_ENV_NAME}}
+        - secretRef:
+            name: {{SECRET_NAME}}
+        volumeMounts:
+        - name: hermes-data
+          mountPath: /opt/data
+        ports:
+        - name: gateway
+          containerPort: 8642
+          protocol: TCP
+        - name: dashboard
+          containerPort: 9119
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "{{CPU_LIMIT}}"
+            memory: {{MEMORY_LIMIT}}
+          requests:
+            cpu: "{{CPU_REQUEST}}"
+            memory: {{MEMORY_REQUEST}}
+        livenessProbe:
+          tcpSocket:
+            port: gateway
+          initialDelaySeconds: 180
+          periodSeconds: 15
+          timeoutSeconds: 5
+          failureThreshold: 5
+        readinessProbe:
+          tcpSocket:
+            port: gateway
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+        securityContext:
+          allowPrivilegeEscalation: false
+      volumes:
+      - name: hermes-data
+        persistentVolumeClaim:
+          claimName: {{PVC_NAME}}
+      - name: hermes-configs
+        configMap:
+          name: {{CONFIGMAP_FILES_NAME}}

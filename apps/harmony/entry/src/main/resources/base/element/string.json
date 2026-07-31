@@ -1,0 +1,30 @@
+{
+  "string": [
+    { "name": "module_desc", "value": "知行端模块" },
+    { "name": "EntryAbility_desc", "value": "知行" },
+    { "name": "EntryAbility_label", "value": "知行" },
+    { "name": "login_username", "value": "用户名" },
+    { "name": "login_password", "value": "密码" },
+    { "name": "login_button", "value": "登 录" },
+    { "name": "login_error_default", "value": "登录失败，请重试" },
+    { "name": "agent_list_title", "value": "历史会话" },
+    { "name": "agent_list_empty", "value": "暂无可访问的智能体" },
+    { "name": "tab_chat", "value": "对话" },
+    { "name": "tab_mine", "value": "我的" },
+    { "name": "tab_workspace", "value": "工作区" },
+    { "name": "session_new", "value": "新建会话" },
+    { "name": "session_delete", "value": "删除" },
+    { "name": "session_rename", "value": "重命名" },
+    { "name": "composer_placeholder", "value": "发送消息给智能体…" },
+    { "name": "composer_send", "value": "发送" },
+    { "name": "composer_stop", "value": "停止" },
+    { "name": "composer_waiting", "value": "等待回复…" },
+    { "name": "model_sheet_title", "value": "选择模型" },
+    { "name": "approval_title", "value": "需要确认" },
+    { "name": "approval_choice_once", "value": "本次" },
+    { "name": "approval_choice_session", "value": "本次会话" },
+    { "name": "approval_choice_always", "value": "总是" },
+    { "name": "approval_choice_deny", "value": "拒绝" },
+    { "name": "reason_mic", "value": "用于语音输入转文字" }
+  ]
+}

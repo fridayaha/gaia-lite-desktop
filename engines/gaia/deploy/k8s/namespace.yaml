@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gaia
+  labels:
+    app.kubernetes.io/part-of: unionagents
+    app.kubernetes.io/component: gaia

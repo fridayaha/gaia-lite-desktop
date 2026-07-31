@@ -1,0 +1,45 @@
+flowchart TB
+    subgraph 接入[用户接入层]
+        Portal[Enduser Portal<br/>Vue3 + Tailwind · Chat 直渲染]
+        Admin[管理台 Admin<br/>Vue3 + Element Plus]
+        IM[IM 平台<br/>企业微信 / 飞书]
+    end
+    subgraph 服务[应用服务层]
+        Manager[Manager · FastAPI<br/>JWT/RBAC · V3 三层 CRUD + 运行时代理]
+        Gateway[Gateway<br/>路由/鉴权/Profile 解析/SSE]
+    end
+    subgraph 编排[运行编排层]
+        Controller[Controller<br/>deploy/suspend/resume/restart/destroy<br/>metric_sampler 1min]
+    end
+    subgraph 引擎[引擎运行层 · K8s]
+        Engine["engine-hermes-{id} Pod<br/>Hermes · 多 Profile · PVC"]
+    end
+    subgraph 模型[模型网关层]
+        LiteLLM[LiteLLM Proxy<br/>per-instance key · 计费 Team=UserGroup]
+        Up[上游 LLM<br/>DeepSeek / GLM]
+    end
+    subgraph 基础[数据与基础设施]
+        PG[(PostgreSQL 16)]
+        MinIO[(MinIO)]
+        K8s[(K8s/k3s API + metrics-server)]
+        LiteDB[(LiteLLM DB)]
+    end
+    Portal -->|X-Agent-ID / SSE| Gateway
+    IM -->|webhook 回调| Gateway
+    Admin -->|REST| Manager
+    Manager -->|controller_client 代理运行时| Controller
+    Manager --> PG
+    Manager -->|Admin API 生成 key| LiteLLM
+    Manager --> MinIO
+    Gateway -->|ensure_profile / DNS 命名| Engine
+    Gateway --> PG
+    Gateway -->|ensure_engine_ready| Controller
+    Controller -->|apply/scale/delete| K8s
+    Controller --> PG
+    Controller --> MinIO
+    Engine -->|/v1/chat/completions| LiteLLM
+    Engine -->|PVC + SUSPEND 归档| MinIO
+    Engine -->|会话/记忆| PG
+    LiteLLM --> Up
+    LiteLLM --> LiteDB
+    K8s -. 调度 .-> Engine

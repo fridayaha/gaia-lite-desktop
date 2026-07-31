@@ -1,0 +1,35 @@
+sequenceDiagram
+    autonumber
+    actor U as 终端用户
+    participant Portal as Enduser Portal
+    participant GW as Gateway
+    participant DB as PostgreSQL
+    participant Ctrl as Controller
+    participant K8s as K8s API
+    participant Engine as Engine Pod
+    participant Lite as LiteLLM
+    U->>Portal: 选择智能体实例进入 Chat
+    Portal->>GW: GET /api/agents/{instanceId} X-Agent-ID
+    GW->>DB: list_accessible_instances access_scope 过滤
+    DB-->>GW: 实例信息
+    GW-->>Portal: 实例列表详情
+    U->>Portal: 发送消息
+    Portal->>GW: POST /api/sessions X-Agent-ID
+    GW->>DB: ProfileResolver.resolve 校验 派生scope profile_name
+    GW->>Ctrl: ensure_profile 部署就绪
+    alt Pod 未运行
+        Ctrl->>K8s: deploy scale=1
+        K8s-->>Ctrl: Pod Ready
+    end
+    Ctrl-->>GW: engine_url pod DNS
+    GW->>Engine: 创建会话
+    Engine-->>GW: session_id
+    GW-->>Portal: session_id
+    Portal->>GW: POST /v1/chat/completions stream X-Agent-ID X-Session-Id
+    GW->>Engine: 透传 SSE 去 Origin Referer 头
+    Engine->>Lite: /v1/chat/completions per-instance key
+    Lite->>Lite: 按 key 归因 Team 计费
+    Lite-->>Engine: 流式 token
+    Engine-->>GW: SSE 流
+    GW-->>Portal: SSE ReadableStream 解析
+    Portal-->>U: 逐字渲染

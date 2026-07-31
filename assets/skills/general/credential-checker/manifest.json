@@ -1,0 +1,57 @@
+{
+  "name": "credential-checker",
+  "version": "1.0.0",
+  "author": "UnionAgents",
+  "industries": ["general"],
+  "description": "安全凭证自检技能 — 验证 secret 参数的加密存储、不回显、合并，以及引擎侧通过出口代理的凭证注入。仅用于凭证机制验证，不具备真实业务能力。",
+  "icon": "ri:search-eye-line",
+  "engine": ["HERMES"],
+  "config_params": [
+    {
+      "name": "api_key",
+      "label": "API Key",
+      "type": "string",
+      "secret": true,
+      "description": "主凭证。经出口代理以 Authorization: Bearer <api_key> 注入外部 API。"
+    },
+    {
+      "name": "api_secret",
+      "label": "API Secret",
+      "type": "string",
+      "secret": true,
+      "description": "第二个 secret，用于验证多凭证合并存储（merge）与逐项配置。"
+    },
+    {
+      "name": "webhook_token",
+      "label": "Webhook Token",
+      "type": "string",
+      "secret": true,
+      "description": "第三个 secret，用于验证不回显明文（重新打开仅显示“已配置”）。"
+    },
+    {
+      "name": "echo_endpoint",
+      "label": "Echo Endpoint",
+      "type": "string",
+      "description": "回显服务地址，用于验证凭证注入。默认 https://httpbin.org/anything （会原样回显收到的请求头）。本期非 secret 参数不持久化，仅验证前端渲染。"
+    },
+    {
+      "name": "timeout_seconds",
+      "label": "Timeout (s)",
+      "type": "number",
+      "description": "请求超时秒数（非 secret，仅验证 number 渲染）。"
+    },
+    {
+      "name": "verbose",
+      "label": "Verbose",
+      "type": "boolean",
+      "description": "是否输出详细诊断（非 secret，仅验证 boolean 渲染）。"
+    },
+    {
+      "name": "http_method",
+      "label": "HTTP Method",
+      "type": "select",
+      "description": "回显请求方法（非 secret，仅验证 select 渲染）。",
+      "options": ["GET", "POST"]
+    }
+  ]
+}

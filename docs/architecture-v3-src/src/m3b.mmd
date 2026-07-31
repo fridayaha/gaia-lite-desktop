@@ -1,0 +1,17 @@
+flowchart LR
+    WeCom["企业微信应用<br/>AgentInstanceChannel<br/>channel_type=wecom<br/>corp_id / agent_id / secret"]
+    Inst["智能体实例<br/>AgentInstance<br/>access_scope"]
+    Def["智能体定义<br/>AgentDefinition<br/>engine_type=HERMES"]
+    Ver["版本快照<br/>AgentVersion"]
+    Pool["运行资源<br/>ResourcePool"]
+    Dep["部署<br/>AgentDeployment<br/>pod_name / engine_url"]
+    Prof["单用户 Profile<br/>AgentProfile<br/>user_id → hermes_home"]
+    User[(User)]
+    WeCom -->|instance_id FK| Inst
+    Inst -->|definition_id FK| Def
+    Inst -->|version_id FK| Ver
+    Def -. current_version_id .-> Ver
+    Inst -->|resource_pool_id FK| Pool
+    Inst -->|1:N scope 部署| Dep
+    Dep -->|1:N| Prof
+    Prof -->|user_id FK| User

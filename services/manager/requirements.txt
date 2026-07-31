@@ -1,0 +1,42 @@
+# Manager 服务依赖（独立文件，便于 Docker 分层缓存与版本锁定）
+# controller 并入后需 kubernetes/minio（worker K8s 生命周期 + MinIO 归档）
+fastapi
+uvicorn
+sqlalchemy
+asyncpg
+alembic
+python-jose
+passlib[bcrypt]
+bcrypt<4.1.0
+cryptography
+pydantic
+pydantic[email]
+pydantic-settings
+httpx
+sse-starlette
+python-multipart
+pypinyin
+kubernetes
+minio
+prometheus-fastapi-instrumentator
+prometheus-client
+
+# 邮件服务商 SDK（云厂商真实探活用，0.8.101+）
+# 阿里云 DirectMail（pypi 包名是 alibabacloud_dm20151123）
+alibabacloud_dm20151123>=0.1.0
+tencentcloud-sdk-python-ses>=3.0.0
+# 华为云 Cloud Email 无官方 Python SDK，huawei_provider.py 用 httpx + stdlib HMAC-SHA256 签名直接调 RESTful API
+
+# 短信服务商 SDK（云厂商真实探活用，0.8.102+）
+alibabacloud-dysmsapi20170525>=2.0.0
+tencentcloud-sdk-python-sms>=3.0.0
+# 华为云 SMS 无官方 Python SDK，huawei_provider.py 用 httpx + stdlib HMAC-SHA256 签名直接调 RESTful API
+
+# 登录安全加固（0.8.103+）
+# zxcvbn-python 评估密码强度 score 0-4，要求 ≥ 3（强）；纯 Python 无 C 扩展
+zxcvbn-python>=4.4.0
+
+# 验证码生成（0.8.104+）
+# Pillow 用于图形验证码 PNG 生成（120x40 白底 + 4 位数字 + 干扰线）
+# 纯 Python wheel，无 C 扩展依赖；Docker 镜像无需装字体文件
+Pillow>=10.0.0

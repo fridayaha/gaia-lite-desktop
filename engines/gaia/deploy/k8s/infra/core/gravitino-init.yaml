@@ -1,0 +1,119 @@
+# Gravitino 初始化 Job（建 entity store 表 + 创建 metalake）
+#
+# 两阶段初始化（顺序执行，均幂等）：
+#   1. init-schema：在 PG 的 gravitino_store schema 建好 Gravitino entity store 表。
+#      ⚠️ Gravitino 1.3.0 的 relational entity store（JDBCBackend）不会自动建表，
+#         启动时即查 entity_change_log 等表，缺表 → ClassNotFoundException → CrashLoop。
+#         schema SQL 取自 gravitino 镜像自带的
+#         /opt/gravitino/scripts/postgresql/schema-1.3.0-postgresql.sql（版本跟随镜像，
+#         不会与仓库 infra/ 文件漂移）。CREATE TABLE IF NOT EXISTS 幂等，可重复执行。
+#   2. wait-gravitino + 创建 metalake "ontology"（代码 gravitino_registry.py 写死常量）。
+#      Trino 的 gravitino connector 配置 gravitino.metalake=ontology，metalake 不存在则
+#      Trino 起不来。metalake 已存在则跳过。
+#
+# 执行时机：本 Job 在 Gravitino Deployment 之后调度。init-schema 阶段不依赖 Gravitino
+# 健康（直接连 PG），只 wait-gravitino 阶段才等。因此即便 Gravitino 首次启动因表缺失
+# CrashLoop，本 Job 的 init-schema 也能先把表建好，让 Gravitino 后续重启成功。
+# Trino Deployment 的 initContainer 依赖本 Job 完成（wait-gravitino-init）。
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: gaia-gravitino-init
+  namespace: gaia
+spec:
+  backoffLimit: 4
+  ttlSecondsAfterFinished: 86400
+  template:
+    spec:
+      restartPolicy: OnFailure
+      initContainers:
+        # 阶段 1a：从 gravitino 镜像抽取 schema SQL 到 emptyDir
+        # 用 gravitino 镜像而非硬编码 SQL，保证 schema 与 gravitino 版本一致
+        - name: extract-schema
+          image: apache/gravitino:1.3.0
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              SRC=/opt/gravitino/scripts/postgresql/schema-1.3.0-postgresql.sql
+              echo "[gravitino-init] 抽取 Gravitino entity store schema SQL: $SRC"
+              cp "$SRC" /schema/gravitino-pg-schema.sql
+              echo "[gravitino-init] schema SQL 行数: $(wc -l < /schema/gravitino-pg-schema.sql)"
+          volumeMounts:
+            - name: schema
+              mountPath: /schema
+        # 阶段 1b：在 PG 执行 schema SQL 建 entity store 表（幂等）
+        - name: init-schema
+          image: postgres:16-alpine
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-password
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              echo "[gravitino-init] 确保 gravitino_store schema 存在..."
+              psql -h gaia-postgres -U ontology -d ontology -v ON_ERROR_STOP=1 \
+                -c "CREATE SCHEMA IF NOT EXISTS gravitino_store;"
+              # 镜像自带 schema SQL 的 CREATE TABLE 均 IF NOT EXISTS（幂等），
+              # 但少数 CREATE INDEX 漏了 IF NOT EXISTS（上游 bug），重跑会报 "already exists"。
+              # 故不设 ON_ERROR_STOP，让索引重复错误不中断；最终靠下方关键表校验决定成败。
+              echo "[gravitino-init] 执行 Gravitino entity store 建表 DDL（幂等）..."
+              psql -h gaia-postgres -U ontology -d ontology \
+                -c "SET search_path TO gravitino_store;" \
+                -f /schema/gravitino-pg-schema.sql >/dev/null
+              echo "[gravitino-init] ✅ Gravitino entity store 表就绪"
+              # 验证关键表存在
+              psql -h gaia-postgres -U ontology -d ontology -tAc \
+                "SELECT to_regclass('gravitino_store.entity_change_log');" | grep -q entity_change_log && \
+                echo "[gravitino-init] ✅ entity_change_log 表已存在" || \
+                { echo "[gravitino-init] ❌ entity_change_log 表缺失"; exit 1; }
+          volumeMounts:
+            - name: schema
+              mountPath: /schema
+              readOnly: true
+        # 阶段 2a：等 Gravitino 主服务健康（表已建好，Gravitino 此轮重启后应能起来）
+        - name: wait-gravitino
+          image: nginx:alpine
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          command:
+            - sh
+            - -c
+            - "until wget -q -O- http://gaia-gravitino:8090/api/health 2>/dev/null | grep -q '\"status\":\"up\"'; do echo '[gravitino-init] 等待 Gravitino 健康...'; sleep 3; done"
+      containers:
+        # 阶段 2b：创建 metalake（幂等，已存在则跳过）
+        - name: gravitino-init
+          image: nginx:alpine
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              METALAKE="ontology"
+              echo "[gravitino-init] 检查 metalake ${METALAKE} 是否存在..."
+              EXISTING=$(wget -q -O- http://gaia-gravitino:8090/api/metalakes 2>/dev/null)
+              if echo "$EXISTING" | grep -q "\"name\":\"${METALAKE}\""; then
+                echo "[gravitino-init] metalake ${METALAKE} 已存在，跳过创建"
+                exit 0
+              fi
+              echo "[gravitino-init] 创建 metalake ${METALAKE}..."
+              wget -q -O- --header="Content-Type: application/json" \
+                --post-data="{\"name\":\"${METALAKE}\",\"comment\":\"Gaia ontology metalake\",\"properties\":{}}" \
+                http://gaia-gravitino:8090/api/metalakes
+              echo ""
+              echo "[gravitino-init] 验证 metalake 已创建..."
+              wget -q -O- http://gaia-gravitino:8090/api/metalakes 2>/dev/null | grep -q "\"name\":\"${METALAKE}\"" && \
+                echo "[gravitino-init] ✅ metalake ${METALAKE} 创建成功" || \
+                { echo "[gravitino-init] ❌ metalake 创建失败"; exit 1; }
+      volumes:
+        - name: schema
+          emptyDir: {}

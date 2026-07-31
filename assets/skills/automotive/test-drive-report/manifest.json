@@ -1,0 +1,18 @@
+{
+  "name": "test-drive-report",
+  "version": "1.3.3",
+  "author": "UnionAgents",
+  "industries": ["automotive"],
+  "description": "车企销售顾问查询本人名下已完成的客户试驾报告。按客户姓名/手机号尾号/试驾日期/时段模糊检索，命中后下发企微卡片，点击跳转完整报告页。支持基于报告详情（销售检核/成交意愿/下一步建议）的多轮问答，详情来自 GET /api/drive_analysis。",
+  "icon": "ri:roadster-line",
+  "engine": ["HERMES"],
+  "config_params": [
+    {
+      "name": "api_key",
+      "label": "试驾报告系统 API Key",
+      "type": "string",
+      "secret": true,
+      "description": "试驾报告系统鉴权密钥，通过 sidecar 解密后以 X-API-Key 头调用 API。"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+# Gradle
+.gradle/
+build/
+
+# Android Studio / IntelliJ
+*.iml
+.idea/
+local.properties
+captures/
+.cxx/
+
+# Keystore (do not commit)
+*.keystore
+*.jks
+keystore.properties
+
+# APK / AAB / mapping files
+*.apk
+*.aab
+*.apk.idsig
+mapping.txt
+
+# Kotlin compiler session files
+.kotlin/

@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /opt/scripts/profile-supervisor.sh

@@ -1,0 +1,12 @@
+flowchart TD
+    Draft["定义草稿<br/>persona/model/skill/memory config"] --> Pub["定义发布版本<br/>publish_definition"]
+    Pub --> Snap["生成不可变 AgentVersion<br/>version_no=1.0.n<br/>拷贝 configs + engine_type"]
+    Snap --> Cur["d.current_version_id=v.id<br/>definition.status=PUBLISHED"]
+    Cur --> CInst["create_instance<br/>version_id 默认=current_version"]
+    CInst --> Online["实例上线 publish_instance<br/>DRAFT→PUBLISHED + ensure http channel"]
+    Online --> Run["终端可访问"]
+    Run --> Roll["需要升级/回滚<br/>switch_version"]
+    Roll --> Upd["inst.version_id=新版本<br/>regen litellm key"]
+    Upd --> Reload["controller _load_instance_config<br/>读新版本配置"]
+    Reload --> Rst["restart 使配置生效"]
+    Rst --> Run

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: console-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: console-admin }
+  template:
+    metadata:
+      labels: { app: console-admin }
+    spec:
+      containers:
+      - name: admin
+        image: unionagents/console-admin:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          requests: { cpu: "50m", memory: "64Mi" }
+          limits: { cpu: "200m", memory: "256Mi" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: console-admin
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080
+  selector: { app: console-admin }

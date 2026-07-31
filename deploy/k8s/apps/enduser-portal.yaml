@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enduser-portal
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: enduser-portal }
+  template:
+    metadata:
+      labels: { app: enduser-portal }
+    spec:
+      containers:
+      - name: portal
+        image: unionagents/enduser-portal:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          requests: { cpu: "100m", memory: "64Mi" }
+          limits: { cpu: "500m", memory: "256Mi" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: enduser-portal
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30081
+  selector: { app: enduser-portal }

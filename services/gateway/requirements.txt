@@ -1,0 +1,16 @@
+# Gateway 服务依赖（独立文件，便于 Docker 分层缓存与版本锁定）
+fastapi
+uvicorn
+httpx
+python-jose
+pydantic-settings
+sse-starlette
+sqlalchemy[asyncio]
+asyncpg
+cryptography
+websockets
+prometheus-fastapi-instrumentator
+langfuse>=2.0.0,<3.0.0
+av  # amr→wav 转码（豆包 ASR openspeech 不支持 amr）
+redis>=5.0  # wecom_bot_callback 流式状态共享（多副本 HA）；未配置 UA_REDIS_URL 时降级内存
+tzdata  # IANA 时区数据兜底（python:3.11-slim 无系统 tzdata，保证 ZoneInfo("Asia/Shanghai") 可用）

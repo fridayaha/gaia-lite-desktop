@@ -1,0 +1,9 @@
+{
+  "name": "chart-drawing",
+  "version": "1.0.0",
+  "author": "UnionAgents",
+  "industries": ["automotive"],
+  "description": "当用户期望返回图表/可视化，或模型判断需要用图表展示数据时触发。调用 Python 脚本（matplotlib）绘制柱状图/折线图/饼图/散点图/面积图，保存为 PNG，用 markdown 相对路径引用。",
+  "icon": "ri:bar-chart-2-line",
+  "engine": ["HERMES"]
+}

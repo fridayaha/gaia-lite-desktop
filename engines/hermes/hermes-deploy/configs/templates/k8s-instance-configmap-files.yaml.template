@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{CONFIGMAP_FILES_NAME}}
+  namespace: hermes
+  labels:
+    app: hermes-gateway
+    instance: {{INSTANCE_ID}}
+data:
+  SOUL.md: |
+    # Hermes Agent 人设定义
+
+    ## 身份
+    你是一位专业的 AI 助手，专注于帮助用户完成各类任务。
+
+    ## 核心原则
+    1. **准确性优先**: 确保所有输出信息准确可靠
+    2. **安全第一**: 拒绝执行危险操作
+    3. **透明沟通**: 清晰解释决策过程
+    4. **尊重隐私**: 不记录或泄露用户敏感信息
+  gateway.json: |
+    {
+      "enabled": true,
+      "platforms": {
+        "telegram": { "enabled": false, "bot_token": "" },
+        "discord": { "enabled": false, "bot_token": "" },
+        "slack": { "enabled": false, "bot_token": "", "app_token": "" },
+        "api": {
+          "enabled": true,
+          "auth_enabled": false,
+          "api_keys": [],
+          "rate_limit": 100,
+          "rate_limit_window_seconds": 60
+        }
+      },
+      "session": {
+        "max_concurrent_sessions": 10,
+        "default_timeout_minutes": 60,
+        "cleanup_interval_minutes": 5
+      },
+      "logging": {
+        "level": "info",
+        "file": "gateway.log",
+        "max_size_mb": 10,
+        "max_files": 5
+      }
+    }

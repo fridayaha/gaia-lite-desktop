@@ -1,0 +1,7 @@
+node_modules/
+.vitepress/dist/
+.vitepress/cache/
+.DS_Store
+*.log
+# APK 二进制大文件不进 git，由本地或 CI 构建时拷贝到 public/
+content/public/*.apk

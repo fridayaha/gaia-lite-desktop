@@ -1,0 +1,5 @@
+# gitignore for base APK template directory
+# 真实 base APK 由 dev 本地构建后 cp 进来，不入仓库
+# .gitkeep 是唯一入库文件，保证目录存在
+*.apk
+!.gitkeep

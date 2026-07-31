@@ -1,0 +1,1310 @@
+/*
+ * Gaia Design System
+ *
+ * Tailwind v4 CSS-first。token 两层架构（见 @layer base + @theme inline）。
+ * 组件语义类用 @layer components + @apply 组合 Tailwind 工具类，
+ * 保留语义类名以便 TSX 可读，同时样式走 Tailwind token 体系（亮暗可切）。
+ */
+
+@import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ──────────────────────────────────────────────────────────
+   1. Token 两层架构
+   ────────────────────────────────────────────────────────── */
+
+@layer base {
+  :root {
+    /* 默认 = 暗色主题 */
+    --color-bg: #0c1117;
+    --color-sidebar: #111924;
+    --color-surface: #18222f;
+    --color-border: #253040;
+    --color-border-light: #2a3648;
+    --color-text: #e8e6e3;
+    --color-text-secondary: #9aa8b8;
+    --color-text-muted: #738091;
+
+    --color-accent: #d4875e;
+    --color-accent-hover: #e09870;
+    --color-accent-text: #e8b896;
+
+    --color-teal: #4f8c8d;
+    --color-teal-hover: #5fa8a9;
+
+    --color-success: #5e8c5e;
+    --color-warning: #e0b15d;
+    --color-error: #c44d4f;
+
+    /* 滚动条：用中性灰而非 accent，避免在浅/深背景上抢视觉焦点；
+       track 用半透明衬底，给 thumb 提供稳定对比，水平滚动条不再“贴着背景消失”。 */
+    --scrollbar-thumb: rgba(255, 255, 255, 0.22);
+    --scrollbar-thumb-hover: rgba(255, 255, 255, 0.38);
+    --scrollbar-track: rgba(255, 255, 255, 0.05);
+
+    /* z-index 层级规范（尼尔森一致性 / 防止多层弹窗错乱） */
+    --z-base: 0;
+    --z-dropdown: 50;
+    --z-sticky: 60;
+    --z-overlay-backdrop: 90;
+    --z-modal: 100;
+    --z-confirm: 150;
+    --z-toast: 200;
+    --z-progress: 250;
+
+    /* 旧名别名（迁移期兼容） */
+    --bg: var(--color-bg);
+    --sidebar-bg: var(--color-sidebar);
+    --surface: var(--color-surface);
+    --border: var(--color-border);
+    --border-light: var(--color-border-light);
+    --text: var(--color-text);
+    --text-secondary: var(--color-text-secondary);
+    --text-muted: var(--color-text-muted);
+    --accent: var(--color-accent);
+    --accent-hover: var(--color-accent-hover);
+    --accent-bg: color-mix(in srgb, var(--color-accent) 8%, transparent);
+    --accent-bg-strong: color-mix(in srgb, var(--color-accent) 16%, transparent);
+    --accent-text: var(--color-accent-text);
+    --teal: var(--color-teal);
+    --teal-hover: var(--color-teal-hover);
+    --teal-bg: color-mix(in srgb, var(--color-teal) 15%, transparent);
+    --success: var(--color-success);
+    --warning: var(--color-warning);
+    --error: var(--color-error);
+
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 24px;
+    --font-size-xs: 11px;
+    --font-size-sm: 12px;
+    --font-size-md: 14px;
+    --font-size-lg: 16px;
+
+    font-family: var(--font-ui);
+    font-size: var(--font-size-md);
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+  }
+
+  /* 亮色主题 */
+  .light {
+    --color-bg: #f7f6f3;
+    --color-sidebar: #ffffff;
+    --color-surface: #ffffff;
+    --color-border: #e6e2da;
+    --color-border-light: #d8d3c8;
+    --color-text: #1c232e;
+    --color-text-secondary: #5a6675;
+    --color-text-muted: #6a7686;
+
+    --color-accent: #b8682f;
+    --color-accent-hover: #9c5523;
+    --color-accent-text: #8a4f22;
+
+    --color-teal: #2f6a6b;
+    --color-teal-hover: #245556;
+
+    --color-success: #3f7a3f;
+    --color-warning: #b07d1f;
+    --color-error: #b03a3c;
+
+    /* 亮色：中性灰 thumb + 浅灰 track，保证在白色 surface 上有清晰区分度 */
+    --scrollbar-thumb: rgba(60, 70, 84, 0.42);
+    --scrollbar-thumb-hover: rgba(40, 48, 58, 0.62);
+    --scrollbar-track: rgba(60, 70, 84, 0.08);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-sidebar: var(--color-sidebar);
+  --color-surface: var(--color-surface);
+  --color-border: var(--color-border);
+  --color-border-light: var(--color-border-light);
+  --color-text: var(--color-text);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-text: var(--color-accent-text);
+  --color-teal: var(--color-teal);
+  --color-teal-hover: var(--color-teal-hover);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+
+  --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace;
+
+  --animate-fade-in: fadeIn 0.25s ease;
+  --animate-blink: blink 0.8s infinite;
+  --animate-pulse: pulse 1.5s infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ──────────────────────────────────────────────────────────
+   2. 基础重置 / 滚动条
+   ──────────────────────────────────────────────────────────
+   滚动条用中性灰 token（见 @layer base），亮/暗主题下都有稳定对比度，
+   不用 accent 品牌色（滚动条不应抢视觉焦点）。
+   Firefox: scrollbar-color/width；WebKit: ::-webkit-scrollbar-*。 */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  background-clip: padding-box;
+}
+
+/* 屏幕阅读器专用（视觉隐藏但可读） */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ──────────────────────────────────────────────────────────
+   3. 组件语义类（@apply Tailwind 工具类）
+   ────────────────────────────────────────────────────────── */
+
+@layer components {
+  /* ── App shell ── */
+  .app-layout {
+    @apply flex h-full flex-col;
+  }
+  .app-titlebar {
+    @apply flex h-10 shrink-0 items-center gap-3 border-b border-border bg-sidebar px-4 leading-none select-none;
+  }
+  .app-titlebar-logo {
+    @apply flex items-center gap-1.5 text-sm font-bold text-accent-text leading-none;
+  }
+  .app-titlebar-spacer {
+    @apply flex-1;
+  }
+  .app-titlebar-crumb {
+    @apply flex items-center gap-1.5 text-[12px] text-text-muted;
+  }
+  .app-titlebar-crumb .crumb-sep {
+    @apply opacity-50;
+  }
+  .app-titlebar-crumb .crumb-current {
+    @apply text-text-secondary font-medium;
+  }
+  .app-body {
+    @apply flex min-h-0 flex-1;
+  }
+  .main-content {
+    @apply min-w-0 flex-1 overflow-y-auto p-6;
+  }
+  /* fullBleed: 页面自管内边距（如三栏 Workspace），去除默认 padding */
+  .main-content.full-bleed {
+    @apply p-0;
+  }
+
+  /* ── Rail ── */
+  .rail {
+    @apply flex shrink-0 flex-col gap-1 border-r border-border bg-sidebar py-2;
+    width: 128px;
+  }
+  .rail-btn {
+    @apply relative flex h-10 w-full cursor-pointer flex-row items-center justify-start gap-2 rounded-md
+      border-none bg-none px-3 text-text-muted transition-colors;
+  }
+  .rail-btn:hover {
+    @apply text-text bg-white/5;
+  }
+  .rail-btn.active {
+    @apply text-accent-text bg-[var(--accent-bg)];
+  }
+  .rail-btn.active::before {
+    content: '';
+    @apply absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-sm bg-accent;
+  }
+  .rail-btn-icon {
+    @apply text-base leading-none inline-flex items-center justify-center;
+    width: 20px;
+  }
+  .rail-btn-label {
+    @apply text-xs leading-none;
+  }
+  .rail-spacer {
+    @apply flex-1;
+  }
+  .rail-group-arrow {
+    @apply ml-auto self-center;
+  }
+  /* 父项展开态：保持浅高亮，表明「当前组已展开」 */
+  .rail-btn.group-expanded {
+    @apply bg-white/[0.04] text-text;
+  }
+  /* 分组子项：横向布局，左缩进 + 连接线 + 浅背景容器包裹。
+     层级区分（NNGroup）：缩进是最强层级信号。 */
+  .rail-subitems {
+    @apply relative mx-2 flex flex-col gap-0.5
+      border-l-2 border-border-light bg-black/[0.12] py-1 pl-2 pr-1;
+  }
+  .rail-subitem {
+    @apply relative flex w-full cursor-pointer flex-row items-center gap-1.5
+      rounded-md border-none bg-none py-1.5 pl-2 pr-2 text-text-muted transition-colors;
+  }
+  .rail-subitem:hover {
+    @apply bg-white/[0.06] text-text;
+  }
+  .rail-subitem.active {
+    @apply text-accent-text bg-[var(--accent-bg)];
+  }
+  /* 子项 active 指示器：圆点（区别于父项的粗条） */
+  .rail-subitem.active::before {
+    content: '';
+    @apply absolute left-[-6px] top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-accent;
+  }
+  .rail-subitem-icon {
+    @apply text-sm leading-none inline-flex items-center justify-center;
+    width: 18px;
+  }
+  .rail-subitem-label {
+    @apply text-[11px] leading-none;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    @apply flex w-[280px] shrink-0 flex-col overflow-hidden border-r border-border bg-sidebar;
+  }
+  .sidebar-header {
+    @apply border-b border-border px-4 py-3 text-xs font-semibold uppercase tracking-wider text-text-muted;
+  }
+  .sidebar-list {
+    @apply flex-1 overflow-y-auto p-2;
+  }
+  .sidebar-item {
+    @apply mb-0.5 flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm
+      text-text-secondary transition-all;
+  }
+  .sidebar-item:hover {
+    @apply text-text bg-white/[0.04];
+  }
+  .sidebar-item.active {
+    @apply bg-[var(--accent-bg)] font-medium text-accent-text;
+  }
+  .sidebar-item .badge {
+    @apply ml-auto rounded-pill bg-[var(--accent-bg-strong)] px-1.5 py-px text-[10px] text-accent-text;
+  }
+
+  /* ── Page layout ── */
+  .page-container {
+    @apply mx-auto max-w-[1100px] p-6;
+  }
+  .page-header {
+    @apply mb-6 flex items-center justify-between;
+  }
+  .page-header h1 {
+    @apply text-xl font-semibold text-text;
+  }
+  /* api_name subtitle under the ontology title — the machine identifier users
+     need to copy/reference (display_name alone isn't enough for API calls). */
+  .ontology-api-name {
+    @apply mt-0.5 block font-mono text-xs text-text-muted;
+  }
+  .page-header-actions {
+    @apply flex gap-2;
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-border
+      bg-surface px-3.5 py-1.5 text-sm font-medium text-text transition-all;
+    min-height: 32px;
+  }
+  .btn:hover {
+    @apply border-border-light bg-white/[0.04];
+  }
+  .btn-primary {
+    @apply border-accent bg-accent text-bg;
+  }
+  .btn-primary:hover {
+    @apply border-accent-hover bg-accent-hover;
+  }
+  .btn-danger {
+    @apply border-error bg-error text-white;
+  }
+  /* Outlined danger — for destructive actions that should NOT compete with
+     the primary action (per SSW: make destructive buttons less prominent
+     except when deletion is the primary purpose). Used in the ontology
+     detail header where the primary action is "新建对象". */
+  .btn-danger-outline {
+    @apply border-error/40 bg-transparent text-error;
+  }
+  .btn-danger-outline:hover {
+    @apply border-error bg-error/10;
+  }
+  .btn-sm {
+    @apply px-2.5 py-[3px] text-[11px];
+    min-height: 28px;
+  }
+  .btn-xs {
+    @apply px-1.5 py-0.5 text-[10px];
+    min-height: 24px;
+  }
+  /* loading 态：禁用点击 + spinner + 不透明度（系统状态可见 / 反馈闭环） */
+  .btn.is-loading {
+    @apply pointer-events-none opacity-70;
+  }
+  .btn-spinner {
+    @apply h-3 w-3 shrink-0 animate-spin rounded-full border-2 border-current border-t-transparent;
+  }
+  .btn:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+  .btn:disabled:hover {
+    @apply border-border bg-surface;
+  }
+  .btn-primary:disabled {
+    @apply border-accent bg-accent;
+  }
+
+  /* ── Cards ── */
+  .card {
+    @apply rounded-lg border border-border bg-surface p-4;
+  }
+  .card-grid {
+    @apply grid gap-3;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+  .object-card {
+    @apply cursor-pointer transition-[border-color,transform];
+  }
+  .object-card:hover {
+    @apply border-accent -translate-y-px;
+  }
+  .object-card.selected {
+    @apply border-accent -m-px border-2;
+  }
+  .object-card-header {
+    @apply mb-2 flex items-center justify-between;
+  }
+  .object-card-name {
+    @apply text-sm font-semibold;
+  }
+  .object-card-meta {
+    @apply flex flex-wrap gap-4 text-[11px] text-text-muted;
+  }
+  .object-card-status {
+    @apply rounded-pill px-2 py-px text-[10px] font-semibold;
+  }
+  /* [deprecated] 统一改用 StatusBadge + .sb-*。旧别名保留以免破坏存量引用。 */
+  .status-active {
+    @apply text-success;
+    background: color-mix(in srgb, var(--color-success) 15%, transparent);
+  }
+  .status-experimental {
+    @apply text-teal;
+    background: color-mix(in srgb, var(--color-teal) 15%, transparent);
+  }
+
+  /* ── Forms ── */
+  .form-group {
+    @apply mb-3 flex flex-col gap-1;
+  }
+  .form-label {
+    @apply text-sm font-medium text-text-secondary;
+  }
+  .form-input,
+  .form-select {
+    @apply w-full rounded-md border border-border bg-bg px-3 py-2 text-sm text-text
+      font-[var(--font-ui)] outline-none transition-[border-color];
+  }
+  .form-input:focus,
+  .form-select:focus {
+    @apply border-accent;
+    box-shadow: 0 0 0 2px var(--accent-bg);
+  }
+  .form-input::placeholder {
+    @apply text-text-muted;
+  }
+  .form-input-mono {
+    @apply font-mono text-xs;
+  }
+
+  /* ── React Aria ListBox items (Select / ComboBox popovers, ADR-013 Phase 4) ── */
+  /* React Aria exposes state via data-* attributes on items. */
+  [data-react-aria-listbox] [role='option'],
+  .react-aria-ListBox [role='option'] {
+    @apply cursor-pointer px-3 py-1.5 text-sm text-text outline-none;
+  }
+  .react-aria-ListBox [role='option'][data-hovered],
+  .react-aria-ListBox [role='option'][data-focused] {
+    @apply bg-[var(--accent-bg)] text-accent-text;
+  }
+  .react-aria-ListBox [role='option'][data-selected] {
+    @apply font-medium;
+  }
+  .react-aria-ListBox [role='option'][data-selected]::after {
+    content: ' ✓';
+    @apply text-accent;
+  }
+  .react-aria-ListBox [role='option'][data-disabled] {
+    @apply cursor-not-allowed opacity-50;
+  }
+  .form-hint {
+    @apply text-[11px] text-text-muted;
+  }
+  .form-row {
+    @apply flex gap-3;
+  }
+  .form-row .form-group {
+    @apply mb-0;
+  }
+
+  /* ── Connector type cards ── */
+  .form-card {
+    @apply mb-2 flex cursor-pointer items-center gap-3 rounded-md border border-border bg-bg
+      p-3 px-4 transition-[border-color,background];
+  }
+  .form-card:hover {
+    @apply border-accent bg-[var(--accent-bg)];
+  }
+  .form-card.selected {
+    @apply border-accent bg-[var(--accent-bg-strong)];
+  }
+  .form-card-label {
+    @apply text-sm font-semibold;
+  }
+  .form-card-hint {
+    @apply mt-0.5 text-[11px] text-text-muted;
+  }
+
+  /* ── Connector catalog: 左品类导航 rail + 右全量分组展示 ── */
+  /* 对齐 Palantir 范式：品类导航定位到右侧对应 section，而非过滤。
+     搜索/能力筛选跨品类全局生效，右侧永远展示所有匹配项。 */
+  .connector-catalog-body {
+    @apply flex flex-col;
+  }
+  .connector-catalog-layout {
+    @apply flex gap-4;
+  }
+  /* 左侧品类导航 rail（sticky，点击滚动到右侧对应 section） */
+  .connector-rail {
+    @apply flex w-40 shrink-0 flex-col gap-0.5;
+  }
+  .connector-rail .rail-btn {
+    @apply h-9 justify-between;
+  }
+  .connector-rail .rail-btn-label {
+    @apply text-xs;
+  }
+  .connector-rail .rail-btn-count {
+    @apply rounded-full bg-white/5 px-1.5 text-[10px] text-text-muted;
+  }
+  .connector-rail .rail-btn.active .rail-btn-count {
+    @apply bg-accent/20 text-accent-text;
+  }
+  /* 右侧：全量分组列表（品类 section + 内部瓷砖网格） */
+  .connector-grid {
+    @apply flex-1 self-stretch overflow-y-auto pr-1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 60vh;
+  }
+  .connector-grid-empty {
+    text-align: center;
+  }
+  /* 每个品类分组 */
+  .connector-category-section {
+    @apply flex flex-col gap-2;
+  }
+  .connector-category-title {
+    @apply m-0 text-[11px] font-semibold uppercase tracking-wider text-text-muted;
+    scroll-margin-top: 0.5rem;
+  }
+  /* 品类内瓷砖网格：auto-fill */
+  .connector-category-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.5rem;
+  }
+  /* 单个瓷砖：纵向布局，紧凑 */
+  .connector-tile {
+    @apply flex cursor-pointer flex-col gap-1 rounded-md border border-border bg-bg p-2.5
+      transition-[border-color,background];
+  }
+  .connector-tile:hover {
+    @apply border-accent bg-[var(--accent-bg)];
+  }
+  .connector-tile:focus-visible {
+    @apply outline-none;
+    box-shadow:
+      0 0 0 2px var(--accent-bg),
+      0 0 0 3px var(--color-accent);
+  }
+  .connector-tile-head {
+    @apply flex items-center gap-1.5;
+  }
+  .connector-tile-icon {
+    @apply text-lg leading-none;
+  }
+  .connector-tile-label {
+    @apply flex-1 truncate text-sm font-semibold;
+  }
+  .connector-tile-maturity {
+    @apply rounded-full px-1.5 py-px text-[9px] leading-none;
+  }
+  .connector-tile-maturity.is-ga {
+    @apply bg-[var(--accent-bg)] text-accent-text;
+  }
+  .connector-tile-maturity.is-beta {
+    @apply bg-[var(--warning-bg,#fff7ed)] text-[var(--warning-text,#9a3412)];
+  }
+  .connector-tile-desc {
+    @apply text-[11px] leading-snug text-text-muted;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .connector-tile-caps {
+    @apply mt-0.5 flex flex-wrap gap-1;
+  }
+  .connector-tile-cap {
+    @apply rounded bg-[var(--accent-bg)] px-1.5 py-px text-[10px] text-accent-text;
+  }
+
+  /* 响应式：窄屏品类 rail 折叠为顶部水平横滚 chip 条 */
+  @media (max-width: 640px) {
+    .connector-catalog-layout {
+      @apply flex-col;
+    }
+    .connector-rail {
+      @apply w-full flex-row gap-1 overflow-x-auto pb-2;
+    }
+    .connector-rail .rail-btn {
+      @apply h-8 shrink-0;
+    }
+    .connector-grid {
+      @apply max-h-none;
+    }
+  }
+
+  /* ── Tables ── */
+  .data-table {
+    @apply w-full border-collapse text-sm;
+  }
+  .data-table th {
+    @apply border-b border-border px-3 py-2 text-left text-[11px] font-medium uppercase
+      tracking-wider text-text-muted;
+  }
+  .data-table td {
+    @apply border-b border-border px-3 py-2;
+  }
+  .data-table tr:hover td {
+    @apply bg-white/[0.02];
+  }
+
+  /* ── Dialog / Modal ── */
+  .dialog-overlay {
+    @apply fixed inset-0 flex items-center justify-center bg-black/60;
+    z-index: var(--z-modal);
+  }
+  .dialog {
+    @apply min-w-[400px] max-w-[600px] rounded-lg border border-border bg-surface p-6;
+  }
+  .dialog h2 {
+    @apply mb-3 text-base;
+  }
+  .dialog-actions {
+    @apply mt-6 flex justify-end gap-2;
+  }
+  .overlay-backdrop {
+    @apply fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur;
+    z-index: var(--z-overlay-backdrop);
+  }
+  .overlay-panel {
+    @apply flex max-h-[90vh] w-full flex-col rounded-lg border border-border bg-surface
+      shadow-[0_20px_60px_rgba(0,0,0,0.4)];
+  }
+  .overlay-header {
+    @apply shrink-0 border-b border-border px-5 py-4 flex items-center justify-between;
+  }
+  .overlay-header h3 {
+    @apply m-0 text-base font-semibold;
+  }
+  .overlay-body {
+    @apply flex-1 overflow-y-auto p-6;
+  }
+  /* focus ring: 键盘可达性（WCAG 可操作性） */
+  .btn:focus-visible,
+  .rail-btn:focus-visible,
+  .sidebar-item:focus-visible,
+  .form-input:focus-visible,
+  .form-select:focus-visible {
+    @apply outline-none;
+    box-shadow:
+      0 0 0 2px var(--accent-bg),
+      0 0 0 3px var(--color-accent);
+  }
+
+  /* ── Empty state ── */
+  .empty-state {
+    @apply py-6 text-center text-text-muted;
+  }
+  .empty-state h2 {
+    @apply mb-2 text-base text-text-secondary;
+  }
+  .empty-state p {
+    @apply text-sm;
+  }
+
+  /* ── Canvas ── */
+  .canvas-container {
+    @apply h-full w-full overflow-hidden rounded-lg border border-border bg-bg;
+  }
+
+  /* ── View toggle ── */
+  .view-toggle {
+    @apply mb-3 flex gap-0.5;
+  }
+  .view-toggle-btn {
+    @apply cursor-pointer border border-border bg-none px-3 py-1 text-[11px] text-text-muted;
+  }
+  .view-toggle-btn:first-child {
+    @apply rounded-l-sm;
+  }
+  .view-toggle-btn:last-child {
+    @apply rounded-r-sm;
+  }
+  .view-toggle-btn.active {
+    @apply border-accent bg-[var(--accent-bg)] text-accent-text;
+  }
+
+  /* ── Search ── */
+  .search-wrap {
+    @apply relative mb-3;
+  }
+  .search-wrap::before {
+    content: '🔍';
+    @apply absolute left-2.5 top-1/2 -translate-y-1/2 text-sm;
+  }
+  .search-input {
+    @apply w-full rounded-md border border-border bg-bg py-2 pl-9 pr-3 text-sm text-text outline-none;
+  }
+  .search-input:focus {
+    @apply border-accent;
+  }
+
+  /* ── Status badge ── */
+  .status-badge {
+    @apply whitespace-nowrap rounded-pill px-2 py-0.5 text-xs font-medium;
+  }
+  .sb-success {
+    @apply text-success;
+    background: color-mix(in srgb, var(--color-success) 20%, transparent);
+  }
+  .sb-error {
+    @apply text-error;
+    background: color-mix(in srgb, var(--color-error) 20%, transparent);
+  }
+  .sb-warning {
+    @apply text-warning;
+    background: color-mix(in srgb, var(--color-warning) 15%, transparent);
+  }
+  .sb-muted {
+    @apply text-text-muted bg-white/5;
+  }
+
+  /* ── Capability bar ── */
+  .capability-bar {
+    @apply flex flex-wrap gap-1;
+  }
+  .capability-btn {
+    @apply flex cursor-pointer items-center gap-1 rounded-pill border border-border bg-transparent
+      px-2 py-0.5 text-[11px] text-text-secondary transition-all;
+  }
+  .capability-btn:hover {
+    @apply border-accent text-accent-text bg-[var(--accent-bg)];
+  }
+
+  /* ── Badge ── */
+  .badge {
+    @apply rounded-pill px-1.5 py-px text-[10px];
+  }
+
+  /* ── Schema tree ── */
+  .schema-tree {
+    @apply flex flex-col gap-px text-sm;
+  }
+  .schema-schema-label {
+    @apply px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-text-muted;
+  }
+  .schema-table-node {
+    @apply flex cursor-pointer items-center gap-1.5 rounded-sm px-2 py-1 transition-colors;
+  }
+  .schema-table-node:hover {
+    @apply bg-white/[0.04];
+  }
+  .schema-table-node.selected {
+    @apply bg-[var(--accent-bg)] text-accent-text;
+  }
+  .schema-table-node .checkbox {
+    @apply flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-[3px] border border-border text-[10px];
+  }
+  .schema-table-node .checkbox.checked {
+    @apply border-accent bg-accent text-bg;
+  }
+  .schema-table-name {
+    @apply font-mono text-sm font-medium;
+  }
+  .schema-table-icon {
+    @apply w-4 shrink-0 text-center text-[14px] text-text-muted;
+  }
+  .schema-table-stats {
+    @apply ml-auto text-[11px] text-text-muted;
+  }
+  .schema-table-children {
+    @apply ml-4 border-l border-border pl-5;
+  }
+
+  /* ── Column list ── */
+  .column-list-compact {
+    @apply flex flex-col gap-px;
+  }
+  .column-row {
+    @apply flex items-center gap-1.5 rounded-sm px-1.5 py-0.5 font-mono text-[11px] transition-colors;
+  }
+  .column-row:hover {
+    @apply bg-white/[0.03];
+  }
+  .column-row.selectable {
+    @apply cursor-pointer;
+  }
+  .column-row.selected {
+    @apply bg-[var(--accent-bg)] text-accent-text;
+  }
+  .column-name {
+    @apply text-text;
+  }
+  .column-type {
+    @apply text-text-muted;
+  }
+  .column-pk {
+    @apply text-[10px] text-accent-text;
+  }
+  .column-fk {
+    @apply text-[10px] text-teal;
+  }
+  .column-null {
+    @apply text-text-muted opacity-50;
+  }
+
+  /* ── Detail tab bar（表详情页：列信息 / 数据预览） ── */
+  .detail-tab-bar {
+    @apply flex items-center gap-1 border-b border-border px-3;
+  }
+  .detail-tab {
+    @apply relative -mb-px border-b-2 border-transparent px-3 py-2 text-[12px] font-medium
+      text-text-muted transition-colors;
+  }
+  .detail-tab:hover {
+    @apply text-text-secondary;
+  }
+  .detail-tab.active {
+    @apply border-accent text-text;
+  }
+  .detail-tab-count {
+    @apply ml-1.5 rounded-full bg-white/[0.06] px-1.5 py-0.5 text-[10px] text-text-muted;
+  }
+
+  /* ── Preview table ── */
+  .preview-table-wrap {
+    @apply flex flex-col rounded-md border border-border bg-bg;
+  }
+  .preview-table-scroll {
+    @apply max-h-[calc(100vh-280px)] min-h-[200px] overflow-auto;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+  /* 预览表滚动条：复用全局中性灰 token（见基础重置），
+     水平滚动条在亮色背景下不再与背景融为一体。宽度略大于全局以保证可抓取性。 */
+  .preview-table-scroll::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  .preview-table-scroll::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 6px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+  }
+  .preview-table-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+    background-clip: padding-box;
+  }
+  .preview-table-scroll::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  .preview-table {
+    @apply min-w-full border-collapse font-mono text-[11px];
+  }
+  .preview-table th {
+    @apply sticky top-0 z-[var(--z-sticky)] whitespace-nowrap border-b border-border
+      bg-surface px-2.5 py-1.5 text-left align-top font-medium text-text-muted;
+  }
+  .preview-table th .preview-col-name {
+    @apply block font-medium text-text-secondary;
+  }
+  .preview-table th .preview-col-type {
+    @apply mt-0.5 block text-[10px] font-normal text-text-muted;
+  }
+  .preview-table th .preview-col-comment {
+    @apply mt-0.5 block max-w-[220px] truncate text-[10px] font-normal italic text-text-muted;
+  }
+  .preview-table td {
+    @apply max-w-[260px] truncate whitespace-nowrap border-b border-white/[0.04] px-2.5 py-1
+      text-text-secondary;
+  }
+  .preview-table tr:hover td {
+    @apply bg-white/[0.02];
+  }
+  /* 行号列 sticky 左锁，横向滚动时不丢行号 */
+  .preview-table .preview-row-index {
+    @apply sticky left-0 z-[var(--z-sticky)] w-[36px] min-w-[36px] bg-surface text-center
+      text-text-muted;
+  }
+  .preview-table tr:hover .preview-row-index {
+    @apply bg-white/[0.04];
+  }
+  .preview-table-foot {
+    @apply shrink-0 border-t border-border px-2.5 py-1.5 text-[11px] text-text-muted;
+  }
+  .preview-null {
+    @apply text-text-muted italic;
+  }
+  .preview-error {
+    @apply p-3 text-center text-sm text-error;
+  }
+
+  /* ── Toast ── */
+  .toast {
+    @apply fixed bottom-5 right-5 rounded-md border border-border bg-surface px-4 py-3 text-sm text-text;
+    z-index: var(--z-toast);
+    animation: toast-in 0.2s ease;
+  }
+  .toast-success {
+    @apply border-success;
+  }
+  .toast-error {
+    @apply border-error;
+  }
+  .toast-info {
+    @apply border-border;
+  }
+
+  /* ── Section divider ── */
+  .section-header {
+    @apply mt-4 mb-2 flex items-center justify-between border-b border-border py-2;
+  }
+  .section-header h5 {
+    @apply m-0 text-sm font-semibold uppercase tracking-wide text-text-secondary;
+  }
+
+  /* ── Explore panel ── */
+  .explore-panel {
+    @apply mt-3 overflow-hidden rounded-md border border-border bg-bg;
+  }
+  .explore-panel-header {
+    @apply flex items-center justify-between border-b border-border bg-white/[0.03] px-3 py-2;
+  }
+
+  /* ── Data source card ── */
+  .ds-card {
+    @apply mb-4 rounded-lg border border-border bg-surface p-6 transition-[border-color];
+  }
+  .ds-card:hover {
+    @apply border-border-light;
+  }
+  /* 列表形态：高密度可扫描行，收紧内边距 */
+  .ds-card-list {
+    @apply p-3.5;
+  }
+  .ds-card-header {
+    @apply mb-1.5 flex items-start justify-between gap-3;
+  }
+  .ds-card-list .ds-card-header {
+    @apply mb-1 items-center;
+  }
+  .ds-card-title {
+    @apply flex flex-wrap items-center gap-2;
+  }
+  .ds-card-list .ds-card-title {
+    @apply flex-nowrap;
+  }
+  .ds-card-name {
+    @apply text-sm font-semibold;
+  }
+  .ds-card-actions {
+    @apply flex shrink-0 items-center gap-1;
+  }
+  /* 连接器类型徽标：用 accent-bg 轻量化，避免抢眼 */
+  .ds-card-type {
+    @apply rounded-pill bg-[var(--accent-bg)] px-1.5 py-px text-[10px] text-accent-text;
+  }
+  /* Meta 行：连接目标（mono 强调） + 描述（灰） */
+  .ds-card-meta {
+    @apply flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[12px];
+  }
+  .ds-card-target {
+    @apply font-mono text-[11px] text-text-secondary;
+  }
+  .ds-card-desc {
+    @apply text-text-muted;
+  }
+  /* 同步概览摘要行（列表形态，点击进详情） */
+  .ds-card-sync-summary {
+    @apply mt-1.5 flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] text-text-secondary
+      transition-colors;
+  }
+  .ds-card-sync-summary:not(:disabled):hover {
+    @apply bg-white/[0.04] text-text;
+  }
+  .ds-card-sync-count {
+    @apply font-medium;
+  }
+  .ds-card-sync-sep {
+    @apply text-text-muted;
+  }
+  .ds-card-sync-hint {
+    @apply text-accent-text opacity-70;
+  }
+  /* 虚拟表资产标记 */
+  .ds-card-asset-link {
+    @apply text-text-secondary;
+  }
+
+  /* ── Status dot ── */
+  .status-dot {
+    @apply h-2 w-2 shrink-0 rounded-full;
+  }
+  .status-dot.connected {
+    @apply bg-success;
+  }
+  .status-dot.error {
+    @apply bg-error;
+  }
+  .status-dot.disconnected {
+    @apply bg-white/20;
+  }
+
+  /* ── Sync task ── */
+  .sync-task-item {
+    @apply mb-2 flex items-center justify-between rounded-md border border-border bg-bg px-3 py-2
+      text-sm transition-[border-color];
+  }
+  .sync-task-item:hover {
+    @apply border-border-light;
+  }
+  .sync-task-info {
+    @apply flex flex-wrap items-center gap-3;
+  }
+
+  /* ── Metrics ── */
+  .metrics-grid {
+    @apply mb-6 grid gap-3;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+  .metric-card {
+    @apply rounded-lg border border-border bg-surface p-4;
+  }
+  .metric-value {
+    @apply mb-1 text-[28px] font-bold text-accent-text;
+  }
+  .metric-label {
+    @apply text-[11px] uppercase tracking-wide text-text-muted;
+  }
+
+  /* ── Skeleton（骨架屏，系统状态可见 / 避免布局抖动） ── */
+  .skeleton {
+    @apply relative overflow-hidden rounded-md bg-white/[0.05];
+  }
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--color-text) 8%, transparent),
+      transparent
+    );
+    animation: skeleton-shimmer 1.4s infinite;
+  }
+  .skeleton-line {
+    @apply h-3 w-full;
+  }
+  .skeleton-line.short {
+    @apply w-1/2;
+  }
+  .skeleton-block {
+    @apply h-16;
+  }
+
+  /* ── 全局进度条（长任务反馈） ── */
+  .progress-bar {
+    @apply fixed left-0 top-0 h-[3px] w-full bg-transparent;
+    z-index: var(--z-progress);
+  }
+  .progress-bar-fill {
+    @apply h-full bg-accent transition-[width] duration-200 ease-out;
+  }
+  .progress-bar-label {
+    @apply fixed top-1 right-3 rounded-pill bg-accent px-2 py-0.5 text-[10px] font-medium text-bg;
+    z-index: var(--z-progress);
+  }
+
+  /* ── 错误提示框（行内，替代 Toast 报后端术语） ── */
+  .error-box {
+    @apply mb-3 rounded-md border border-error bg-[color-mix(in_srgb,var(--color-error)_12%,transparent)]
+      px-3 py-2 text-sm text-error;
+  }
+
+  /* ── 图谱图例（格式塔相似性 / 识别优于记忆） ── */
+  .graph-legend {
+    @apply pointer-events-auto absolute bottom-3 right-3 z-10 rounded-md border border-border
+      bg-surface/95 p-2.5 text-[11px] shadow-md backdrop-blur;
+  }
+  .graph-legend-title {
+    @apply mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-text-muted;
+  }
+  .graph-legend-row {
+    @apply flex items-center gap-1.5 py-0.5 text-text-secondary;
+  }
+  .graph-legend-swatch {
+    @apply h-2.5 w-2.5 shrink-0 rounded-full;
+  }
+
+  /* 鸟瞰缩略图容器：navigator 扩展挂载点。固定左下角，限定尺寸。 */
+  .graph-navigator-container {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    z-index: 10;
+    width: 160px;
+    height: 110px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    overflow: hidden;
+    pointer-events: auto;
+  }
+  /* navigator 扩展生成的 panel 撑满容器 */
+  .graph-navigator-container .cytoscape-navigator {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* ── Breadcrumb（统一导航定位） ── */
+  .breadcrumb {
+    @apply mb-4 flex items-center gap-1.5 text-sm text-text-muted;
+  }
+  .breadcrumb a,
+  .breadcrumb button {
+    @apply cursor-pointer text-text-muted transition-colors hover:text-text;
+  }
+  .breadcrumb .crumb-current {
+    @apply text-text;
+  }
+  .breadcrumb .crumb-sep {
+    @apply opacity-40;
+  }
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes drawer-in {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ── AI 助手 Dock（右侧常驻可折叠）── */
+.ai-dock--expanded {
+  animation: drawer-in 0.18s ease;
+}
+.ai-dock--collapsed {
+  animation: drawer-in 0.18s ease;
+}
+.ai-dock-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm, 4px);
+  color: var(--text);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 16px;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+.ai-dock-toggle:hover:not(:disabled) {
+  background: var(--accent-bg);
+  border-color: var(--border);
+}
+.ai-dock-toggle:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+/* 拖拽调宽手柄：贴左边缘的细条，hover 高亮 */
+.ai-dock-resizer {
+  position: absolute;
+  top: 0;
+  left: -3px;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 5;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+.ai-dock-resizer:hover,
+.ai-dock-resizer:active {
+  background: var(--accent-bg-strong);
+}
+
+/* ────────────────────────────────────────────────────────────────
+ * React Flow 端口（Handle）与连接交互
+ *
+ * 为什么这么写：React Flow v12 的连接吸附只认 handle 中心点的
+ * connectionRadius（默认 20px），比 v11 退化（#5264）。解法是：
+ * 1) 加大可视圆点尺寸到 14px，提升可见性与可点性；
+ * 2) 用透明 ::before 伪元素把命中区扩到 28px，拖拽时更易吸附；
+ * 3) 连接拖拽中 / hover 时端口高亮，给出明确反馈。
+ * ──────────────────────────────────────────────────────────────── */
+.react-flow__handle {
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.15);
+  transition: box-shadow 0.15s ease, transform 0.15s ease, background-color 0.15s ease;
+}
+/* 透明命中区：扩大吸附半径，不破坏视觉 */
+.react-flow__handle::before {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border-radius: 9999px;
+  background: transparent;
+}
+.react-flow__handle:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+/* 连接拖拽进行中，所有可作终点的端口高亮提示 */
+.react-flow__connectionline-active .react-flow__handle,
+.react-flow__handle.connectingto {
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.35);
+}
+/* 连接线（拖拽中的虚线）更醒目 */
+.react-flow__connectionline path {
+  stroke: #3b82f6;
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+}
+/*
+ * 边的不可见交互路径必须用 pointer-events: all
+ *
+ * React Flow v12 把边的 pointer-events 改成了 visiblestroke，但
+ * 交互路径 stroke 为 none（不可见），导致 visiblestroke 模式下
+ * 不响应点击——边无法选中（xyflow #3127 / #1211）。
+ * 显式覆盖为 all，让 interactionWidth 的命中区真正生效。
+ */
+.react-flow__edge-interaction {
+  pointer-events: all;
+}

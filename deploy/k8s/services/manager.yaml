@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: manager }
+  template:
+    metadata:
+      labels: { app: manager }
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8002"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: manager
+      automountServiceAccountToken: true
+      containers:
+      - name: manager
+        image: unionagents/manager:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8002
+        env:
+        - name: UA_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: database-url
+        - name: UA_JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: jwt-secret
+        - name: UA_LITELLM_BASE_URL
+          value: "http://litellm:4000"
+        # controller 已并入 manager：/api/controller/* 由 manager 提供，引擎 Pod 回调指 manager
+        - name: UA_CONTROLLER_BASE_URL
+          value: "http://manager:8002"
+        - name: UA_GATEWAY_URL
+          value: "http://gateway:8010"
+        - name: UA_K8S_NAMESPACE
+          value: "unionagents"
+        # k3s 默认 StorageClass 为 local-path（非 standard）；显式指定以绑定引擎数据 PVC
+        - name: UA_PVC_STORAGE_CLASS
+          value: "local-path"
+        - name: UA_API_SERVER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: api-server-key
+        - name: UA_MINIO_ENDPOINT
+          value: "http://minio:9000"
+        - name: UA_MINIO_USER
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: minio-user
+        - name: UA_MINIO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: minio-password
+        - name: UA_LITELLM_MASTER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: litellm-master-key
+        - name: UA_LITELLM_SALT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: litellm-salt-key
+        # Langfuse trace 查询凭据（langfuse-secret 在 unionagents ns 拷贝一份）
+        - name: UA_LANGFUSE_BASE_URL
+          value: "http://langfuse.monitoring:3000"
+        # Langfuse 外部可访问地址（浏览器打开的，NodePort/域名），用于前端"在 Langfuse 中查看"链接
+        - name: UA_LANGFUSE_EXTERNAL_URL
+          value: "http://124.243.186.4:30030"
+        - name: UA_LANGFUSE_PUBLIC_KEY
+          valueFrom:
+            secretKeyRef:
+              name: langfuse-secret
+              key: langfuse-public-key
+        - name: UA_LANGFUSE_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: langfuse-secret
+              key: langfuse-secret-key
+        # Prometheus 查询地址（监控中心资源监控页数据源）
+        - name: UA_PROMETHEUS_URL
+          value: "http://prometheus.monitoring:9090"
+        # Grafana 外部可访问地址（NodePort 30090，浏览器可打开），用于前端"在 Grafana 中查看"链接
+        - name: UA_GRAFANA_EXTERNAL_URL
+          value: "http://190.92.230.115:30090"
+        resources:
+          requests: { cpu: "100m", memory: "256Mi" }
+          limits: { cpu: "500m", memory: "768Mi" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: manager
+spec:
+  ports:
+  - port: 8002
+    targetPort: 8002
+  selector: { app: manager }

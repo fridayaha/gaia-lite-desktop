@@ -1,0 +1,47 @@
+# Gaia migrate（一次性 init Job，跑 alembic upgrade head 建业务表）
+# 用 api 镜像，command 覆盖为 alembic。Job 跑完即退出。
+# api Deployment 依赖此 Job 完成（通过 initContainer wait-migrate 或部署脚本顺序控制）。
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: gaia-migrate
+  namespace: gaia
+spec:
+  backoffLimit: 4
+  ttlSecondsAfterFinished: 86400
+  template:
+    spec:
+      restartPolicy: OnFailure
+      initContainers:
+        - name: wait-postgres
+          image: postgres:16-alpine
+          command:
+            - sh
+            - -c
+            - "until pg_isready -h gaia-postgres -U ontology; do sleep 2; done"
+      containers:
+        - name: migrate
+          image: unionagents/gaia-api:${VERSION}
+          imagePullPolicy: ${IMAGE_PULL_POLICY_SERVICES}
+          command: [".venv/bin/alembic", "upgrade", "head"]
+          env:
+            - name: PG_HOST
+              value: gaia-postgres
+            - name: PG_PORT
+              value: "5432"
+            - name: PG_USER
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-user
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-password
+            - name: PG_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-database

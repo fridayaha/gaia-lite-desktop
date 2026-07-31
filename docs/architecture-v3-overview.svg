@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 940" font-family="'PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+    <style>
+      .layer-title{font-size:15px;font-weight:700}
+      .node-title{font-size:15px;font-weight:600;fill:#0f172a}
+      .node-sub{font-size:11.5px;fill:#64748b}
+      .edge{stroke:#94a3b8;stroke-width:1.6;fill:none}
+      .edge-label{font-size:10.5px;fill:#475569;paint-order:stroke;stroke:#fafbfc;stroke-width:3;stroke-linejoin:round}
+    </style>
+  </defs>
+
+  <rect width="1280" height="940" fill="#fafbfc"/>
+
+  <!-- 标题 -->
+  <text x="640" y="38" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">UnionAgents（知行）V3 系统架构</text>
+  <text x="640" y="58" text-anchor="middle" font-size="12" fill="#64748b">定义 / 资源 / 实例 三层分离 · 引擎统一经 LiteLLM 模型网关 · per-instance key 计费归因</text>
+
+  <!-- ⑤ 模型网关层（左侧竖排） -->
+  <rect x="60" y="200" width="280" height="340" rx="10" fill="#fdf2f8" stroke="#f5cfe0"/>
+  <text x="76" y="220" class="layer-title" fill="#db2777">⑤ 模型网关层</text>
+  <g>
+    <rect x="80" y="238" width="240" height="60" rx="8" fill="#fff" stroke="#d0d7de"/>
+    <rect x="80" y="238" width="4" height="60" rx="2" fill="#db2777"/>
+    <text x="200" y="262" text-anchor="middle" class="node-title">上游 LLM</text>
+    <text x="200" y="282" text-anchor="middle" class="node-sub">DeepSeek-V4 · GLM-5.1/5.2</text>
+  </g>
+  <g>
+    <rect x="80" y="448" width="240" height="60" rx="8" fill="#fff" stroke="#d0d7de"/>
+    <rect x="80" y="448" width="4" height="60" rx="2" fill="#db2777"/>
+    <text x="200" y="472" text-anchor="middle" class="node-title">LiteLLM Proxy · :4000</text>
+    <text x="200" y="492" text-anchor="middle" class="node-sub">per-instance key · Team=UserGroup</text>
+  </g>
+
+  <!-- ① 用户接入层 -->
+  <rect x="400" y="78" width="820" height="96" rx="10" fill="#eef4ff" stroke="#c7d8ff"/>
+  <text x="416" y="98" class="layer-title" fill="#2563eb">① 用户接入层</text>
+  <g>
+    <rect x="440" y="108" width="220" height="56" rx="8" fill="#fff" stroke="#d0d7de"/>
+    <rect x="440" y="108" width="4" height="56" rx="2" fill="#2563eb"/>
+    <text x="550" y="131" text-anchor="middle" class="node-title">管理台 Admin</text>
+    <text x="550" y="150" text-anchor="middle" class="node-sub">Vue3 + Element Plus</text>
+  </g>
+  <g>
+    <rect x="700" y="108" width="220" height="56" rx="8" fill="#fff" stroke="#d0d7de"/>
+    <rect x="700" y="108" width="4" height="56" rx="2" fill="#2563eb"/>
+    <text x="810" y="131" text-anchor="middle" class="node-title">Enduser Portal</text>
+    <text x="810" y="150" text-anchor="middle" class="node-sub">Vue3 + Tailwind · Chat 直渲染</text>
+  </g>
+  <g>
+    <rect x="960" y="108" width="220" height="56" rx="8" fill="#fff" stroke="#d0d7de"/>
+    <rect x="960" y="108" width="4" height="56" rx="2" fill="#2563eb"/>
+    <text x="1070" y="131" text-anchor="middle" class="node-title">IM 平台</text>
+    <text x="1070" y="150" text-anchor="middle" class="node-sub">企业微信 / 飞书 / 钉钉</text>
+  </g>
+
+  <!-- ② 应用服务层 -->
+  <rect x="400" y="200" width="820" height="96" rx="10" fill="#eefcf5" stroke="#b6e6cd"/>
+  <text x="416" y="220" class="layer-title" fill="#059669">② 应用服务层</text>
+  <g>
+    <rect x="480" y="230" width="240" height="56" rx="8" fill="#fff" stroke="#d0d7de"/>
+    <rect x="480" y="230" width="4" height="56" rx="2" fill="#059669"/>
+    <text x="600" y="253" text-anchor="middle" class="node-title">Manager · :8002</text>
+    <text x="600" y="272" text-anchor="middle" class="node-sub">V3 三层 CRUD + 运行时代理 + JWT/RBAC</text>
+  </g>
+  <g>
+    <rect x="800" y="230" width="240" height="56" rx="8" fill="#fff" stroke="#d0d7de"/>
+    <rect x="800" y="230" width="4" height="56" rx="2" fill="#059669"/>
+    <text x="920" y="253" text-anchor="middle" class="node-title">Gateway · :8010</text>
+    <text x="920" y="272" text-anchor="middle" class="node-sub">路由 / 鉴权 / Profile 解析 / SSE</text>
+  </g>
+
+  <!-- ③ 运行编排层 -->
+  <rect x="400" y="322" width="820" height="96" rx="10" fill="#fef3e8" stroke="#fbd9b3"/>
+  <text x="416" y="342" class="layer-title" fill="#ea580c">③ 运行编排层</text>
+  <g>
+    <rect x="640" y="352" width="240" height="56" rx="8" fill="#fff" stroke="#d0d7de"/>
+    <rect x="640" y="352" width="4" height="56" rx="2" fill="#ea580c"/>
+    <text x="760" y="375" text-anchor="middle" class="node-title">Controller · :8001</text>
+    <text x="760" y="394" text-anchor="middle" class="node-sub">引擎生命周期 · 1min 资源采样</text>
+  </g>
+
+  <!-- ④ 引擎运行层 -->
+  <rect x="400" y="444" width="820" height="96" rx="10" fill="#f5f3ff" stroke="#ddd4fb"/>
+  <text x="416" y="464" class="layer-title" fill="#7c3aed">④ 引擎运行层 · K8s</text>
+  <g>
+    <rect x="640" y="474" width="240" height="56" rx="8" fill="#fff" stroke="#d0d7de"/>
+    <rect x="640" y="474" width="4" height="56" rx="2" fill="#7c3aed"/>
+    <text x="760" y="497" text-anchor="middle" class="node-title">engine-hermes-{id} Pod · :8642</text>
+    <text x="760" y="516" text-anchor="middle" class="node-sub">Hermes · 多 Profile · PVC</text>
+  </g>
+
+  <!-- ⑥ 数据与基础设施 -->
+  <rect x="60" y="566" width="1160" height="96" rx="10" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="76" y="586" class="layer-title" fill="#475569">⑥ 数据与基础设施</text>
+  <g>
+    <rect x="80" y="596" width="220" height="56" rx="8" fill="#fff" stroke="#d0d7de"/>
+    <rect x="80" y="596" width="4" height="56" rx="2" fill="#475569"/>
+    <text x="190" y="619" text-anchor="middle" class="node-title">LiteLLM DB</text>
+    <text x="190" y="638" text-anchor="middle" class="node-sub">key / team / spend</text>
+  </g>
+  <g>
+    <rect x="430" y="596" width="220" height="56" rx="8" fill="#fff" stroke="#d0d7de"/>
+    <rect x="430" y="596" width="4" height="56" rx="2" fill="#475569"/>
+    <text x="540" y="619" text-anchor="middle" class="node-title">PostgreSQL 16</text>
+    <text x="540" y="638" text-anchor="middle" class="node-sub">unionagents + litellm 库</text>
+  </g>
+  <g>
+    <rect x="690" y="596" width="220" height="56" rx="8" fill="#fff" stroke="#d0d7de"/>
+    <rect x="690" y="596" width="4" height="56" rx="2" fill="#475569"/>
+    <text x="800" y="619" text-anchor="middle" class="node-title">MinIO</text>
+    <text x="800" y="638" text-anchor="middle" class="node-sub">引擎数据备份 / 归档</text>
+  </g>
+  <g>
+    <rect x="950" y="596" width="220" height="56" rx="8" fill="#fff" stroke="#d0d7de"/>
+    <rect x="950" y="596" width="4" height="56" rx="2" fill="#475569"/>
+    <text x="1060" y="619" text-anchor="middle" class="node-title">K8s / k3s API</text>
+    <text x="1060" y="638" text-anchor="middle" class="node-sub">+ metrics-server</text>
+  </g>
+
+  <!-- 连线（贝塞尔曲线） -->
+  <!-- 接入 → 服务 -->
+  <path class="edge" d="M550,164 C550,195 600,200 600,230" marker-end="url(#arrow)"/>
+  <path class="edge" d="M810,164 C810,195 920,200 920,230" marker-end="url(#arrow)"/>
+  <path class="edge" d="M1070,164 C1070,186 1010,212 920,230" marker-end="url(#arrow)"/>
+  <text x="565" y="186" class="edge-label">REST</text>
+  <text x="822" y="186" class="edge-label">X-Agent-ID / SSE</text>
+  <text x="1060" y="186" class="edge-label">webhook 回调</text>
+
+  <!-- Manager → Controller（controller_client 代理运行时） -->
+  <path class="edge" d="M600,286 C600,306 664,333 760,352" marker-end="url(#arrow)"/>
+  <text x="644" y="314" text-anchor="middle" class="edge-label">controller_client 代理运行时</text>
+
+  <!-- Gateway → Engine -->
+  <path class="edge" d="M920,286 C920,378 856,454 760,474" marker-end="url(#arrow)"/>
+  <text x="940" y="380" class="edge-label">X-Agent-ID + DNS 命名直连</text>
+
+  <!-- Gateway → Controller (ensure_engine_ready) -->
+  <path class="edge" d="M800,272 C776,272 760,304 760,352" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+  <text x="728" y="300" class="edge-label">ensure_engine_ready</text>
+
+  <!-- Controller → K8s -->
+  <path class="edge" d="M760,408 C760,503 880,578 1060,596" marker-end="url(#arrow)"/>
+  <text x="890" y="540" class="edge-label">apply Deployment+Service+PVC</text>
+
+  <!-- Engine → LiteLLM（水平直连，经左侧空带 + 通道，不穿中间层） -->
+  <path class="edge" d="M640,490 L320,490" marker-end="url(#arrow)"/>
+  <text x="480" y="484" text-anchor="middle" class="edge-label">/v1/chat/completions（per-instance key）</text>
+
+  <!-- Manager → LiteLLM（Admin API，经左侧通道下探，不穿中间层） -->
+  <path class="edge" d="M480,258 C370,258 370,470 320,470" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+  <text x="378" y="420" class="edge-label">Admin API 生成 / 轮换 key</text>
+
+  <!-- LiteLLM → 上游 -->
+  <path class="edge" d="M200,448 L200,298" marker-end="url(#arrow)"/>
+
+  <!-- Engine → MinIO（归档） -->
+  <path class="edge" d="M760,530 C760,552 776,578 800,596" marker-end="url(#arrow)" stroke="#cbd5e1"/>
+  <text x="778" y="558" class="edge-label">PVC + SUSPEND 归档</text>
+  <text x="120" y="690" class="edge-label">Manager / Controller / Gateway / LiteLLM → PG · MinIO</text>
+
+  <!-- 图例 -->
+  <g transform="translate(70,790)">
+    <text x="0" y="0" font-size="12" font-weight="600" fill="#0f172a">图例</text>
+    <line x1="0" y1="20" x2="40" y2="20" class="edge" marker-end="url(#arrow)"/>
+    <text x="48" y="24" font-size="11.5" fill="#475569">数据流 / 调用</text>
+    <line x1="180" y1="20" x2="220" y2="20" class="edge" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+    <text x="228" y="24" font-size="11.5" fill="#475569">管理 / 控制调用</text>
+    <text x="380" y="24" font-size="11.5" fill="#475569">· Gateway 不查 Controller 取 upstream，靠 X-Agent-ID + DNS 命名（engine-hermes-{id[:8]}.unionagents.svc:8642）直连引擎</text>
+    <text x="380" y="44" font-size="11.5" fill="#475569">· 引擎全部经 LiteLLM 调上游，per-instance key 保证用量精确归因到计费 Team（Team = UserGroup）</text>
+    <text x="380" y="64" font-size="11.5" fill="#475569">· 详细 ER 关系 / 时序 / RBAC 矩阵见 docs/architecture-v3.md</text>
+  </g>
+</svg>

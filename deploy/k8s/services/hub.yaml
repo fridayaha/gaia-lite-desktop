@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hub
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: hub }
+  template:
+    metadata:
+      labels: { app: hub }
+    spec:
+      containers:
+      - name: hub
+        image: unionagents/hub:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8003
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: hub-database-url
+        # dev：AuthMiddleware 走 dev-admin 上下文（无需 JWT）；
+        # 生产切 header 模式复用 manager 签发的 JWT（与 A 对齐）
+        - name: HUB_AUTH_MODE
+          value: "dev"
+        resources:
+          requests: { cpu: "100m", memory: "128Mi" }
+          limits: { cpu: "500m", memory: "512Mi" }
+        livenessProbe:
+          httpGet: { path: /api/hub/health, port: 8003 }
+          initialDelaySeconds: 15
+          periodSeconds: 30
+        readinessProbe:
+          httpGet: { path: /api/hub/health, port: 8003 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hub
+spec:
+  ports:
+  - port: 8003
+    targetPort: 8003
+  selector: { app: hub }

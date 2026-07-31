@@ -1,0 +1,128 @@
+# ── Python ──
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+dist/
+build/
+*.so
+
+# ── Virtual Environment ──
+.venv/
+.venv_*/
+venv/
+venv_*/
+.env/
+
+# ── pip ──
+
+# ── Testing ──
+.pytest_cache/
+*.db
+.coverage
+.coverage.*
+coverage/
+coverage.xml
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# ── IDE / Editor ──
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.iml
+.vs/
+
+# ── OS ──
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# ── Trino Gravitino Connector (按需下载的二进制插件，不入库) ──
+# 见 CLAUDE.md「组件升级指南」，下载命令：
+#   curl -LO https://github.com/apache/gravitino/releases/download/v{ver}/gravitino-trino-connector-{seg}-{ver}.tar.gz
+#   tar xzf ... -C config/trino/gravitino/ --strip-components=1
+config/trino/gravitino/*.jar
+
+# ── DuckDB Iceberg 扩展 (二进制 ~18MB 超 gitcode 10MB 限制，不入库) ──
+# 分发走自定义 Kestra 镜像 + ACR（见 infra/Dockerfile.kestra）。
+# 构建前手动放置：infra/extensions/iceberg.duckdb_extension.gz
+# 下载来源：https://github.com/duckdb/duckdb_iceberg/releases （duckdb 1.5.3 linux_amd64）
+infra/extensions/iceberg.duckdb_extension.gz
+infra/extensions/*.duckdb_extension
+
+# ── Docker ──
+.docker/
+
+# ── Logs ──
+*.log
+*.log.*
+
+# ── Config with secrets ──
+.env
+.env.*
+!.env.example
+!.env.local.example
+*.key
+*.pem
+*.cert
+
+# ── Project specific ──
+/data/
+*.db
+*.sqlite
+*.sqlite3
+
+# ── pi-crew runtime state (工具生成的运行时状态，不入库) ──
+.crew/
+.pi/
+
+# 本地 compose override (环境相关, 不入库)
+docker-compose.override.yml
+
+# 本地运行日志与调试截图 (dev.sh 产物)
+.run-logs/
+# 仅根目录的 ONNX/embedding 模型文件目录（用前导 / 限定根目录，
+# 避免误伤 src/ontology/core/models/ 这个 ORM 模型目录）
+/models/
+
+# ── 本地备份 / 数据库转储 (升级与排错产物，不入库) ──
+*.bak
+*.dump
+*.sql.bak
+
+# ── Marketing benchmark 产出 (本地运行结果，不入库) ──
+tests/benchmark/marketing/reports/*.md
+tests/benchmark/marketing/reports/*.html
+!tests/benchmark/marketing/reports/.gitkeep
+tests/benchmark/marketing/scripts/.sync_state.json
+
+# ── DVP benchmark 产出 (本地运行结果，不入库) ──
+tests/benchmark/dvp/reports/*
+!tests/benchmark/dvp/reports/.gitkeep
+
+
+# ── 临时截图/调试产物 ──
+graph-first.png
+ds-datasets.png
+explore-landing.png
+explore-now.png
+
+# auto-research skill 工作目录
+.task-cdc-refactor/
+
+# Tauri 构建产物（C2）
+tauri/sidecar/
+tauri/src-tauri/target/
+tauri/src-tauri/gen/

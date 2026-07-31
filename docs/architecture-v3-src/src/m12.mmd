@@ -1,0 +1,7 @@
+flowchart TD
+    Cfg["定义层 skill_config<br/>skills/order/disabled"] --> IDs["_definition_instance_ids<br/>定义下所有 PUBLISHED 实例"]
+    IDs --> Fan{fan-out 每个实例}
+    Fan -->|install| InsCtl["controller /skills/install<br/>解压到 profiles/pn/skills/name<br/>软链接 + 重启 Pod"]
+    Fan -->|uninstall| UninCtl["controller /skills/uninstall<br/>删目录 + 重启"]
+    Fan -->|sync 开关| SyncCtl["controller /skills/config/sync<br/>重写 config.yaml skills.disabled<br/>热生效不重启"]
+    Deep["_load_skill_config<br/>json round-trip 深拷贝<br/>防 ORM 跳过 UPDATE"] -. 配置读写 .-> Cfg

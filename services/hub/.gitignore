@@ -1,0 +1,33 @@
+# Windows / WSL metadata
+*:Zone.Identifier
+
+# OpenCode / local agent artifacts
+opencode.json
+opencode.local.json
+opencode.*.json
+.opencode/
+.opencode-cache/
+opencode.log
+opencode-*.log
+*.opencode.log
+
+# Local scratch / agent temporary files
+.agent/
+.agent-cache/
+.agent-tmp/
+*.agent.log
+
+# uv local lockfile, project currently uses hatchling
+backend/uv.lock
+
+# Hub local object storage
+.hub_storage/
+backend/.hub_storage/
+
+# SQLite smoke test databases
+hub_smoke*.db
+backend/hub_smoke*.db
+
+# Python bytecode
+__pycache__/
+*.pyc

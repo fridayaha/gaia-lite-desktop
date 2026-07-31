@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="380" viewBox="0 0 897.318 556.975">
+  <defs>
+    <linearGradient id="hub-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#589ff8"/>
+      <stop offset="1" stop-color="#2d6cc4"/>
+    </linearGradient>
+    <linearGradient id="node-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#eef5ff"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#589ff8" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#589ff8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 装饰光晕（呼吸动效），背景透明 -->
+  <circle cx="830" cy="80" r="140" fill="url(#halo)">
+    <animate attributeName="opacity" values="0.7;1;0.7" dur="5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="70" cy="500" r="100" fill="url(#halo)">
+    <animate attributeName="opacity" values="1;0.65;1" dur="5.5s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- 连接流线（带 id 供数据包引用） -->
+  <g stroke="#589ff8" stroke-width="1.8" fill="none" stroke-dasharray="5,5" opacity="0.55">
+    <path id="flow-l1" d="M 220 130 Q 350 100 480 130"/>
+    <path id="flow-l2" d="M 480 130 Q 610 100 680 140"/>
+    <path id="flow-l3" d="M 220 130 Q 170 280 200 420"/>
+    <path id="flow-l4" d="M 680 140 Q 720 280 700 420"/>
+    <path id="flow-l5" d="M 200 420 Q 350 460 480 440"/>
+    <path id="flow-l6" d="M 480 440 Q 610 460 700 420"/>
+    <!-- 外圈 → 中央 -->
+    <path id="flow-c1" d="M 220 130 Q 350 200 440 270"/>
+    <path id="flow-c2" d="M 680 140 Q 580 210 460 270"/>
+    <path id="flow-c3" d="M 200 420 Q 320 360 440 290"/>
+    <path id="flow-c4" d="M 700 420 Q 590 360 460 290"/>
+    <!-- 次级节点 -->
+    <path id="flow-n1" d="M 440 270 Q 540 230 580 200"/>
+    <path id="flow-n2" d="M 440 290 Q 340 350 320 350"/>
+  </g>
+
+  <!-- 数据包：沿流线移动（错峰） -->
+  <g fill="#589ff8">
+    <circle r="3.5" opacity="0.85">
+      <animateMotion dur="3.2s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#flow-l1"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" opacity="0.85">
+      <animateMotion dur="3.5s" repeatCount="indefinite" begin="0.4s">
+        <mpath href="#flow-l2"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" opacity="0.85">
+      <animateMotion dur="3.8s" repeatCount="indefinite" begin="0.8s">
+        <mpath href="#flow-c1"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" opacity="0.85">
+      <animateMotion dur="3.3s" repeatCount="indefinite" begin="1.2s">
+        <mpath href="#flow-c2"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" opacity="0.85">
+      <animateMotion dur="3.6s" repeatCount="indefinite" begin="0.2s">
+        <mpath href="#flow-c3"/>
+      </animateMotion>
+    </circle>
+    <circle r="3.5" opacity="0.85">
+      <animateMotion dur="3.4s" repeatCount="indefinite" begin="0.9s">
+        <mpath href="#flow-c4"/>
+      </animateMotion>
+    </circle>
+    <circle r="3" opacity="0.8">
+      <animateMotion dur="2.8s" repeatCount="indefinite" begin="0.5s">
+        <mpath href="#flow-n1"/>
+      </animateMotion>
+    </circle>
+    <circle r="3" opacity="0.8">
+      <animateMotion dur="2.6s" repeatCount="indefinite" begin="1s">
+        <mpath href="#flow-n2"/>
+      </animateMotion>
+    </circle>
+  </g>
+
+  <!-- 外圈节点：呼吸动效（错峰） -->
+  <!-- 左上大节点（实心渐变） -->
+  <circle cx="220" cy="130" r="42" fill="url(#hub-grad)" opacity="0.92">
+    <animate attributeName="r" values="42;44;42" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="220" cy="130" r="42" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.4">
+    <animate attributeName="r" values="42;44;42" dur="4s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- 右上节点（空心） -->
+  <circle cx="680" cy="140" r="36" fill="url(#node-grad)" stroke="#589ff8" stroke-width="2.2">
+    <animate attributeName="r" values="36;38;36" dur="4.5s" repeatCount="indefinite" begin="0.5s"/>
+  </circle>
+
+  <!-- 左下节点（空心） -->
+  <circle cx="200" cy="420" r="38" fill="url(#node-grad)" stroke="#589ff8" stroke-width="2.2">
+    <animate attributeName="r" values="38;40;38" dur="4.3s" repeatCount="indefinite" begin="1s"/>
+  </circle>
+
+  <!-- 右下大节点（实心渐变） -->
+  <circle cx="700" cy="420" r="42" fill="url(#hub-grad)" opacity="0.92">
+    <animate attributeName="r" values="42;44;42" dur="4.7s" repeatCount="indefinite" begin="1.5s"/>
+  </circle>
+  <circle cx="700" cy="420" r="42" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.4">
+    <animate attributeName="r" values="42;44;42" dur="4.7s" repeatCount="indefinite" begin="1.5s"/>
+  </circle>
+
+  <!-- 顶部中节点 -->
+  <circle cx="480" cy="130" r="28" fill="url(#node-grad)" stroke="#589ff8" stroke-width="2">
+    <animate attributeName="r" values="28;30;28" dur="3.8s" repeatCount="indefinite" begin="0.3s"/>
+  </circle>
+
+  <!-- 底部中节点 -->
+  <circle cx="480" cy="440" r="28" fill="url(#node-grad)" stroke="#589ff8" stroke-width="2">
+    <animate attributeName="r" values="28;30;28" dur="4.2s" repeatCount="indefinite" begin="0.8s"/>
+  </circle>
+
+  <!-- 次级节点（小，呼吸） -->
+  <circle cx="580" cy="200" r="18" fill="#589ff8" opacity="0.55">
+    <animate attributeName="opacity" values="0.55;0.85;0.55" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="320" cy="350" r="18" fill="#589ff8" opacity="0.55">
+    <animate attributeName="opacity" values="0.55;0.85;0.55" dur="3.4s" repeatCount="indefinite" begin="0.6s"/>
+  </circle>
+
+  <!-- 中央节点：呼吸 + 内层小圆呼吸 -->
+  <circle cx="450" cy="280" r="58" fill="url(#hub-grad)">
+    <animate attributeName="r" values="58;62;58" dur="3.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="450" cy="280" r="58" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.55">
+    <animate attributeName="r" values="58;62;58" dur="3.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="450" cy="280" r="24" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.45">
+    <animate attributeName="r" values="24;28;24" dur="3.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="450" cy="280" r="6" fill="#ffffff" opacity="0.8">
+    <animate attributeName="opacity" values="0.8;1;0.8" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+</svg>

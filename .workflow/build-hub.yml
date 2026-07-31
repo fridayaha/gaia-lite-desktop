@@ -1,0 +1,32 @@
+version: '1.0'
+name: build-hub
+displayName: 构建_Hub_服务
+triggers:
+  trigger: manual
+variables:
+  VERSION: "0.6.2"
+stages:
+  - name: build
+    displayName: 构建_Hub_镜像
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: build@docker
+        name: hub
+        displayName: Hub_API
+        type: account
+        repository: ${REGISTRY}
+        username: ${REGISTRY_USERNAME}
+        password: ${REGISTRY_PASSWORD}
+        tag: unionagents/hub:${VERSION}
+        dockerfile: ./services/hub/Dockerfile
+        context: .
+        artifacts: []
+        isCache: true
+        processorType:
+          - amd64
+        parameter: {}
+        notify: []
+        strategy:
+          retry: '0'

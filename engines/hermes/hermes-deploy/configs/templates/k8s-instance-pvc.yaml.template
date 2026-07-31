@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{PVC_NAME}}
+  namespace: hermes
+  labels:
+    app: hermes-gateway
+    instance: {{INSTANCE_ID}}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{PVC_SIZE}}

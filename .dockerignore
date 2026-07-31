@@ -1,0 +1,61 @@
+**/node_modules
+.pnpm-store
+.git
+.gitignore
+.gitkeep
+dist
+.vite
+.vscode
+.husky
+.eslintrc*
+.prettierrc*
+.editorconfig
+.lintstagedrc*
+*.md
+__pycache__
+*.pyc
+.env
+.env.*
+!.env.example
+Dockerfile*
+.dockerignore
+.gitattributes
+*.log
+.turbo
+coverage
+
+# Python virtualenv（本地 dev，Docker 构建不需要）
+.venv/
+
+# k8s 部署清单（kubectl apply，不进入镜像）
+deploy/
+
+# 根目录文档（旧），用 /docs/ 只排除根目录，不排除 apps/docs/
+/docs/
+
+# 每日构建归档（数十 GB 的 tar.gz，绝不能进入 Docker build context）
+builds/
+logs/
+
+# CI/CD pipeline 定义（Gitee Go 使用，不 COPY 进镜像）
+.workflow/
+
+# Claude Code 内部文件
+.claude/
+
+# Python 项目元数据（无 Dockerfile 引用）
+uv.lock
+pyproject.toml
+Makefile
+
+# 测试产物
+.pytest_cache/
+**/.pytest_cache/
+
+# Python 打包产物
+*.egg-info/
+**/*.egg-info/
+
+# Dockerfile.prebuilt 用本地预构建 dist 打包，取反上面 dist 排除规则
+!apps/admin/dist/
+!apps/docs/.vitepress/dist/

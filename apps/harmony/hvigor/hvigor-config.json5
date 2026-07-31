@@ -1,0 +1,10 @@
+{
+  "modelVersion": "5.0.0",
+  "dependencies": {
+    "@ohos/hvigor-ohos-plugin": "file:/Applications/DevEco-Studio.app/Contents/tools/hvigor/hvigor-ohos-plugin"
+  },
+  "execution": {},
+  "logging": {
+    "level": "info"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "app": {
+    "bundleName": "com.unionagents.enduser",
+    "vendor": "unionagents",
+    "versionCode": 2,
+    "versionName": "0.9.2",
+    "icon": "$media:app_icon",
+    "label": "$string:app_name",
+    "minAPIVersion": 12
+  }
+}

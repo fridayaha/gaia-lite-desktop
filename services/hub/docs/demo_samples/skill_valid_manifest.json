@@ -1,0 +1,45 @@
+{
+  "name": "Text Summarizer Skill",
+  "type": "skill",
+  "version": "1.0.0",
+  "manifest_version": "0.1",
+  "description": "对输入文本提取关键信息并生成摘要",
+  "instruction": "接收一段文本，分析其主旨和关键信息，以简洁语言生成摘要输出",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "text": {
+        "type": "string",
+        "description": "待摘要的原始文本"
+      },
+      "max_length": {
+        "type": "integer",
+        "description": "摘要最大字数",
+        "default": 200
+      }
+    },
+    "required": ["text"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "summary": {
+        "type": "string",
+        "description": "生成的摘要"
+      },
+      "keywords": {
+        "type": "array",
+        "items": {"type": "string"},
+        "description": "提取的关键词列表"
+      }
+    }
+  },
+  "permission_json": {
+    "allowed_actions": ["http_request"],
+    "scope": ["external_api"]
+  },
+  "runtime_compatibility": {
+    "platform": "linux",
+    "min_runtime_version": "1.0.0"
+  }
+}

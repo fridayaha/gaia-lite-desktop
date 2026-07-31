@@ -1,0 +1,27 @@
+# ============================================================
+# 依赖预构建镜像（CI 用）
+# ============================================================
+# 仅在 package.json / pnpm-lock.yaml 变更时需要重建。
+# 用法:
+#   docker build -f apps/admin/Dockerfile.deps \
+#     -t crpi-x1lxt7dogr41s0b4.cn-hangzhou.personal.cr.aliyuncs.com/unionagents/console-admin-deps:latest .
+#   docker push crpi-x1lxt7dogr41s0b4.cn-hangzhou.personal.cr.aliyuncs.com/unionagents/console-admin-deps:latest
+# ============================================================
+FROM docker.m.daocloud.io/library/node:22-alpine
+
+WORKDIR /app
+ENV CI=true
+ENV PNPM_HOME=/pnpm
+ENV PATH=$PNPM_HOME:$PATH
+
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# 用 apps/admin/ 下的 lockfile 确保与生产构建一致
+COPY apps/admin/pnpm-lock.yaml apps/admin/
+COPY apps/admin/package.json apps/admin/package.json
+
+# .npmrc 兜底：防止 pnpm 回退到 registry.npmjs.org
+RUN echo "registry=https://registry.npmmirror.com" > apps/admin/.npmrc
+
+RUN cd apps/admin && \
+    pnpm install --no-frozen-lockfile --ignore-scripts

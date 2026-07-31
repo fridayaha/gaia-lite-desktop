@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: langfuse-db-setup
+  namespace: unionagents
+  labels:
+    app: langfuse
+spec:
+  ttlSecondsAfterFinished: 600
+  backoffLimit: 5
+  template:
+    metadata:
+      labels:
+        app: langfuse
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: psql
+          image: postgres:16-alpine
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              echo "Waiting for postgres to be ready..."
+              until pg_isready -h postgres -p 5432 -U "$PGUSER"; do
+                sleep 2
+              done
+              echo "Creating langfuse database (idempotent)..."
+              psql -h postgres -p 5432 -U "$PGUSER" -d postgres -tc \
+                "SELECT 1 FROM pg_database WHERE datname='langfuse'" | grep -q 1 || \
+                psql -h postgres -p 5432 -U "$PGUSER" -d postgres -c \
+                "CREATE DATABASE langfuse"
+              echo "Granting privileges..."
+              psql -h postgres -p 5432 -U "$PGUSER" -d postgres -c \
+                "GRANT ALL PRIVILEGES ON DATABASE langfuse TO \"$PGUSER\";"
+              echo "Done."
+          env:
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: unionagents-secret
+                  key: pg-user
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: unionagents-secret
+                  key: pg-password
+          resources:
+            requests: { cpu: "50m", memory: "32Mi" }
+            limits: { cpu: "200m", memory: "128Mi" }

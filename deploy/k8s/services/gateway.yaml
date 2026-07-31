@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: gateway }
+  template:
+    metadata:
+      labels: { app: gateway }
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8010"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: gateway
+        image: unionagents/gateway:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8010
+        env:
+        - name: UA_JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: jwt-secret
+        - name: UA_API_SERVER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: api-server-key
+        - name: UA_K8S_NAMESPACE
+          value: "unionagents"
+        # controller 已并入 manager：/api/controller/* 由 manager:8002 提供
+        - name: UA_CONTROLLER_URL
+          value: "http://manager:8002"
+        # channel 模块(IM callback)需 DB 读写渠道配置/消息，与 manager 共用 unionagents DB
+        - name: UA_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: database-url
+        # Langfuse tracing（env 未配置时 gateway 自动 no-op，不影响请求）
+        - name: LANGFUSE_HOST
+          value: "http://langfuse.monitoring:3000"
+        - name: LANGFUSE_PUBLIC_KEY
+          valueFrom:
+            secretKeyRef:
+              name: langfuse-secret
+              key: langfuse-public-key
+        - name: LANGFUSE_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: langfuse-secret
+              key: langfuse-secret-key
+        # 语音 ASR（火山引擎 OpenSpeech 豆包 volc.seedasr.auc，submit+query 异步）。X-Api-Key 走 Secret，见方案 §七.1
+        - name: UA_ASR_PROVIDER
+          value: "volcengine"
+        - name: UA_ASR_VOLC_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: asr-volc-api-key
+        - name: UA_ASR_VOLC_RESOURCE_ID
+          value: "volc.seedasr.auc"
+        resources:
+          requests: { cpu: "100m", memory: "128Mi" }
+          limits: { cpu: "500m", memory: "256Mi" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+spec:
+  ports:
+  - port: 8010
+    targetPort: 8010
+  selector: { app: gateway }

@@ -1,0 +1,45 @@
+{
+  "enabled": true,
+  "platforms": {
+    "telegram": {
+      "enabled": false,
+      "bot_token": "",
+      "allowed_users": [],
+      "require_mention": true,
+      "session_timeout_minutes": 60
+    },
+    "discord": {
+      "enabled": false,
+      "bot_token": "",
+      "allowed_channels": [],
+      "require_mention": true,
+      "session_timeout_minutes": 60
+    },
+    "slack": {
+      "enabled": false,
+      "bot_token": "",
+      "app_token": "",
+      "allowed_channels": [],
+      "require_mention": true,
+      "session_timeout_minutes": 60
+    },
+    "api": {
+      "enabled": true,
+      "auth_enabled": false,
+      "api_keys": [],
+      "rate_limit": 100,
+      "rate_limit_window_seconds": 60
+    }
+  },
+  "session": {
+    "max_concurrent_sessions": 10,
+    "default_timeout_minutes": 60,
+    "cleanup_interval_minutes": 5
+  },
+  "logging": {
+    "level": "info",
+    "file": "gateway.log",
+    "max_size_mb": 10,
+    "max_files": 5
+  }
+}

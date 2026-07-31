@@ -1,0 +1,32 @@
+version: '1.0'
+name: build-enduser
+displayName: 构建用户门户前端
+triggers:
+  trigger: manual
+variables:
+  VERSION: "0.6.2"
+stages:
+  - name: build
+    displayName: 构建用户门户前端镜像
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: build@docker
+        name: enduser
+        displayName: 用户门户前端
+        type: account
+        repository: ${REGISTRY}
+        username: ${REGISTRY_USERNAME}
+        password: ${REGISTRY_PASSWORD}
+        tag: unionagents/enduser-portal:${VERSION}
+        dockerfile: ./apps/enduser/Dockerfile
+        context: .
+        artifacts: []
+        isCache: true
+        processorType:
+          - amd64
+        parameter: {}
+        notify: []
+        strategy:
+          retry: '0'

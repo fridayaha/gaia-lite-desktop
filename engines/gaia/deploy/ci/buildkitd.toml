@@ -1,0 +1,9 @@
+# BuildKit 配置：docker.io 镜像走 docker.1ms.run 加速
+# 用于 buildx docker-container driver 的 builder（解决构建时拉基础镜像超时）
+# Makefile 的 buildx-builder 目标会自动引用此文件创建 builder
+[registry."docker.io"]
+  mirrors = ["docker.1ms.run"]
+
+[registry."docker.1ms.run"]
+  http = false
+  insecure = false

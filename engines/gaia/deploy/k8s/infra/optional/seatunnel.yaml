@@ -1,0 +1,94 @@
+# SeaTunnel 2.3.13（Pipeline 引擎，单节点 Zeta）
+# 相比 docker-compose 的优化：master/worker 合并为单节点，hazelcast 只配 localhost。
+# entrypoint shim 必须保留（处理镜像自带 opengauss/postgresql 驱动冲突）。
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gaia-seatunnel
+  namespace: gaia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gaia-seatunnel
+  template:
+    metadata:
+      labels:
+        app: gaia-seatunnel
+    spec:
+      initContainers:
+        - name: wait-gravitino
+          image: nginx:alpine
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          command:
+            - sh
+            - -c
+            - "until wget -q -O- http://gaia-gravitino:8090/metrics >/dev/null 2>&1; do sleep 3; done"
+      containers:
+        - name: seatunnel
+          image: apache/seatunnel:2.3.13
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          command: ["/usr/local/bin/seatunnel-entrypoint.sh"]
+          args: ["/opt/seatunnel/bin/seatunnel-cluster.sh"]
+          ports:
+            - containerPort: 5801
+              name: hazelcast
+            - containerPort: 8080
+              name: http
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms256m -Xmx512m"
+            - name: AWS_REGION
+              value: us-east-1
+          volumeMounts:
+            - mountPath: /opt/seatunnel/config/seatunnel.yaml
+              subPath: seatunnel.yaml
+              name: config
+            - mountPath: /opt/seatunnel/config/hazelcast.yaml
+              subPath: hazelcast.yaml
+              name: config
+            - mountPath: /usr/local/bin/seatunnel-entrypoint.sh
+              subPath: seatunnel-entrypoint.sh
+              name: entrypoint
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+          readinessProbe:
+            tcpSocket:
+              port: 5801
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          livenessProbe:
+            tcpSocket:
+              port: 5801
+            initialDelaySeconds: 60
+            periodSeconds: 30
+      volumes:
+        - name: config
+          configMap:
+            name: gaia-seatunnel-config
+        - name: entrypoint
+          configMap:
+            name: gaia-seatunnel-entrypoint
+            defaultMode: 0755
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gaia-seatunnel
+  namespace: gaia
+spec:
+  ports:
+    - port: 5801
+      name: hazelcast
+      targetPort: 5801
+    - port: 8080
+      name: http
+      targetPort: 8080
+  selector:
+    app: gaia-seatunnel

@@ -1,0 +1,22 @@
+{
+  // HarmonyOS 应用签名配置示例。复制为 signing-config.json5 后填入真实路径，
+  // 由 hvigorw 在 release 构建时通过 --signing-configs=<path> 加载。
+  //
+  // 真实密钥（.p12 私钥库 + .cer 证书）请通过华为开发者联盟申请：
+  //   https://developer.huawei.com/consumer/cn/service/josp/agc/index.html#/myApp
+  //
+  // 严禁提交真实密钥到本仓库——signing-config.json5 已加入 .gitignore。
+  "material": {
+    "storePassword": "change-me",
+    "keyAlias": "change-me",
+    "keyPassword": "change-me",
+    "certPath": "/path/to/release.cer",
+    "storeFile": "/path/to/release.p12"
+  },
+  "products": [
+    {
+      "name": "default",
+      "signingConfig": "default"
+    }
+  ]
+}

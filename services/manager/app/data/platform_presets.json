@@ -1,0 +1,68 @@
+{
+  "_comment": "出厂预制 skill 清单。每个智能体模版创建时自动预填这些 skill（source=preset, builtin=true），开发者可在模版编辑页开关。SKILL.md 本体位于同目录 preset_skills/<name>/。Hermes 0 skill 也能跑，此清单是「开箱即用最小可用集」，非运行时硬需求。",
+  "presets": [
+    {
+      "name": "plan",
+      "description": "Plan mode: write an actionable markdown plan to .hermes/plans/, no execution. Bite-sized tasks, exact paths, complete code.",
+      "icon": "ri:clipboard-line",
+      "version": "2.0.0",
+      "author": "Hermes Agent",
+      "enabled_default": true,
+      "removable": true
+    },
+    {
+      "name": "searxng-search",
+      "description": "Free meta-search via SearXNG — aggregates results from 70+ search engines. Self-hosted or use a public instance. No API key needed.",
+      "icon": "ri:search-line",
+      "version": "1.0.0",
+      "author": "hermes-agent",
+      "enabled_default": true,
+      "removable": true
+    },
+    {
+      "name": "concept-diagrams",
+      "description": "Generate flat, minimal light/dark-aware SVG diagrams as standalone HTML files. Best suited for educational and non-software visuals.",
+      "icon": "ri:shape-line",
+      "version": "0.1.0",
+      "author": "v1k22, ported into hermes-agent",
+      "enabled_default": true,
+      "removable": true
+    },
+    {
+      "name": "fastmcp",
+      "description": "Build, test, inspect, install, and deploy MCP servers with FastMCP in Python. Use when creating a new MCP server or wrapping an API/database as MCP tools.",
+      "icon": "ri:plug-line",
+      "version": "1.0.0",
+      "author": "Hermes Agent",
+      "enabled_default": true,
+      "removable": true
+    },
+    {
+      "name": "one-three-one-rule",
+      "description": "Structured decision-making framework: one problem statement, three options with pros/cons, one recommendation with definition of done and implementation plan.",
+      "icon": "ri:list-check-3",
+      "version": "1.0.0",
+      "author": "Willard Moore",
+      "enabled_default": true,
+      "removable": true
+    },
+    {
+      "name": "im-channel-push",
+      "description": "IM 通道消息推送（出站，支持企微/钉钉/飞书等）。Cron 定时任务/主动提醒场景下向指定 IM 用户推送 markdown/text/卡片消息。通过 terminal 执行 send.py 调 gateway send 端点下发。",
+      "icon": "ri:send-plane-line",
+      "version": "1.0.0",
+      "author": "UnionAgents",
+      "enabled_default": true,
+      "removable": true
+    },
+    {
+      "name": "current-user-info",
+      "description": "查询当前用户基本信息（用户名/真实姓名/联系方式/角色/业务身份等）。处理任务需要当前用户自身信息时使用——每次调用返回数据库最新值，不依赖对话记忆。仅查询，不能修改用户信息。",
+      "icon": "ri:user-line",
+      "version": "1.0.0",
+      "author": "UnionAgents",
+      "enabled_default": true,
+      "removable": true
+    }
+  ]
+}

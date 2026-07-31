@@ -1,0 +1,8 @@
+shellEmulator: true
+shamefullyHoist: true
+enablePrePostScripts: false
+strictPeerDependencies: false
+minimumReleaseAge: 0
+
+allowBuilds:
+  esbuild: true

@@ -1,0 +1,1581 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>Hermes Skills 完整清单（172 个）</title>
+<style>
+:root{--bg:#0b1020;--card:#121a33;--txt:#e6ebff;--muted:#8a93b8;--bd:#243056;--accent:#6ea8ff;--ok:#3ddc97;--warn:#ffb454;--bad:#ff6b6b;--preset:#c084fc}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.55 -apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+header{padding:24px 32px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:rgba(11,16,32,.92);backdrop-filter:blur(8px);z-index:10}
+header h1{margin:0 0 6px;font-size:20px}
+header .sub{color:var(--muted);font-size:13px}
+.stats{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px}
+.stat{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px 14px;min-width:90px}
+.stat b{display:block;font-size:20px}
+.stat span{color:var(--muted);font-size:12px}
+.bar{height:8px;border-radius:6px;background:var(--card);margin-top:10px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.controls input,.controls select{background:var(--card);border:1px solid var(--bd);color:var(--txt);border-radius:8px;padding:8px 12px;font-size:13px}
+.controls input{flex:1;min-width:200px}
+.btns{display:flex;gap:6px;flex-wrap:wrap}
+.btns button{background:var(--card);border:1px solid var(--bd);color:var(--muted);border-radius:8px;padding:7px 12px;cursor:pointer;font-size:12px;transition:.15s}
+.btns button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btns button:hover{border-color:var(--accent)}
+main{padding:20px 32px 60px}
+.cat{margin:24px 0}
+.cat h2{font-size:15px;color:var(--accent);border-left:3px solid var(--accent);padding-left:10px;margin:18px 0 8px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--bd);vertical-align:top}
+th{background:#0e1530;color:var(--muted);font-size:12px;font-weight:600;position:sticky;top:120px}
+td.name{font-family:ui-monospace,Menlo,monospace;color:#9ec5ff;white-space:nowrap}
+td.src{font-size:12px;color:var(--muted)}
+td.src b.bundled{color:var(--ok)} 
+td.src b.optional{color:var(--warn)}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:4px;margin-right:4px;font-weight:600}
+.tag-preset{background:rgba(192,132,252,.18);color:var(--preset)}
+.tag-ban{background:rgba(255,107,107,.18);color:var(--bad)}
+.rec{font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;display:inline-block}
+.rec-预制{background:rgba(192,132,252,.18);color:var(--preset)}
+.rec-保留{background:rgba(61,220,151,.15);color:var(--ok)}
+.rec-移除{background:rgba(255,180,84,.15);color:var(--warn)}
+.rec-禁用{background:rgba(255,107,107,.18);color:var(--bad)}
+.flag{font-size:11px;color:var(--warn)}
+tr.hidden{display:none}
+tr:hover{background:rgba(110,168,255,.06)}
+footer{color:var(--muted);font-size:12px;text-align:center;padding:20px}
+.legend{color:var(--muted);font-size:12px;margin-top:8px}
+</style></head><body>
+<header>
+<h1>Hermes Agent Skills 完整清单</h1>
+<div class="sub">来源：NousResearch/hermes-agent 官方 catalog · bundled（官方镜像自带，安装即激活）+ optional（官网推荐，默认不激活）· 两者交集 0 · 共 172 个（bundled 72 + optional 100）</div>
+<div class="stats">
+<div class="stat"><b style="color:var(--preset)">5</b><span>出厂预制</span></div>
+<div class="stat"><b style="color:var(--ok)">103</b><span>建议保留</span></div>
+<div class="stat"><b style="color:var(--warn)">62</b><span>建议移除</span></div>
+<div class="stat"><b style="color:var(--bad)">2</b><span>禁用</span></div>
+</div>
+<div class="bar">
+<i style="width:2.9%;background:var(--preset)"></i>
+<i style="width:59.9%;background:var(--ok)"></i>
+<i style="width:36.0%;background:var(--warn)"></i>
+<i style="width:1.2%;background:var(--bad)"></i>
+</div>
+<div class="controls">
+<input id="q" placeholder="搜索 名称/作用/分类…" oninput="filt()">
+<select id="catf" onchange="filt()"><option value="">全部分类</option>
+<option value="mlops">mlops (37)</option>
+<option value="creative">creative (25)</option>
+<option value="productivity">productivity (16)</option>
+<option value="research">research (16)</option>
+<option value="software-development">software-development (12)</option>
+<option value="autonomous-ai-agents">autonomous-ai-agents (9)</option>
+<option value="finance">finance (8)</option>
+<option value="github">github (6)</option>
+<option value="apple">apple (5)</option>
+<option value="devops">devops (5)</option>
+<option value="security">security (5)</option>
+<option value="media">media (4)</option>
+<option value="blockchain">blockchain (3)</option>
+<option value="payments">payments (3)</option>
+<option value="dogfood">dogfood (2)</option>
+<option value="email">email (2)</option>
+<option value="gaming">gaming (2)</option>
+<option value="health">health (2)</option>
+<option value="mcp">mcp (2)</option>
+<option value="communication">communication (1)</option>
+<option value="data-science">data-science (1)</option>
+<option value="migration">migration (1)</option>
+<option value="note-taking">note-taking (1)</option>
+<option value="smart-home">smart-home (1)</option>
+<option value="social-media">social-media (1)</option>
+<option value="web-development">web-development (1)</option>
+<option value="yuanbao">yuanbao (1)</option>
+</select>
+<select id="srcf" onchange="filt()"><option value="">全部来源</option><option value="bundled">bundled 镜像自带</option><option value="optional">optional 官网推荐</option></select>
+<div class="btns" id="recbtns">
+<button data-rec="" class="active" onclick="setRec('')">全部</button>
+<button data-rec="预制" onclick="setRec('预制')">预制</button>
+<button data-rec="保留" onclick="setRec('保留')">保留</button>
+<button data-rec="移除" onclick="setRec('移除')">移除</button>
+<button data-rec="禁用" onclick="setRec('禁用')">禁用</button>
+</div>
+</div>
+<div class="legend">备注「境外/需Key」为关键词启发式自动标注，存在假阳性（如 plan/arxiv/searxng-search 实际无需 key），请二次复核。</div>
+</header>
+<main>
+<div class="cat"><h2>mlops · 37</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="mlops" data-src="bundled" data-rec="保留" data-name="audiocraft-audio-generation" data-desc="audiocraft: musicgen text-to-music, audiogen text-to-sound.">
+<td class="name">audiocraft-audio-generation</td>
+<td>AudioCraft: MusicGen text-to-music, AudioGen text-to-sound.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="bundled" data-rec="保留" data-name="evaluating-llms-harness" data-desc="lm-eval-harness: benchmark llms (mmlu, gsm8k, etc.).">
+<td class="name">evaluating-llms-harness</td>
+<td>lm-eval-harness: benchmark LLMs (MMLU, GSM8K, etc.).</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="bundled" data-rec="移除" data-name="huggingface-hub" data-desc="huggingface hf cli: search/download/upload models, datasets.">
+<td class="name">huggingface-hub</td>
+<td>HuggingFace hf CLI: search/download/upload models, datasets.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="mlops" data-src="bundled" data-rec="保留" data-name="llama-cpp" data-desc="llama.cpp local gguf inference + hf hub model discovery.">
+<td class="name">llama-cpp</td>
+<td>llama.cpp local GGUF inference + HF Hub model discovery.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="bundled" data-rec="保留" data-name="segment-anything-model" data-desc="sam: zero-shot image segmentation via points, boxes, masks.">
+<td class="name">segment-anything-model</td>
+<td>SAM: zero-shot image segmentation via points, boxes, masks.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="bundled" data-rec="移除" data-name="serving-llms-vllm" data-desc="vllm: high-throughput llm serving, openai api, quantization.">
+<td class="name">serving-llms-vllm</td>
+<td>vLLM: high-throughput LLM serving, OpenAI API, quantization.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="mlops" data-src="bundled" data-rec="移除" data-name="weights-and-biases" data-desc="w&amp;b: log ml experiments, sweeps, model registry, dashboards.">
+<td class="name">weights-and-biases</td>
+<td>W&amp;B: log ML experiments, sweeps, model registry, dashboards.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="axolotl" data-desc="axolotl: yaml llm fine-tuning (lora, dpo, grpo).">
+<td class="name">axolotl</td>
+<td>Axolotl: YAML LLM fine-tuning (LoRA, DPO, GRPO).</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="chroma" data-desc="open-source embedding database for ai applications. store embeddings and metadata, perform vector and full-text search, filter by metadata. simple 4-function api. scales from notebooks to production clusters. use for semantic search, rag...">
+<td class="name">chroma</td>
+<td>Open-source embedding database for AI applications. Store embeddings and metadata, perform vector and full-text search, filter by metadata. Simple 4-function API. Scales from notebooks to production clusters. Use for semantic search, RAG...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="移除" data-name="clip" data-desc="openai&#x27;s model connecting vision and language. enables zero-shot image classification, image-text matching, and cross-modal retrieval. trained on 400m image-text pairs. use for image search, content moderation, or vision-language tasks w...">
+<td class="name">clip</td>
+<td>OpenAI&#x27;s model connecting vision and language. Enables zero-shot image classification, image-text matching, and cross-modal retrieval. Trained on 400M image-text pairs. Use for image search, content moderation, or vision-language tasks w...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="distributed-llm-pretraining-torchtitan" data-desc="provides pytorch-native distributed llm pretraining using torchtitan with 4d parallelism (fsdp2, tp, pp, cp). use when pretraining llama 3.1, deepseek v3, or custom models at scale from 8 to 512+ gpus with float8, torch.compile, and dist...">
+<td class="name">distributed-llm-pretraining-torchtitan</td>
+<td>Provides PyTorch-native distributed LLM pretraining using torchtitan with 4D parallelism (FSDP2, TP, PP, CP). Use when pretraining Llama 3.1, DeepSeek V3, or custom models at scale from 8 to 512+ GPUs with Float8, torch.compile, and dist...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="dspy" data-desc="dspy: declarative lm programs, auto-optimize prompts, rag.">
+<td class="name">dspy</td>
+<td>DSPy: declarative LM programs, auto-optimize prompts, RAG.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="faiss" data-desc="facebook&#x27;s library for efficient similarity search and clustering of dense vectors. supports billions of vectors, gpu acceleration, and various index types (flat, ivf, hnsw). use for fast k-nn search, large-scale vector retrieval, or whe...">
+<td class="name">faiss</td>
+<td>Facebook&#x27;s library for efficient similarity search and clustering of dense vectors. Supports billions of vectors, GPU acceleration, and various index types (Flat, IVF, HNSW). Use for fast k-NN search, large-scale vector retrieval, or whe...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="fine-tuning-with-trl" data-desc="trl: sft, dpo, ppo, grpo, reward modeling for llm rlhf.">
+<td class="name">fine-tuning-with-trl</td>
+<td>TRL: SFT, DPO, PPO, GRPO, reward modeling for LLM RLHF.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="guidance" data-desc="control llm output with regex and grammars, guarantee valid json/xml/code generation, enforce structured formats, and build multi-step workflows with guidance - microsoft research&#x27;s constrained generation framework">
+<td class="name">guidance</td>
+<td>Control LLM output with regex and grammars, guarantee valid JSON/XML/code generation, enforce structured formats, and build multi-step workflows with Guidance - Microsoft Research&#x27;s constrained generation framework</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="huggingface-accelerate" data-desc="simplest distributed training api. 4 lines to add distributed support to any pytorch script. unified api for deepspeed/fsdp/megatron/ddp. automatic device placement, mixed precision (fp16/bf16/fp8). interactive config, single launch comm...">
+<td class="name">huggingface-accelerate</td>
+<td>Simplest distributed training API. 4 lines to add distributed support to any PyTorch script. Unified API for DeepSpeed/FSDP/Megatron/DDP. Automatic device placement, mixed precision (FP16/BF16/FP8). Interactive config, single launch comm...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="huggingface-tokenizers" data-desc="fast tokenizers optimized for research and production. rust-based implementation tokenizes 1gb in &amp;lt;20 seconds. supports bpe, wordpiece, and unigram algorithms. train custom vocabularies, track alignments, handle padding/truncation. integ...">
+<td class="name">huggingface-tokenizers</td>
+<td>Fast tokenizers optimized for research and production. Rust-based implementation tokenizes 1GB in &amp;lt;20 seconds. Supports BPE, WordPiece, and Unigram algorithms. Train custom vocabularies, track alignments, handle padding/truncation. Integ...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="instructor" data-desc="extract structured data from llm responses with pydantic validation, retry failed extractions automatically, parse complex json with type safety, and stream partial results with instructor - battle-tested structured output library">
+<td class="name">instructor</td>
+<td>Extract structured data from LLM responses with Pydantic validation, retry failed extractions automatically, parse complex JSON with type safety, and stream partial results with Instructor - battle-tested structured output library</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="lambda-labs-gpu-cloud" data-desc="reserved and on-demand gpu cloud instances for ml training and inference. use when you need dedicated gpu instances with simple ssh access, persistent filesystems, or high-performance multi-node clusters for large-scale training.">
+<td class="name">lambda-labs-gpu-cloud</td>
+<td>Reserved and on-demand GPU cloud instances for ML training and inference. Use when you need dedicated GPU instances with simple SSH access, persistent filesystems, or high-performance multi-node clusters for large-scale training.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="llava" data-desc="large language and vision assistant. enables visual instruction tuning and image-based conversations. combines clip vision encoder with vicuna/llama language models. supports multi-turn image chat, visual question answering, and instruct...">
+<td class="name">llava</td>
+<td>Large Language and Vision Assistant. Enables visual instruction tuning and image-based conversations. Combines CLIP vision encoder with Vicuna/LLaMA language models. Supports multi-turn image chat, visual question answering, and instruct...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="modal-serverless-gpu" data-desc="serverless gpu cloud platform for running ml workloads. use when you need on-demand gpu access without infrastructure management, deploying ml models as apis, or running batch jobs with automatic scaling.">
+<td class="name">modal-serverless-gpu</td>
+<td>Serverless GPU cloud platform for running ML workloads. Use when you need on-demand GPU access without infrastructure management, deploying ML models as APIs, or running batch jobs with automatic scaling.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="nemo-curator" data-desc="gpu-accelerated data curation for llm training. supports text/image/video/audio. features fuzzy deduplication (16× faster), quality filtering (30+ heuristics), semantic deduplication, pii redaction, nsfw detection. scales across gpus wit...">
+<td class="name">nemo-curator</td>
+<td>GPU-accelerated data curation for LLM training. Supports text/image/video/audio. Features fuzzy deduplication (16× faster), quality filtering (30+ heuristics), semantic deduplication, PII redaction, NSFW detection. Scales across GPUs wit...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="禁用" data-name="obliteratus" data-desc="obliteratus: abliterate llm refusals (diff-in-means).">
+<td class="name">obliteratus</td>
+<td>OBLITERATUS: abliterate LLM refusals (diff-in-means).</td>
+<td class="src"><b class="optional">optional</b></td>
+<td><span class="tag tag-ban">禁用</span></td>
+<td class="flag"></td>
+<td><span class="rec rec-禁用">禁用</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="optimizing-attention-flash" data-desc="optimizes transformer attention with flash attention for 2-4x speedup and 10-20x memory reduction. use when training/running transformers with long sequences (&gt;512 tokens), encountering gpu memory issues with attention, or need faster in...">
+<td class="name">optimizing-attention-flash</td>
+<td>Optimizes transformer attention with Flash Attention for 2-4x speedup and 10-20x memory reduction. Use when training/running transformers with long sequences (&gt;512 tokens), encountering GPU memory issues with attention, or need faster in...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="outlines" data-desc="outlines: structured json/regex/pydantic llm generation.">
+<td class="name">outlines</td>
+<td>Outlines: structured JSON/regex/Pydantic LLM generation.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="peft-fine-tuning" data-desc="parameter-efficient fine-tuning for llms using lora, qlora, and 25+ methods. use when fine-tuning large models (7b-70b) with limited gpu memory, when you need to train &amp;lt;1% of parameters with minimal accuracy loss, or for multi-adapter se...">
+<td class="name">peft-fine-tuning</td>
+<td>Parameter-efficient fine-tuning for LLMs using LoRA, QLoRA, and 25+ methods. Use when fine-tuning large models (7B-70B) with limited GPU memory, when you need to train &amp;lt;1% of parameters with minimal accuracy loss, or for multi-adapter se...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="pinecone" data-desc="managed vector database for production ai applications. fully managed, auto-scaling, with hybrid search (dense + sparse), metadata filtering, and namespaces. low latency (&amp;lt;100ms p95). use for production rag, recommendation systems, or se...">
+<td class="name">pinecone</td>
+<td>Managed vector database for production AI applications. Fully managed, auto-scaling, with hybrid search (dense + sparse), metadata filtering, and namespaces. Low latency (&amp;lt;100ms p95). Use for production RAG, recommendation systems, or se...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="pytorch-fsdp" data-desc="expert guidance for fully sharded data parallel training with pytorch fsdp - parameter sharding, mixed precision, cpu offloading, fsdp2">
+<td class="name">pytorch-fsdp</td>
+<td>Expert guidance for Fully Sharded Data Parallel training with PyTorch FSDP - parameter sharding, mixed precision, CPU offloading, FSDP2</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="pytorch-lightning" data-desc="high-level pytorch framework with trainer class, automatic distributed training (ddp/fsdp/deepspeed), callbacks system, and minimal boilerplate. scales from laptop to supercomputer with same code. use when you want clean training loops w...">
+<td class="name">pytorch-lightning</td>
+<td>High-level PyTorch framework with Trainer class, automatic distributed training (DDP/FSDP/DeepSpeed), callbacks system, and minimal boilerplate. Scales from laptop to supercomputer with same code. Use when you want clean training loops w...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="qdrant-vector-search" data-desc="high-performance vector similarity search engine for rag and semantic search. use when building production rag systems requiring fast nearest neighbor search, hybrid search with filtering, or scalable vector storage with rust-powered per...">
+<td class="name">qdrant-vector-search</td>
+<td>High-performance vector similarity search engine for RAG and semantic search. Use when building production RAG systems requiring fast nearest neighbor search, hybrid search with filtering, or scalable vector storage with Rust-powered per...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="simpo-training" data-desc="simple preference optimization for llm alignment. reference-free alternative to dpo with better performance (+6.4 points on alpacaeval 2.0). no reference model needed, more efficient than dpo. use for preference alignment when want simpl...">
+<td class="name">simpo-training</td>
+<td>Simple Preference Optimization for LLM alignment. Reference-free alternative to DPO with better performance (+6.4 points on AlpacaEval 2.0). No reference model needed, more efficient than DPO. Use for preference alignment when want simpl...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="slime-rl-training" data-desc="provides guidance for llm post-training with rl using slime, a megatron+sglang framework. use when training glm models, implementing custom data generation workflows, or needing tight megatron-lm integration for rl scaling.">
+<td class="name">slime-rl-training</td>
+<td>Provides guidance for LLM post-training with RL using slime, a Megatron+SGLang framework. Use when training GLM models, implementing custom data generation workflows, or needing tight Megatron-LM integration for RL scaling.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="sparse-autoencoder-training" data-desc="provides guidance for training and analyzing sparse autoencoders (saes) using saelens to decompose neural network activations into interpretable features. use when discovering interpretable features, analyzing superposition, or studying...">
+<td class="name">sparse-autoencoder-training</td>
+<td>Provides guidance for training and analyzing Sparse Autoencoders (SAEs) using SAELens to decompose neural network activations into interpretable features. Use when discovering interpretable features, analyzing superposition, or studying...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="移除" data-name="stable-diffusion-image-generation" data-desc="state-of-the-art text-to-image generation with stable diffusion models via huggingface diffusers. use when generating images from text prompts, performing image-to-image translation, inpainting, or building custom diffusion pipelines.">
+<td class="name">stable-diffusion-image-generation</td>
+<td>State-of-the-art text-to-image generation with Stable Diffusion models via HuggingFace Diffusers. Use when generating images from text prompts, performing image-to-image translation, inpainting, or building custom diffusion pipelines.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="tensorrt-llm" data-desc="optimizes llm inference with nvidia tensorrt for maximum throughput and lowest latency. use for production deployment on nvidia gpus (a100/h100), when you need 10-100x faster inference than pytorch, or for serving models with quantizatio...">
+<td class="name">tensorrt-llm</td>
+<td>Optimizes LLM inference with NVIDIA TensorRT for maximum throughput and lowest latency. Use for production deployment on NVIDIA GPUs (A100/H100), when you need 10-100x faster inference than PyTorch, or for serving models with quantizatio...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="保留" data-name="unsloth" data-desc="unsloth: 2-5x faster lora/qlora fine-tuning, less vram.">
+<td class="name">unsloth</td>
+<td>Unsloth: 2-5x faster LoRA/QLoRA fine-tuning, less VRAM.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="mlops" data-src="optional" data-rec="移除" data-name="whisper" data-desc="openai&#x27;s general-purpose speech recognition model. supports 99 languages, transcription, translation to english, and language identification. six model sizes from tiny (39m params) to large (1550m params). use for speech-to-text, podcast...">
+<td class="name">whisper</td>
+<td>OpenAI&#x27;s general-purpose speech recognition model. Supports 99 languages, transcription, translation to English, and language identification. Six model sizes from tiny (39M params) to large (1550M params). Use for speech-to-text, podcast...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>creative · 25</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="creative" data-src="bundled" data-rec="保留" data-name="architecture-diagram" data-desc="dark-themed svg architecture/cloud/infra diagrams as html.">
+<td class="name">architecture-diagram</td>
+<td>Dark-themed SVG architecture/cloud/infra diagrams as HTML.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="bundled" data-rec="保留" data-name="ascii-art" data-desc="ascii art: pyfiglet, cowsay, boxes, image-to-ascii.">
+<td class="name">ascii-art</td>
+<td>ASCII art: pyfiglet, cowsay, boxes, image-to-ascii.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="bundled" data-rec="保留" data-name="ascii-video" data-desc="ascii video: convert video/audio to colored ascii mp4/gif.">
+<td class="name">ascii-video</td>
+<td>ASCII video: convert video/audio to colored ASCII MP4/GIF.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="bundled" data-rec="保留" data-name="baoyu-infographic" data-desc="infographics: 21 layouts x 21 styles (信息图, 可视化).">
+<td class="name">baoyu-infographic</td>
+<td>Infographics: 21 layouts x 21 styles (信息图, 可视化).</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="bundled" data-rec="保留" data-name="claude-design" data-desc="design one-off html artifacts (landing, deck, prototype).">
+<td class="name">claude-design</td>
+<td>Design one-off HTML artifacts (landing, deck, prototype).</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="bundled" data-rec="保留" data-name="comfyui" data-desc="generate images, video, and audio with comfyui — install, launch, manage nodes/models, run workflows with parameter injection. uses the official comfy-cli for lifecycle and direct rest/websocket api for execution.">
+<td class="name">comfyui</td>
+<td>Generate images, video, and audio with ComfyUI — install, launch, manage nodes/models, run workflows with parameter injection. Uses the official comfy-cli for lifecycle and direct REST/WebSocket API for execution.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="bundled" data-rec="移除" data-name="design-md" data-desc="author/validate/export google&#x27;s design.md token spec files.">
+<td class="name">design-md</td>
+<td>Author/validate/export Google&#x27;s DESIGN.md token spec files.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外/需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="creative" data-src="bundled" data-rec="保留" data-name="excalidraw" data-desc="hand-drawn excalidraw json diagrams (arch, flow, seq).">
+<td class="name">excalidraw</td>
+<td>Hand-drawn Excalidraw JSON diagrams (arch, flow, seq).</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="bundled" data-rec="保留" data-name="humanizer" data-desc="humanize text: strip ai-isms and add real voice.">
+<td class="name">humanizer</td>
+<td>Humanize text: strip AI-isms and add real voice.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="bundled" data-rec="保留" data-name="manim-video" data-desc="manim ce animations: 3blue1brown math/algo videos.">
+<td class="name">manim-video</td>
+<td>Manim CE animations: 3Blue1Brown math/algo videos.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="bundled" data-rec="保留" data-name="p5js" data-desc="p5.js sketches: gen art, shaders, interactive, 3d.">
+<td class="name">p5js</td>
+<td>p5.js sketches: gen art, shaders, interactive, 3D.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="bundled" data-rec="移除" data-name="popular-web-designs" data-desc="54 real design systems (stripe, linear, vercel) as html/css.">
+<td class="name">popular-web-designs</td>
+<td>54 real design systems (Stripe, Linear, Vercel) as HTML/CSS.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="creative" data-src="bundled" data-rec="保留" data-name="pretext" data-desc="use when building creative browser demos with @chenglou/pretext — dom-free text layout for ascii art, typographic flow around obstacles, text-as-geometry games, kinetic typography, and text-powered generative art. produces single-file ht...">
+<td class="name">pretext</td>
+<td>Use when building creative browser demos with @chenglou/pretext — DOM-free text layout for ASCII art, typographic flow around obstacles, text-as-geometry games, kinetic typography, and text-powered generative art. Produces single-file HT...</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="bundled" data-rec="保留" data-name="sketch" data-desc="throwaway html mockups: 2-3 design variants to compare.">
+<td class="name">sketch</td>
+<td>Throwaway HTML mockups: 2-3 design variants to compare.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="bundled" data-rec="移除" data-name="songwriting-and-ai-music" data-desc="songwriting craft and suno ai music prompts.">
+<td class="name">songwriting-and-ai-music</td>
+<td>Songwriting craft and Suno AI music prompts.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="creative" data-src="bundled" data-rec="保留" data-name="touchdesigner-mcp" data-desc="control a running touchdesigner instance via twozero mcp — create operators, set parameters, wire connections, execute python, build real-time visuals. 36 native tools.">
+<td class="name">touchdesigner-mcp</td>
+<td>Control a running TouchDesigner instance via twozero MCP — create operators, set parameters, wire connections, execute Python, build real-time visuals. 36 native tools.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="optional" data-rec="保留" data-name="baoyu-article-illustrator" data-desc="article illustrations: type × style × palette consistency.">
+<td class="name">baoyu-article-illustrator</td>
+<td>Article illustrations: type × style × palette consistency.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="optional" data-rec="保留" data-name="baoyu-comic" data-desc="knowledge comics (知识漫画): educational, biography, tutorial.">
+<td class="name">baoyu-comic</td>
+<td>Knowledge comics (知识漫画): educational, biography, tutorial.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="optional" data-rec="保留" data-name="blender-mcp" data-desc="control blender directly from hermes via socket connection to the blender-mcp addon. create 3d objects, materials, animations, and run arbitrary blender python (bpy) code. use when user wants to create or modify anything in blender.">
+<td class="name">blender-mcp</td>
+<td>Control Blender directly from Hermes via socket connection to the blender-mcp addon. Create 3D objects, materials, animations, and run arbitrary Blender Python (bpy) code. Use when user wants to create or modify anything in Blender.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="optional" data-rec="预制" data-name="concept-diagrams" data-desc="generate flat, minimal light/dark-aware svg diagrams as standalone html files, using a unified educational visual language with 9 semantic color ramps, sentence-case typography, and automatic dark mode. best suited for educational and no...">
+<td class="name">concept-diagrams</td>
+<td>Generate flat, minimal light/dark-aware SVG diagrams as standalone HTML files, using a unified educational visual language with 9 semantic color ramps, sentence-case typography, and automatic dark mode. Best suited for educational and no...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td><span class="tag tag-preset">预制</span></td>
+<td class="flag"></td>
+<td><span class="rec rec-预制">预制</span></td>
+</tr>
+<tr data-cat="creative" data-src="optional" data-rec="保留" data-name="creative-ideation" data-desc="generate ideas via named methods from creative practice.">
+<td class="name">creative-ideation</td>
+<td>Generate ideas via named methods from creative practice.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="optional" data-rec="保留" data-name="hyperframes" data-desc="create html-based video compositions, animated title cards, social overlays, captioned talking-head videos, audio-reactive visuals, and shader transitions using hyperframes. html is the source of truth for video. use when the user wants...">
+<td class="name">hyperframes</td>
+<td>Create HTML-based video compositions, animated title cards, social overlays, captioned talking-head videos, audio-reactive visuals, and shader transitions using HyperFrames. HTML is the source of truth for video. Use when the user wants...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="optional" data-rec="保留" data-name="kanban-video-orchestrator" data-desc="plan, set up, and monitor a multi-agent video production pipeline backed by hermes kanban. use when the user wants to make any video — narrative film, product/marketing, music video, explainer, ascii/terminal art, abstract/generative loo...">
+<td class="name">kanban-video-orchestrator</td>
+<td>Plan, set up, and monitor a multi-agent video production pipeline backed by Hermes Kanban. Use when the user wants to make ANY video — narrative film, product/marketing, music video, explainer, ASCII/terminal art, abstract/generative loo...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="optional" data-rec="保留" data-name="meme-generation" data-desc="generate real meme images by picking a template and overlaying text with pillow. produces actual .png meme files.">
+<td class="name">meme-generation</td>
+<td>Generate real meme images by picking a template and overlaying text with Pillow. Produces actual .png meme files.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="creative" data-src="optional" data-rec="保留" data-name="pixel-art" data-desc="pixel art w/ era palettes (nes, game boy, pico-8).">
+<td class="name">pixel-art</td>
+<td>Pixel art w/ era palettes (NES, Game Boy, PICO-8).</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>productivity · 16</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="productivity" data-src="bundled" data-rec="移除" data-name="airtable" data-desc="airtable rest api via curl. records crud, filters, upserts.">
+<td class="name">airtable</td>
+<td>Airtable REST API via curl. Records CRUD, filters, upserts.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="productivity" data-src="bundled" data-rec="移除" data-name="google-workspace" data-desc="gmail, calendar, drive, docs, sheets via gws cli or python.">
+<td class="name">google-workspace</td>
+<td>Gmail, Calendar, Drive, Docs, Sheets via gws CLI or Python.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="productivity" data-src="bundled" data-rec="保留" data-name="maps" data-desc="geocode, pois, routes, timezones via openstreetmap/osrm.">
+<td class="name">maps</td>
+<td>Geocode, POIs, routes, timezones via OpenStreetMap/OSRM.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="productivity" data-src="bundled" data-rec="保留" data-name="nano-pdf" data-desc="edit pdf text/typos/titles via nano-pdf cli (nl prompts).">
+<td class="name">nano-pdf</td>
+<td>Edit PDF text/typos/titles via nano-pdf CLI (NL prompts).</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="productivity" data-src="bundled" data-rec="移除" data-name="notion" data-desc="notion api + ntn cli: pages, databases, markdown, workers.">
+<td class="name">notion</td>
+<td>Notion API + ntn CLI: pages, databases, markdown, Workers.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="productivity" data-src="bundled" data-rec="保留" data-name="ocr-and-documents" data-desc="extract text from pdfs/scans (pymupdf, marker-pdf).">
+<td class="name">ocr-and-documents</td>
+<td>Extract text from PDFs/scans (pymupdf, marker-pdf).</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="productivity" data-src="bundled" data-rec="保留" data-name="petdex" data-desc="install and select animated petdex mascots for hermes.">
+<td class="name">petdex</td>
+<td>Install and select animated petdex mascots for Hermes.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="productivity" data-src="bundled" data-rec="保留" data-name="powerpoint" data-desc="create, read, edit .pptx decks, slides, notes, templates.">
+<td class="name">powerpoint</td>
+<td>Create, read, edit .pptx decks, slides, notes, templates.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="productivity" data-src="bundled" data-rec="保留" data-name="teams-meeting-pipeline" data-desc="operate the teams meeting summary pipeline via hermes cli — summarize meetings, inspect pipeline status, replay jobs, manage microsoft graph subscriptions.">
+<td class="name">teams-meeting-pipeline</td>
+<td>Operate the Teams meeting summary pipeline via Hermes CLI — summarize meetings, inspect pipeline status, replay jobs, manage Microsoft Graph subscriptions.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="productivity" data-src="optional" data-rec="移除" data-name="canvas" data-desc="canvas lms integration — fetch enrolled courses and assignments using api token authentication.">
+<td class="name">canvas</td>
+<td>Canvas LMS integration — fetch enrolled courses and assignments using API token authentication.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="productivity" data-src="optional" data-rec="保留" data-name="here.now" data-desc="publish static sites to &amp;#123;slug&amp;#125;.here.now and store private files in cloud drives for agent-to-agent handoff.">
+<td class="name">here.now</td>
+<td>Publish static sites to &amp;#123;slug&amp;#125;.here.now and store private files in cloud Drives for agent-to-agent handoff.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="productivity" data-src="optional" data-rec="移除" data-name="memento-flashcards" data-desc="spaced-repetition flashcard system. create cards from facts or text, chat with flashcards using free-text answers graded by the agent, generate quizzes from youtube transcripts, review due cards with adaptive scheduling, and export/impor...">
+<td class="name">memento-flashcards</td>
+<td>Spaced-repetition flashcard system. Create cards from facts or text, chat with flashcards using free-text answers graded by the agent, generate quizzes from YouTube transcripts, review due cards with adaptive scheduling, and export/impor...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="productivity" data-src="optional" data-rec="保留" data-name="shop" data-desc="shop catalog search, checkout, order tracking, returns.">
+<td class="name">shop</td>
+<td>Shop catalog search, checkout, order tracking, returns.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="productivity" data-src="optional" data-rec="移除" data-name="shopify" data-desc="shopify admin &amp; storefront graphql apis via curl. products, orders, customers, inventory, metafields.">
+<td class="name">shopify</td>
+<td>Shopify Admin &amp; Storefront GraphQL APIs via curl. Products, orders, customers, inventory, metafields.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="productivity" data-src="optional" data-rec="保留" data-name="siyuan" data-desc="siyuan note api for searching, reading, creating, and managing blocks and documents in a self-hosted knowledge base via curl.">
+<td class="name">siyuan</td>
+<td>SiYuan Note API for searching, reading, creating, and managing blocks and documents in a self-hosted knowledge base via curl.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="productivity" data-src="optional" data-rec="移除" data-name="telephony" data-desc="give hermes phone capabilities without core tool changes. provision and persist a twilio number, send and receive sms/mms, make direct calls, and place ai-driven outbound calls through bland.ai or vapi.">
+<td class="name">telephony</td>
+<td>Give Hermes phone capabilities without core tool changes. Provision and persist a Twilio number, send and receive SMS/MMS, make direct calls, and place AI-driven outbound calls through Bland.ai or Vapi.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>research · 16</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="research" data-src="bundled" data-rec="移除" data-name="arxiv" data-desc="search arxiv papers by keyword, author, category, or id.">
+<td class="name">arxiv</td>
+<td>Search arXiv papers by keyword, author, category, or ID.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="research" data-src="bundled" data-rec="保留" data-name="blogwatcher" data-desc="monitor blogs and rss/atom feeds via blogwatcher-cli tool.">
+<td class="name">blogwatcher</td>
+<td>Monitor blogs and RSS/Atom feeds via blogwatcher-cli tool.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="research" data-src="bundled" data-rec="移除" data-name="llm-wiki" data-desc="karpathy&#x27;s llm wiki: build/query interlinked markdown kb.">
+<td class="name">llm-wiki</td>
+<td>Karpathy&#x27;s LLM Wiki: build/query interlinked markdown KB.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="research" data-src="bundled" data-rec="移除" data-name="polymarket" data-desc="query polymarket: markets, prices, orderbooks, history.">
+<td class="name">polymarket</td>
+<td>Query Polymarket: markets, prices, orderbooks, history.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="research" data-src="bundled" data-rec="保留" data-name="research-paper-writing" data-desc="write ml papers for neurips/icml/iclr: design→submit.">
+<td class="name">research-paper-writing</td>
+<td>Write ML papers for NeurIPS/ICML/ICLR: design→submit.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="research" data-src="optional" data-rec="保留" data-name="bioinformatics" data-desc="gateway to 400+ bioinformatics skills from bioskills and clawbio. covers genomics, transcriptomics, single-cell, variant calling, pharmacogenomics, metagenomics, structural biology, and more. fetches domain-specific reference material on...">
+<td class="name">bioinformatics</td>
+<td>Gateway to 400+ bioinformatics skills from bioSkills and ClawBio. Covers genomics, transcriptomics, single-cell, variant calling, pharmacogenomics, metagenomics, structural biology, and more. Fetches domain-specific reference material on...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="research" data-src="optional" data-rec="保留" data-name="darwinian-evolver" data-desc="evolve prompts/regex/sql/code with imbue&#x27;s evolution loop.">
+<td class="name">darwinian-evolver</td>
+<td>Evolve prompts/regex/SQL/code with Imbue&#x27;s evolution loop.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="research" data-src="optional" data-rec="移除" data-name="domain-intel" data-desc="passive domain reconnaissance using python stdlib. subdomain discovery, ssl certificate inspection, whois lookups, dns records, domain availability checks, and bulk multi-domain analysis. no api keys required.">
+<td class="name">domain-intel</td>
+<td>Passive domain reconnaissance using Python stdlib. Subdomain discovery, SSL certificate inspection, WHOIS lookups, DNS records, domain availability checks, and bulk multi-domain analysis. No API keys required.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="research" data-src="optional" data-rec="保留" data-name="drug-discovery" data-desc="pharmaceutical research assistant for drug discovery workflows. search bioactive compounds on chembl, calculate drug-likeness (lipinski ro5, qed, tpsa, synthetic accessibility), look up drug-drug interactions via openfda, interpret admet...">
+<td class="name">drug-discovery</td>
+<td>Pharmaceutical research assistant for drug discovery workflows. Search bioactive compounds on ChEMBL, calculate drug-likeness (Lipinski Ro5, QED, TPSA, synthetic accessibility), look up drug-drug interactions via OpenFDA, interpret ADMET...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="research" data-src="optional" data-rec="移除" data-name="duckduckgo-search" data-desc="free web search via duckduckgo — text, news, images, videos. no api key needed. prefer the `ddgs` cli when installed; use the python ddgs library only after verifying that `ddgs` is available in the current runtime.">
+<td class="name">duckduckgo-search</td>
+<td>Free web search via DuckDuckGo — text, news, images, videos. No API key needed. Prefer the `ddgs` CLI when installed; use the Python DDGS library only after verifying that `ddgs` is available in the current runtime.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="research" data-src="optional" data-rec="移除" data-name="gitnexus-explorer" data-desc="index a codebase with gitnexus and serve an interactive knowledge graph via web ui + cloudflare tunnel.">
+<td class="name">gitnexus-explorer</td>
+<td>Index a codebase with GitNexus and serve an interactive knowledge graph via web UI + Cloudflare tunnel.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="research" data-src="optional" data-rec="保留" data-name="osint-investigation" data-desc="public-records osint investigation framework — sec edgar filings, usaspending contracts, senate lobbying, ofac sanctions, icij offshore leaks, nyc property records (acris), opencorporates registries, courtlistener court records, wayback...">
+<td class="name">osint-investigation</td>
+<td>Public-records OSINT investigation framework — SEC EDGAR filings, USAspending contracts, Senate lobbying, OFAC sanctions, ICIJ offshore leaks, NYC property records (ACRIS), OpenCorporates registries, CourtListener court records, Wayback...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="research" data-src="optional" data-rec="移除" data-name="parallel-cli" data-desc="optional vendor skill for parallel cli — agent-native web search, extraction, deep research, enrichment, findall, and monitoring. prefer json output and non-interactive flows.">
+<td class="name">parallel-cli</td>
+<td>Optional vendor skill for Parallel CLI — agent-native web search, extraction, deep research, enrichment, FindAll, and monitoring. Prefer JSON output and non-interactive flows.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="research" data-src="optional" data-rec="保留" data-name="qmd" data-desc="search personal knowledge bases, notes, docs, and meeting transcripts locally using qmd — a hybrid retrieval engine with bm25, vector search, and llm reranking. supports cli and mcp integration.">
+<td class="name">qmd</td>
+<td>Search personal knowledge bases, notes, docs, and meeting transcripts locally using qmd — a hybrid retrieval engine with BM25, vector search, and LLM reranking. Supports CLI and MCP integration.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="research" data-src="optional" data-rec="移除" data-name="scrapling" data-desc="web scraping with scrapling - http fetching, stealth browser automation, cloudflare bypass, and spider crawling via cli and python.">
+<td class="name">scrapling</td>
+<td>Web scraping with Scrapling - HTTP fetching, stealth browser automation, Cloudflare bypass, and spider crawling via CLI and Python.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="research" data-src="optional" data-rec="预制" data-name="searxng-search" data-desc="free meta-search via searxng — aggregates results from 70+ search engines. self-hosted or use a public instance. no api key needed. falls back automatically when the web search toolset is unavailable.">
+<td class="name">searxng-search</td>
+<td>Free meta-search via SearXNG — aggregates results from 70+ search engines. Self-hosted or use a public instance. No API key needed. Falls back automatically when the web search toolset is unavailable.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td><span class="tag tag-preset">预制</span></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-预制">预制</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>software-development · 12</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="software-development" data-src="bundled" data-rec="移除" data-name="hermes-agent-skill-authoring" data-desc="author in-repo skill.md: frontmatter, validator, structure.">
+<td class="name">hermes-agent-skill-authoring</td>
+<td>Author in-repo SKILL.md: frontmatter, validator, structure.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="software-development" data-src="bundled" data-rec="保留" data-name="node-inspect-debugger" data-desc="debug node.js via --inspect + chrome devtools protocol cli.">
+<td class="name">node-inspect-debugger</td>
+<td>Debug Node.js via --inspect + Chrome DevTools Protocol CLI.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="software-development" data-src="bundled" data-rec="预制" data-name="plan" data-desc="plan mode: write an actionable markdown plan to .hermes/plans/, no execution. bite-sized tasks, exact paths, complete code.">
+<td class="name">plan</td>
+<td>Plan mode: write an actionable markdown plan to .hermes/plans/, no execution. Bite-sized tasks, exact paths, complete code.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td><span class="tag tag-preset">预制</span></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-预制">预制</span></td>
+</tr>
+<tr data-cat="software-development" data-src="bundled" data-rec="保留" data-name="python-debugpy" data-desc="debug python: pdb repl + debugpy remote (dap).">
+<td class="name">python-debugpy</td>
+<td>Debug Python: pdb REPL + debugpy remote (DAP).</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="software-development" data-src="bundled" data-rec="保留" data-name="requesting-code-review" data-desc="pre-commit review: security scan, quality gates, auto-fix.">
+<td class="name">requesting-code-review</td>
+<td>Pre-commit review: security scan, quality gates, auto-fix.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="software-development" data-src="bundled" data-rec="保留" data-name="simplify-code" data-desc="parallel 3-agent cleanup of recent code changes.">
+<td class="name">simplify-code</td>
+<td>Parallel 3-agent cleanup of recent code changes.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="software-development" data-src="bundled" data-rec="保留" data-name="spike" data-desc="throwaway experiments to validate an idea before build.">
+<td class="name">spike</td>
+<td>Throwaway experiments to validate an idea before build.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="software-development" data-src="bundled" data-rec="保留" data-name="systematic-debugging" data-desc="4-phase root cause debugging: understand bugs before fixing.">
+<td class="name">systematic-debugging</td>
+<td>4-phase root cause debugging: understand bugs before fixing.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="software-development" data-src="bundled" data-rec="保留" data-name="test-driven-development" data-desc="tdd: enforce red-green-refactor, tests before code.">
+<td class="name">test-driven-development</td>
+<td>TDD: enforce RED-GREEN-REFACTOR, tests before code.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="software-development" data-src="optional" data-rec="保留" data-name="code-wiki" data-desc="generate wiki docs + mermaid diagrams for any codebase.">
+<td class="name">code-wiki</td>
+<td>Generate wiki docs + Mermaid diagrams for any codebase.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="software-development" data-src="optional" data-rec="移除" data-name="rest-graphql-debug" data-desc="debug rest/graphql apis: status codes, auth, schemas, repro.">
+<td class="name">rest-graphql-debug</td>
+<td>Debug REST/GraphQL APIs: status codes, auth, schemas, repro.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="software-development" data-src="optional" data-rec="保留" data-name="subagent-driven-development" data-desc="execute plans via delegate_task subagents (2-stage review).">
+<td class="name">subagent-driven-development</td>
+<td>Execute plans via delegate_task subagents (2-stage review).</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>autonomous-ai-agents · 9</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="autonomous-ai-agents" data-src="bundled" data-rec="移除" data-name="claude-code" data-desc="delegate coding to claude code cli (features, prs).">
+<td class="name">claude-code</td>
+<td>Delegate coding to Claude Code CLI (features, PRs).</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="autonomous-ai-agents" data-src="bundled" data-rec="移除" data-name="codex" data-desc="delegate coding to openai codex cli (features, prs).">
+<td class="name">codex</td>
+<td>Delegate coding to OpenAI Codex CLI (features, PRs).</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="autonomous-ai-agents" data-src="bundled" data-rec="保留" data-name="hermes-agent" data-desc="configure, extend, or contribute to hermes agent.">
+<td class="name">hermes-agent</td>
+<td>Configure, extend, or contribute to Hermes Agent.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="autonomous-ai-agents" data-src="bundled" data-rec="保留" data-name="opencode" data-desc="delegate coding to opencode cli (features, pr review).">
+<td class="name">opencode</td>
+<td>Delegate coding to OpenCode CLI (features, PR review).</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="autonomous-ai-agents" data-src="optional" data-rec="移除" data-name="antigravity-cli" data-desc="operate the antigravity cli (agy): plugins, auth, sandbox.">
+<td class="name">antigravity-cli</td>
+<td>Operate the Antigravity CLI (agy): plugins, auth, sandbox.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外/需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="autonomous-ai-agents" data-src="optional" data-rec="移除" data-name="blackbox" data-desc="delegate coding tasks to blackbox ai cli agent. multi-model agent with built-in judge that runs tasks through multiple llms and picks the best result. requires the blackbox cli and a blackbox ai api key.">
+<td class="name">blackbox</td>
+<td>Delegate coding tasks to Blackbox AI CLI agent. Multi-model agent with built-in judge that runs tasks through multiple LLMs and picks the best result. Requires the blackbox CLI and a Blackbox AI API key.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外/需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="autonomous-ai-agents" data-src="optional" data-rec="移除" data-name="grok" data-desc="delegate coding to xai grok build cli (features, prs).">
+<td class="name">grok</td>
+<td>Delegate coding to xAI Grok Build CLI (features, PRs).</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="autonomous-ai-agents" data-src="optional" data-rec="移除" data-name="honcho" data-desc="configure and use honcho memory with hermes -- cross-session user modeling, multi-profile peer isolation, observation config, dialectic reasoning, session summaries, and context budget enforcement. use when setting up honcho, troubleshoo...">
+<td class="name">honcho</td>
+<td>Configure and use Honcho memory with Hermes -- cross-session user modeling, multi-profile peer isolation, observation config, dialectic reasoning, session summaries, and context budget enforcement. Use when setting up Honcho, troubleshoo...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="autonomous-ai-agents" data-src="optional" data-rec="移除" data-name="openhands" data-desc="delegate coding to openhands cli (model-agnostic, litellm).">
+<td class="name">openhands</td>
+<td>Delegate coding to OpenHands CLI (model-agnostic, LiteLLM).</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>finance · 8</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="finance" data-src="optional" data-rec="移除" data-name="3-statement-model" data-desc="build fully-integrated 3-statement models (is, bs, cf) in excel with working capital schedules, d&amp;a roll-forwards, debt schedule, and the plugs that make cash and retained earnings tie. pairs with excel-author.">
+<td class="name">3-statement-model</td>
+<td>Build fully-integrated 3-statement models (IS, BS, CF) in Excel with working capital schedules, D&amp;A roll-forwards, debt schedule, and the plugs that make cash and retained earnings tie. Pairs with excel-author.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="finance" data-src="optional" data-rec="移除" data-name="comps-analysis" data-desc="build comparable company analysis in excel — operating metrics, valuation multiples, statistical benchmarking vs peer sets. pairs with excel-author. use for public-company valuation, ipo pricing, sector benchmarking, or outlier detection.">
+<td class="name">comps-analysis</td>
+<td>Build comparable company analysis in Excel — operating metrics, valuation multiples, statistical benchmarking vs peer sets. Pairs with excel-author. Use for public-company valuation, IPO pricing, sector benchmarking, or outlier detection.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="finance" data-src="optional" data-rec="移除" data-name="dcf-model" data-desc="build institutional-quality dcf valuation models in excel — revenue projections, fcf build, wacc, terminal value, bear/base/bull scenarios, 5x5 sensitivity tables. pairs with excel-author. use for intrinsic-value equity analysis.">
+<td class="name">dcf-model</td>
+<td>Build institutional-quality DCF valuation models in Excel — revenue projections, FCF build, WACC, terminal value, Bear/Base/Bull scenarios, 5x5 sensitivity tables. Pairs with excel-author. Use for intrinsic-value equity analysis.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="finance" data-src="optional" data-rec="保留" data-name="excel-author" data-desc="build auditable excel workbooks headless with openpyxl — blue/black/green cell conventions, formulas over hardcodes, named ranges, balance checks, sensitivity tables. use for financial models, audit outputs, reconciliations.">
+<td class="name">excel-author</td>
+<td>Build auditable Excel workbooks headless with openpyxl — blue/black/green cell conventions, formulas over hardcodes, named ranges, balance checks, sensitivity tables. Use for financial models, audit outputs, reconciliations.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="finance" data-src="optional" data-rec="移除" data-name="lbo-model" data-desc="build leveraged buyout models in excel — sources &amp; uses, debt schedule, cash sweep, exit multiple, irr/moic sensitivity. pairs with excel-author. use for pe screening, sponsor-case valuation, or illustrative lbo in a pitch.">
+<td class="name">lbo-model</td>
+<td>Build leveraged buyout models in Excel — sources &amp; uses, debt schedule, cash sweep, exit multiple, IRR/MOIC sensitivity. Pairs with excel-author. Use for PE screening, sponsor-case valuation, or illustrative LBO in a pitch.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="finance" data-src="optional" data-rec="移除" data-name="merger-model" data-desc="build accretion/dilution (merger) models in excel — pro-forma p&amp;l, synergies, financing mix, eps impact. pairs with excel-author. use for m&amp;a pitches, board materials, or deal evaluation.">
+<td class="name">merger-model</td>
+<td>Build accretion/dilution (merger) models in Excel — pro-forma P&amp;L, synergies, financing mix, EPS impact. Pairs with excel-author. Use for M&amp;A pitches, board materials, or deal evaluation.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="finance" data-src="optional" data-rec="移除" data-name="pptx-author" data-desc="build powerpoint decks headless with python-pptx. pairs with excel-author for model-backed decks where every number traces to a workbook cell. use for pitch decks, ic memos, earnings notes.">
+<td class="name">pptx-author</td>
+<td>Build PowerPoint decks headless with python-pptx. Pairs with excel-author for model-backed decks where every number traces to a workbook cell. Use for pitch decks, IC memos, earnings notes.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="finance" data-src="optional" data-rec="保留" data-name="stocks" data-desc="stock quotes, history, search, compare, crypto via yahoo.">
+<td class="name">stocks</td>
+<td>Stock quotes, history, search, compare, crypto via Yahoo.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>github · 6</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="github" data-src="bundled" data-rec="保留" data-name="codebase-inspection" data-desc="inspect codebases w/ pygount: loc, languages, ratios.">
+<td class="name">codebase-inspection</td>
+<td>Inspect codebases w/ pygount: LOC, languages, ratios.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="github" data-src="bundled" data-rec="移除" data-name="github-auth" data-desc="github auth setup: https tokens, ssh keys, gh cli login.">
+<td class="name">github-auth</td>
+<td>GitHub auth setup: HTTPS tokens, SSH keys, gh CLI login.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外/需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="github" data-src="bundled" data-rec="保留" data-name="github-code-review" data-desc="review prs: diffs, inline comments via gh or rest.">
+<td class="name">github-code-review</td>
+<td>Review PRs: diffs, inline comments via gh or REST.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="github" data-src="bundled" data-rec="移除" data-name="github-issues" data-desc="create, triage, label, assign github issues via gh or rest.">
+<td class="name">github-issues</td>
+<td>Create, triage, label, assign GitHub issues via gh or REST.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="github" data-src="bundled" data-rec="移除" data-name="github-pr-workflow" data-desc="github pr lifecycle: branch, commit, open, ci, merge.">
+<td class="name">github-pr-workflow</td>
+<td>GitHub PR lifecycle: branch, commit, open, CI, merge.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="github" data-src="bundled" data-rec="保留" data-name="github-repo-management" data-desc="clone/create/fork repos; manage remotes, releases.">
+<td class="name">github-repo-management</td>
+<td>Clone/create/fork repos; manage remotes, releases.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>apple · 5</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="apple" data-src="bundled" data-rec="移除" data-name="apple-notes" data-desc="manage apple notes via memo cli: create, search, edit.">
+<td class="name">apple-notes</td>
+<td>Manage Apple Notes via memo CLI: create, search, edit.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="apple" data-src="bundled" data-rec="保留" data-name="apple-reminders" data-desc="apple reminders via remindctl: add, list, complete.">
+<td class="name">apple-reminders</td>
+<td>Apple Reminders via remindctl: add, list, complete.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="apple" data-src="bundled" data-rec="移除" data-name="findmy" data-desc="track apple devices/airtags via findmy.app on macos.">
+<td class="name">findmy</td>
+<td>Track Apple devices/AirTags via FindMy.app on macOS.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="apple" data-src="bundled" data-rec="移除" data-name="imessage" data-desc="send and receive imessages/sms via the imsg cli on macos.">
+<td class="name">imessage</td>
+<td>Send and receive iMessages/SMS via the imsg CLI on macOS.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="apple" data-src="bundled" data-rec="移除" data-name="macos-computer-use" data-desc="drive the macos desktop in the background — screenshots, mouse, keyboard, scroll, drag — without stealing the user&#x27;s cursor, keyboard focus, or space. works with any tool-capable model. load this skill whenever the `computer_use` tool is...">
+<td class="name">macos-computer-use</td>
+<td>Drive the macOS desktop in the background — screenshots, mouse, keyboard, scroll, drag — without stealing the user&#x27;s cursor, keyboard focus, or Space. Works with any tool-capable model. Load this skill whenever the `computer_use` tool is...</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>devops · 5</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="devops" data-src="optional" data-rec="保留" data-name="docker-management" data-desc="manage docker containers, images, volumes, networks, and compose stacks — lifecycle ops, debugging, cleanup, and dockerfile optimization.">
+<td class="name">docker-management</td>
+<td>Manage Docker containers, images, volumes, networks, and Compose stacks — lifecycle ops, debugging, cleanup, and Dockerfile optimization.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="devops" data-src="optional" data-rec="移除" data-name="hermes-s6-container-supervision" data-desc="modify, debug, or extend the s6-overlay supervision tree inside the hermes agent docker image — adding new services, debugging profile gateways, understanding the architecture b main-program pattern.">
+<td class="name">hermes-s6-container-supervision</td>
+<td>Modify, debug, or extend the s6-overlay supervision tree inside the Hermes Agent Docker image — adding new services, debugging profile gateways, understanding the Architecture B main-program pattern.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="devops" data-src="optional" data-rec="移除" data-name="inference-sh-cli" data-desc="run 150+ ai apps via inference.sh cli (infsh) — image generation, video creation, llms, search, 3d, social automation. uses the terminal tool. triggers: inference.sh, infsh, ai apps, flux, veo, image generation, video generation, seedrea...">
+<td class="name">inference-sh-cli</td>
+<td>Run 150+ AI apps via inference.sh CLI (infsh) — image generation, video creation, LLMs, search, 3D, social automation. Uses the terminal tool. Triggers: inference.sh, infsh, ai apps, flux, veo, image generation, video generation, seedrea...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="devops" data-src="optional" data-rec="保留" data-name="pinggy-tunnel" data-desc="zero-install localhost tunnels over ssh via pinggy.">
+<td class="name">pinggy-tunnel</td>
+<td>Zero-install localhost tunnels over SSH via Pinggy.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="devops" data-src="optional" data-rec="移除" data-name="watchers" data-desc="poll rss, json apis, and github with watermark dedup.">
+<td class="name">watchers</td>
+<td>Poll RSS, JSON APIs, and GitHub with watermark dedup.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>security · 5</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="security" data-src="optional" data-rec="移除" data-name="1password" data-desc="set up and use 1password cli (op). use when installing the cli, enabling desktop app integration, signing in, and reading/injecting secrets for commands.">
+<td class="name">1password</td>
+<td>Set up and use 1Password CLI (op). Use when installing the CLI, enabling desktop app integration, signing in, and reading/injecting secrets for commands.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="security" data-src="optional" data-rec="禁用" data-name="godmode" data-desc="jailbreak llms: parseltongue, godmode, ultraplinian.">
+<td class="name">godmode</td>
+<td>Jailbreak LLMs: Parseltongue, GODMODE, ULTRAPLINIAN.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td><span class="tag tag-ban">禁用</span></td>
+<td class="flag"></td>
+<td><span class="rec rec-禁用">禁用</span></td>
+</tr>
+<tr data-cat="security" data-src="optional" data-rec="移除" data-name="oss-forensics" data-desc="supply chain investigation, evidence recovery, and forensic analysis for github repositories. covers deleted commit recovery, force-push detection, ioc extraction, multi-source evidence collection, hypothesis formation/validation, and st...">
+<td class="name">oss-forensics</td>
+<td>Supply chain investigation, evidence recovery, and forensic analysis for GitHub repositories. Covers deleted commit recovery, force-push detection, IOC extraction, multi-source evidence collection, hypothesis formation/validation, and st...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="security" data-src="optional" data-rec="保留" data-name="sherlock" data-desc="osint username search across 400+ social networks. hunt down social media accounts by username.">
+<td class="name">sherlock</td>
+<td>OSINT username search across 400+ social networks. Hunt down social media accounts by username.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="security" data-src="optional" data-rec="移除" data-name="web-pentest" data-desc="authorized web application penetration testing — reconnaissance, vulnerability analysis, proof-based exploitation, and professional reporting. adapts shannon&#x27;s &quot;no exploit, no report&quot; methodology with hard guardrails for scope, authoriza...">
+<td class="name">web-pentest</td>
+<td>Authorized web application penetration testing — reconnaissance, vulnerability analysis, proof-based exploitation, and professional reporting. Adapts Shannon&#x27;s &quot;No Exploit, No Report&quot; methodology with hard guardrails for scope, authoriza...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>media · 4</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="media" data-src="bundled" data-rec="移除" data-name="gif-search" data-desc="search/download gifs from tenor via curl + jq.">
+<td class="name">gif-search</td>
+<td>Search/download GIFs from Tenor via curl + jq.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="media" data-src="bundled" data-rec="移除" data-name="heartmula" data-desc="heartmula: suno-like song generation from lyrics + tags.">
+<td class="name">heartmula</td>
+<td>HeartMuLa: Suno-like song generation from lyrics + tags.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="media" data-src="bundled" data-rec="保留" data-name="songsee" data-desc="audio spectrograms/features (mel, chroma, mfcc) via cli.">
+<td class="name">songsee</td>
+<td>Audio spectrograms/features (mel, chroma, MFCC) via CLI.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="media" data-src="bundled" data-rec="移除" data-name="youtube-content" data-desc="youtube transcripts to summaries, threads, blogs.">
+<td class="name">youtube-content</td>
+<td>YouTube transcripts to summaries, threads, blogs.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>blockchain · 3</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="blockchain" data-src="optional" data-rec="保留" data-name="evm" data-desc="read-only evm client: wallets, tokens, gas across 8 chains.">
+<td class="name">evm</td>
+<td>Read-only EVM client: wallets, tokens, gas across 8 chains.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="blockchain" data-src="optional" data-rec="保留" data-name="hyperliquid" data-desc="hyperliquid market data, account history, trade review.">
+<td class="name">hyperliquid</td>
+<td>Hyperliquid market data, account history, trade review.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="blockchain" data-src="optional" data-rec="移除" data-name="solana" data-desc="query solana blockchain data with usd pricing — wallet balances, token portfolios with values, transaction details, nfts, whale detection, and live network stats. uses solana rpc + coingecko. no api key required.">
+<td class="name">solana</td>
+<td>Query Solana blockchain data with USD pricing — wallet balances, token portfolios with values, transaction details, NFTs, whale detection, and live network stats. Uses Solana RPC + CoinGecko. No API key required.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>payments · 3</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="payments" data-src="optional" data-rec="保留" data-name="mpp-agent" data-desc="pay http 402 apis via machine payments protocol (mpp).">
+<td class="name">mpp-agent</td>
+<td>Pay HTTP 402 APIs via Machine Payments Protocol (MPP).</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="payments" data-src="optional" data-rec="移除" data-name="stripe-link-cli" data-desc="agent payments via stripe link — cards, spt, approvals.">
+<td class="name">stripe-link-cli</td>
+<td>Agent payments via Stripe Link — cards, SPT, approvals.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+<tr data-cat="payments" data-src="optional" data-rec="移除" data-name="stripe-projects" data-desc="provision saas services + sync creds via stripe projects.">
+<td class="name">stripe-projects</td>
+<td>Provision SaaS services + sync creds via Stripe Projects.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>dogfood · 2</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="dogfood" data-src="bundled" data-rec="保留" data-name="dogfood" data-desc="exploratory qa of web apps: find bugs, evidence, reports.">
+<td class="name">dogfood</td>
+<td>Exploratory QA of web apps: find bugs, evidence, reports.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="dogfood" data-src="optional" data-rec="保留" data-name="adversarial-ux-test" data-desc="roleplay the most difficult, tech-resistant user for your product. browse the app as that persona, find every ux pain point, then filter complaints through a pragmatism layer to separate real problems from noise. creates actionable ticke...">
+<td class="name">adversarial-ux-test</td>
+<td>Roleplay the most difficult, tech-resistant user for your product. Browse the app as that persona, find every UX pain point, then filter complaints through a pragmatism layer to separate real problems from noise. Creates actionable ticke...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>email · 2</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="email" data-src="bundled" data-rec="保留" data-name="himalaya" data-desc="himalaya cli: imap/smtp email from terminal.">
+<td class="name">himalaya</td>
+<td>Himalaya CLI: IMAP/SMTP email from terminal.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="email" data-src="optional" data-rec="移除" data-name="agentmail" data-desc="give the agent its own dedicated email inbox via agentmail. send, receive, and manage email autonomously using agent-owned email addresses (e.g. hermes-agent@agentmail.to).">
+<td class="name">agentmail</td>
+<td>Give the agent its own dedicated email inbox via AgentMail. Send, receive, and manage email autonomously using agent-owned email addresses (e.g. hermes-agent@agentmail.to).</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>gaming · 2</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="gaming" data-src="optional" data-rec="保留" data-name="minecraft-modpack-server" data-desc="host modded minecraft servers (curseforge, modrinth).">
+<td class="name">minecraft-modpack-server</td>
+<td>Host modded Minecraft servers (CurseForge, Modrinth).</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="gaming" data-src="optional" data-rec="保留" data-name="pokemon-player" data-desc="play pokemon via headless emulator + ram reads.">
+<td class="name">pokemon-player</td>
+<td>Play Pokemon via headless emulator + RAM reads.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>health · 2</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="health" data-src="optional" data-rec="保留" data-name="fitness-nutrition" data-desc="gym workout planner and nutrition tracker. search 690+ exercises by muscle, equipment, or category via wger. look up macros and calories for 380,000+ foods via usda fooddata central. compute bmi, tdee, one-rep max, macro splits, and body...">
+<td class="name">fitness-nutrition</td>
+<td>Gym workout planner and nutrition tracker. Search 690+ exercises by muscle, equipment, or category via wger. Look up macros and calories for 380,000+ foods via USDA FoodData Central. Compute BMI, TDEE, one-rep max, macro splits, and body...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+<tr data-cat="health" data-src="optional" data-rec="保留" data-name="neuroskill-bci" data-desc="connect to a running neuroskill instance and incorporate the user&#x27;s real-time cognitive and emotional state (focus, relaxation, mood, cognitive load, drowsiness, heart rate, hrv, sleep staging, and 40+ derived exg scores) into responses....">
+<td class="name">neuroskill-bci</td>
+<td>Connect to a running NeuroSkill instance and incorporate the user&#x27;s real-time cognitive and emotional state (focus, relaxation, mood, cognitive load, drowsiness, heart rate, HRV, sleep staging, and 40+ derived EXG scores) into responses....</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>mcp · 2</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="mcp" data-src="optional" data-rec="预制" data-name="fastmcp" data-desc="build, test, inspect, install, and deploy mcp servers with fastmcp in python. use when creating a new mcp server, wrapping an api or database as mcp tools, exposing resources or prompts, or preparing a fastmcp server for claude code, cur...">
+<td class="name">fastmcp</td>
+<td>Build, test, inspect, install, and deploy MCP servers with FastMCP in Python. Use when creating a new MCP server, wrapping an API or database as MCP tools, exposing resources or prompts, or preparing a FastMCP server for Claude Code, Cur...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td><span class="tag tag-preset">预制</span></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-预制">预制</span></td>
+</tr>
+<tr data-cat="mcp" data-src="optional" data-rec="移除" data-name="mcporter" data-desc="use the mcporter cli to list, configure, auth, and call mcp servers/tools directly (http or stdio), including ad-hoc servers, config edits, and cli/type generation.">
+<td class="name">mcporter</td>
+<td>Use the mcporter CLI to list, configure, auth, and call MCP servers/tools directly (HTTP or stdio), including ad-hoc servers, config edits, and CLI/type generation.</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>communication · 1</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="communication" data-src="optional" data-rec="预制" data-name="one-three-one-rule" data-desc="structured decision-making framework for technical proposals and trade-off analysis. when the user faces a choice between multiple approaches (architecture decisions, tool selection, refactoring strategies, migration paths), this skill p...">
+<td class="name">one-three-one-rule</td>
+<td>Structured decision-making framework for technical proposals and trade-off analysis. When the user faces a choice between multiple approaches (architecture decisions, tool selection, refactoring strategies, migration paths), this skill p...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td><span class="tag tag-preset">预制</span></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-预制">预制</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>data-science · 1</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="data-science" data-src="bundled" data-rec="保留" data-name="jupyter-live-kernel" data-desc="iterative python via live jupyter kernel (hamelnb).">
+<td class="name">jupyter-live-kernel</td>
+<td>Iterative Python via live Jupyter kernel (hamelnb).</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>migration · 1</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="migration" data-src="optional" data-rec="移除" data-name="openclaw-migration" data-desc="migrate a user&#x27;s openclaw customization footprint into hermes agent. imports hermes-compatible memories, soul.md, command allowlists, user skills, and selected workspace assets from ~/.openclaw, then reports exactly what could not be mig...">
+<td class="name">openclaw-migration</td>
+<td>Migrate a user&#x27;s OpenClaw customization footprint into Hermes Agent. Imports Hermes-compatible memories, SOUL.md, command allowlists, user skills, and selected workspace assets from ~/.openclaw, then reports exactly what could not be mig...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag">需Key</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>note-taking · 1</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="note-taking" data-src="bundled" data-rec="保留" data-name="obsidian" data-desc="read, search, create, and edit notes in the obsidian vault.">
+<td class="name">obsidian</td>
+<td>Read, search, create, and edit notes in the Obsidian vault.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>smart-home · 1</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="smart-home" data-src="bundled" data-rec="保留" data-name="openhue" data-desc="control philips hue lights, scenes, rooms via openhue cli.">
+<td class="name">openhue</td>
+<td>Control Philips Hue lights, scenes, rooms via OpenHue CLI.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>social-media · 1</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="social-media" data-src="bundled" data-rec="移除" data-name="xurl" data-desc="x/twitter via xurl cli: post, search, dm, media, v2 api.">
+<td class="name">xurl</td>
+<td>X/Twitter via xurl CLI: post, search, DM, media, v2 API.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag">境外</td>
+<td><span class="rec rec-移除">移除</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>web-development · 1</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="web-development" data-src="optional" data-rec="保留" data-name="page-agent" data-desc="embed alibaba/page-agent into your own web application — a pure-javascript in-page gui agent that ships as a single &amp;lt;script&gt; tag or npm package and lets end-users of your site drive the ui with natural language (&quot;click login, fill userna...">
+<td class="name">page-agent</td>
+<td>Embed alibaba/page-agent into your own web application — a pure-JavaScript in-page GUI agent that ships as a single &amp;lt;script&gt; tag or npm package and lets end-users of your site drive the UI with natural language (&quot;click login, fill userna...</td>
+<td class="src"><b class="optional">optional</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+</table></div>
+<div class="cat"><h2>yuanbao · 1</h2><table>
+<tr><th>名称</th><th>作用</th><th>来源</th><th>标签</th><th>备注</th><th>建议</th></tr>
+<tr data-cat="yuanbao" data-src="bundled" data-rec="保留" data-name="yuanbao" data-desc="yuanbao (元宝) groups: @mention users, query info/members.">
+<td class="name">yuanbao</td>
+<td>Yuanbao (元宝) groups: @mention users, query info/members.</td>
+<td class="src"><b class="bundled">bundled</b></td>
+<td></td>
+<td class="flag"></td>
+<td><span class="rec rec-保留">保留</span></td>
+</tr>
+</table></div>
+</main>
+<footer>生成自 NousResearch/hermes-agent 官方 skills-catalog.md + optional-skills-catalog.md · UnionAgents 平台裁剪复核用</footer>
+<script>
+let curRec='';
+function setRec(r){curRec=r;document.querySelectorAll('#recbtns button').forEach(b=>b.classList.toggle('active',b.dataset.rec===r));filt();}
+function filt(){
+  const q=document.getElementById('q').value.trim().toLowerCase();
+  const c=document.getElementById('catf').value;
+  const s=document.getElementById('srcf').value;
+  document.querySelectorAll('tbody tr, table tr').forEach(tr=>{
+    if(!tr.dataset.name)return;
+    const okQ=!q||tr.dataset.name.includes(q)||tr.dataset.desc.includes(q)||(tr.dataset.cat||'').includes(q);
+    const okC=!c||tr.dataset.cat===c;
+    const okS=!s||tr.dataset.src===s;
+    const okR=!curRec||tr.dataset.rec===curRec;
+    tr.classList.toggle('hidden',!(okQ&&okC&&okS&&okR));
+  });
+}
+</script></body></html>

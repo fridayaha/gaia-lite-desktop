@@ -1,0 +1,31 @@
+# PostgreSQL 配置 + 初始化脚本（ConfigMap）
+# 镜像 ngosang/timescaledb-postgis 自带 postgis/timescaledb/pgcrypto 扩展库，
+# 这里只挂载 postgresql.conf（含 shared_preload_libraries='timescaledb'）和
+# docker-entrypoint-initdb.d 初始化 SQL（建 gravitino_store schema + 激活扩展）。
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gaia-postgres-config
+  namespace: gaia
+data:
+  postgresql.conf: |
+    # Gaia PostgreSQL config — shared by business-ontology metadata and
+    # Gravitino entity store. Enables logical replication so SeaTunnel's
+    # PostgreSQL-CDC source can stream via WAL logical decoding.
+    wal_level = logical
+    max_replication_slots = 10
+    max_wal_senders = 10
+    # TimescaleDB 需预加载才能启用超表功能。
+    shared_preload_libraries = 'timescaledb'
+    listen_addresses = '*'
+  00-extensions.sql: |
+    -- 激活图关联推理与时空分析所需扩展（随镜像预装，此处仅 CREATE EXTENSION）
+    CREATE EXTENSION IF NOT EXISTS postgis;
+    CREATE EXTENSION IF NOT EXISTS timescaledb;
+    CREATE EXTENSION IF NOT EXISTS pgcrypto;
+  01-init-schema.sql: |
+    -- 建 gravitino_store schema（Gravitino Entity Store 物理隔离）
+    CREATE SCHEMA IF NOT EXISTS gravitino_store;
+    -- pgcrypto: gen_random_bytes/gen_random_uuid，Alembic 与运行时依赖
+    CREATE EXTENSION IF NOT EXISTS pgcrypto;

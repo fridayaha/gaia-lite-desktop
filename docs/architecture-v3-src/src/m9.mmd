@@ -1,0 +1,16 @@
+stateDiagram-v2
+    [*] --> PENDING: create_instance
+    PENDING --> DEPLOYING: deploy
+    DEPLOYING --> RUNNING: Pod Ready
+    RUNNING --> SUSPENDED: suspend 或 idle 30min
+    SUSPENDED --> RUNNING: resume
+    RUNNING --> FAILED: Pod 异常
+    SUSPENDED --> ARCHIVED: destroy 或 idle 24h
+    FAILED --> PENDING: 重新 deploy
+    ARCHIVED --> PENDING: 重新 deploy
+    RUNNING --> RUNNING: restart 滚动重启
+    note right of SUSPENDED
+        SUSPEND 即归档: scale0 + tar 到 MinIO backups/
+        PVC 实时写零开销, resume 优先用 PVC
+        DESTROY 仅清 K8s, 数据转 archives/ 永久留存
+    end note

@@ -1,0 +1,18 @@
+{
+  "name": "customer-profile-update",
+  "version": "2.3.3",
+  "author": "DongFeng",
+  "industries": ["automotive"],
+  "description": "车企销售顾问查询/更新客户画像。模糊检索客户→展示画像卡，更新画像跳转外部系统。支持基于画像详情（成交意愿/情绪/标签/动机/抗性/雷达图/推理依据）的多轮问答，详情来自 GET /api/v1/remote/data/profile/{phone}。",
+  "icon": "ri:user-search-line",
+  "engine": ["HERMES"],
+  "config_params": [
+    {
+      "name": "api_key",
+      "label": "画像系统 API Key",
+      "type": "string",
+      "secret": true,
+      "description": "客户画像系统鉴权密钥，通过 sidecar 解密后以 X-API-Key 头调用画像 API。"
+    }
+  ]
+}

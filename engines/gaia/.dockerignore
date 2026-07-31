@@ -1,0 +1,50 @@
+# ── VCS ──
+.git/
+.gitignore
+.gitattributes
+
+# ── Python cache ──
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+.venv/
+*.egg-info/
+# dist/build：排除宿主构建产物（web-ui/better-auth 两阶段构建在容器内重新生成）
+dist/
+build/
+
+# ── 前端依赖（两阶段构建在容器内安装，不需宿主 node_modules）──
+src/web-ui/node_modules/
+auth-server/node_modules/
+
+# ── Dev / CI ──
+tests/
+.github/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pre-commit-config.yaml
+.editorconfig
+.python-version
+
+# ── Docs & Config (mounted at runtime, not needed in image) ──
+docs/
+config/
+# 例外：Trino gravitino connector 插件必须烤入镜像（Dockerfile.trino COPY）
+!config/trino/gravitino/
+scripts/
+monitoring/
+infra/
+# 例外：JDBC 驱动 jar 必须烤入 gravitino-libs 镜像（Dockerfile.gravitino-libs COPY）
+!infra/jars/
+CLAUDE.md
+*.md
+
+# ── Environment & Compose ──
+.env*
+docker-compose*.yml
+Dockerfile
+.dockerignore
+
+# ── Lockfiles & tools ──
+# (pyproject.toml & uv.lock are needed by builder stage — do NOT ignore)

@@ -1,0 +1,41 @@
+{
+  "skill_name": "store-insight",
+  "evals": [
+    {
+      "id": 1,
+      "name": "quan-yuan-pai-hang",
+      "prompt": "帮我查一下这个月所有员工的销售量和试驾量排行，从高到低排",
+      "expected_output": "包含员工的销量排行 Markdown 表格 + 柱状图 PNG",
+      "assertions": [
+        "SQL 成功执行并返回多行数据",
+        "输出包含 Markdown 表格（有 姓名 / 销量 / 试驾量 列）",
+        "生成了 output/ 目录下的图表 PNG 文件",
+        "图表是柱状图类型"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "zhuan-hua-lv-qu-shi",
+      "prompt": "按天统计这个月的试驾转化率，看看哪天转化最好",
+      "expected_output": "每日试驾转化率折线图 + 最高最低点标注",
+      "assertions": [
+        "SQL 成功执行",
+        "输出包含每日转化率的 Markdown 表格",
+        "生成了折线图 PNG 文件",
+        "图表标注了最高点和最低点",
+        "表格包含 日期 / 试驾转化率 列"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "mu-biao-wan-cheng-lu",
+      "prompt": "看看这个月的销售目标完成了多少",
+      "expected_output": "目标 vs 已完成对比分析",
+      "assertions": [
+        "SQL 成功执行",
+        "输出包含目标值、当前完成值、完成率",
+        "完成率以百分比形式展示"
+      ]
+    }
+  ]
+}

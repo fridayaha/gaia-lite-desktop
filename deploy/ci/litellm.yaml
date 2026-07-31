@@ -1,0 +1,103 @@
+# ============================================================
+# LiteLLM Proxy — 云上统一模型网关
+# 引擎不再直连外部供应商，全部经 LiteLLM /v1/* OpenAI 兼容端点
+# 依赖 unionagents-secret:
+#   litellm-database-url  (postgresql://user:pass@host:5432/litellm)
+#   litellm-master-key    (manager 管理 LiteLLM 的 Bearer 凭据)
+#   litellm-salt-key      (加密上游供应商凭据，设后不可改)
+# litellm database 需预先在云 PG 创建（deploy.sh 已含幂等创建步骤）
+# ============================================================
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: litellm-config
+data:
+  config.yaml: |
+    model_list: []
+    general_settings:
+      store_model_in_db: true
+    litellm_settings:
+      drop_params: true
+      request_timeout: 600
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: litellm
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: litellm }
+  template:
+    metadata:
+      labels: { app: litellm }
+    spec:
+      imagePullSecrets:
+      - name: registry-secret
+      containers:
+      - name: litellm
+        # 官方 litellm-database 镜像，已转入项目容器镜像仓库（国内拉取快）
+        # 源镜像 ghcr.io/berriai/litellm-database:main-stable，由构建机拉取后推到项目镜像仓库
+        # 注意：litellm 是第三方镜像，版本不跟踪 app 版本；升级 litellm 时手动更新此 tag
+        image: ${REGISTRY}/unionagents/litellm:0.6.2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 4000
+        args: ["--config", "/app/config.yaml", "--port", "4000"]
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: litellm-database-url
+        - name: LITELLM_MASTER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: litellm-master-key
+        - name: LITELLM_SALT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: litellm-salt-key
+        # 关闭自带 UI，纯 REST 集成
+        - name: DISABLE_ADMIN_UI
+          value: "True"
+        - name: STORE_MODEL_IN_DB
+          value: "True"
+        - name: UI_USERNAME
+          value: "disabled"
+        volumeMounts:
+        - name: config
+          mountPath: /app/config.yaml
+          subPath: config.yaml
+        readinessProbe:
+          httpGet:
+            path: /health/liveliness
+            port: 4000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health/liveliness
+            port: 4000
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        resources:
+          requests: { cpu: "100m", memory: "512Mi" }
+          limits: { cpu: "1", memory: "2Gi" }
+      volumes:
+      - name: config
+        configMap:
+          name: litellm-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: litellm
+spec:
+  ports:
+  - port: 4000
+    targetPort: 4000
+  selector: { app: litellm }

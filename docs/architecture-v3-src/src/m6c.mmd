@@ -1,0 +1,5 @@
+flowchart LR
+    AS{access_scope}
+    AS -->|ALL| AllUser["所有登录用户可见<br/>Team=平台默认 default"]
+    AS -->|USER| UList["指定用户列表可见<br/>Team=平台默认 default"]
+    AS -->|USER_GROUP| GList["指定用户组成员可见<br/>Team=access_groups[0] 对应 Team"]

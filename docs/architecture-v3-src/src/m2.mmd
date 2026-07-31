@@ -1,0 +1,30 @@
+flowchart LR
+    subgraph 开发层[① 智能体开发层]
+        Def["AgentDefinition<br/>name / engine_type 枚举<br/>persona·model·skill·memory config(草稿)<br/>status: DRAFT/PUBLISHED"]
+        Ver["AgentVersion<br/>不可变快照 · version_no"]
+        Def -->|发布生成 1:N| Ver
+        Ver -. current_version_id .-> Def
+    end
+    subgraph 资源层[② 运行资源管理层]
+        Pool["ResourcePool<br/>min/max cpu·mem · replicas<br/>max_sessions_per_pod<br/>idle_suspend / idle_destroy"]
+    end
+    subgraph 实例层[③ 智能体实例层]
+        Inst["AgentInstance<br/>definition × version × resource_pool<br/>access_scope: ALL/USER/USER_GROUP<br/>status: DRAFT/PUBLISHED/OFFLINE<br/>litellm_config per-instance key"]
+        Chan["AgentInstanceChannel<br/>http / wecom / feishu"]
+        Dep["AgentDeployment<br/>引擎部署状态 · scope"]
+        Prof["AgentProfile<br/>单用户/组 Profile 映射"]
+        Inst --> Chan
+        Inst --> Dep
+        Inst --> Prof
+    end
+    Def -->|实例化 1:N| Inst
+    Pool -->|供给规格 1:N| Inst
+    Ver -->|绑定可回滚 1:N| Inst
+    subgraph 横切[横切关注点]
+        RBAC[RBAC<br/>definition / pool / instance 三类资源]
+        Bill["LiteLLM 计费<br/>Team = UserGroup"]
+        Met["Metrics<br/>spend_logs + metrics-server"]
+    end
+    Inst -. 计费 .- Bill
+    Inst -. 权限 .- RBAC
+    Inst -. 监控 .- Met

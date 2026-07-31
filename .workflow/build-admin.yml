@@ -1,0 +1,32 @@
+version: '1.0'
+name: build-admin
+displayName: 构建管理台前端
+triggers:
+  trigger: manual
+variables:
+  VERSION: "0.6.3"
+stages:
+  - name: build
+    displayName: 构建管理台前端镜像
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: build@docker
+        name: admin
+        displayName: 管理台前端
+        type: account
+        repository: ${REGISTRY}
+        username: ${REGISTRY_USERNAME}
+        password: ${REGISTRY_PASSWORD}
+        tag: unionagents/console-admin:${VERSION}
+        dockerfile: ./apps/admin/Dockerfile
+        context: .
+        artifacts: []
+        isCache: true
+        processorType:
+          - amd64
+        parameter: {}
+        notify: []
+        strategy:
+          retry: '0'

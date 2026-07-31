@@ -1,0 +1,607 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+  namespace: monitoring
+data:
+  overview.json: |-
+    {
+      "annotations": { "list": [] },
+      "title": "UnionAgents Overview",
+      "uid": "unionagents-overview",
+      "version": 1,
+      "schemaVersion": 39,
+      "tags": ["unionagents"],
+      "timezone": "browser",
+      "time": { "from": "now-1h", "to": "now" },
+      "refresh": "30s",
+      "panels": [
+        {
+          "type": "stat",
+          "title": "Node CPU",
+          "id": 1,
+          "gridPos": { "x": 0, "y": 0, "w": 4, "h": 4 },
+          "targets": [
+            {
+              "expr": "1 - avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m]))",
+              "legendFormat": "{{instance}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 0.7 },
+                  { "color": "red", "value": 0.85 }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false } }
+        },
+        {
+          "type": "stat",
+          "title": "Node Memory",
+          "id": 2,
+          "gridPos": { "x": 4, "y": 0, "w": 4, "h": 4 },
+          "targets": [
+            {
+              "expr": "1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)",
+              "legendFormat": "{{instance}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 0.75 },
+                  { "color": "red", "value": 0.9 }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false } }
+        },
+        {
+          "type": "stat",
+          "title": "Pods (unionagents ns)",
+          "id": 3,
+          "gridPos": { "x": 8, "y": 0, "w": 4, "h": 4 },
+          "targets": [
+            {
+              "expr": "count(kube_pod_status_phase{namespace=\"unionagents\"} == 1)",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": { "unit": "short" },
+            "overrides": []
+          },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false } }
+        },
+        {
+          "type": "stat",
+          "title": "Active Agents (running)",
+          "id": 4,
+          "gridPos": { "x": 12, "y": 0, "w": 4, "h": 4 },
+          "targets": [
+            {
+              "expr": "sum(unionagents_agent_deployment_status{status=\"running\"})",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": { "unit": "short" },
+            "overrides": []
+          },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false } }
+        },
+        {
+          "type": "stat",
+          "title": "Manager Up",
+          "id": 5,
+          "gridPos": { "x": 16, "y": 0, "w": 4, "h": 4 },
+          "targets": [
+            {
+              "expr": "up{job=\"union-manager\"}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "mappings": [
+                { "options": { "0": { "text": "DOWN", "color": "red" }, "1": { "text": "UP", "color": "green" } }, "type": "value" }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "red", "value": null },
+                  { "color": "green", "value": 1 }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false } }
+        },
+        {
+          "type": "stat",
+          "title": "Controller Up",
+          "id": 6,
+          "gridPos": { "x": 20, "y": 0, "w": 4, "h": 4 },
+          "targets": [
+            {
+              "expr": "up{job=\"union-controller\"}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "mappings": [
+                { "options": { "0": { "text": "DOWN", "color": "red" }, "1": { "text": "UP", "color": "green" } }, "type": "value" }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "red", "value": null },
+                  { "color": "green", "value": 1 }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false } }
+        },
+        {
+          "type": "timeseries",
+          "title": "Manager / Controller Request Rate",
+          "id": 7,
+          "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+          "targets": [
+            {
+              "expr": "sum by (job) (rate(http_requests_total[3m]))",
+              "legendFormat": "{{job}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": { "unit": "reqps" },
+            "overrides": []
+          }
+        },
+        {
+          "type": "timeseries",
+          "title": "Active SSE Connections",
+          "id": 8,
+          "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+          "targets": [
+            {
+              "expr": "sum by (agent_id) (unionagents_sse_active_connections)",
+              "legendFormat": "{{agent_id}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": { "unit": "short" },
+            "overrides": []
+          }
+        }
+      ]
+    }
+  node-resources.json: |-
+    {
+      "title": "Node Resources",
+      "uid": "node-resources",
+      "version": 1,
+      "schemaVersion": 39,
+      "tags": ["unionagents"],
+      "timezone": "browser",
+      "time": { "from": "now-1h", "to": "now" },
+      "refresh": "30s",
+      "panels": [
+        {
+          "type": "timeseries",
+          "title": "CPU Usage",
+          "id": 1,
+          "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+          "targets": [{
+            "expr": "1 - avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m]))",
+            "legendFormat": "{{instance}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "percentunit" }, "overrides": [] }
+        },
+        {
+          "type": "timeseries",
+          "title": "Memory Usage",
+          "id": 2,
+          "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+          "targets": [{
+            "expr": "1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)",
+            "legendFormat": "{{instance}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "percentunit" }, "overrides": [] }
+        },
+        {
+          "type": "timeseries",
+          "title": "Disk Usage",
+          "id": 3,
+          "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+          "targets": [{
+            "expr": "1 - (node_filesystem_avail_bytes{fstype!~\"tmpfs|overlay\"} / node_filesystem_size_bytes{fstype!~\"tmpfs|overlay\"})",
+            "legendFormat": "{{instance}} {{mountpoint}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "percentunit" }, "overrides": [] }
+        },
+        {
+          "type": "timeseries",
+          "title": "Network Throughput",
+          "id": 4,
+          "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+          "targets": [{
+            "expr": "rate(node_network_receive_bytes_total{device!~\"lo|cni0|flannel.*|veth.*\"}[5m])",
+            "legendFormat": "rx {{instance}} {{device}}",
+            "refId": "A"
+          },{
+            "expr": "rate(node_network_transmit_bytes_total{device!~\"lo|cni0|flannel.*|veth.*\"}[5m])",
+            "legendFormat": "tx {{instance}} {{device}}",
+            "refId": "B"
+          }],
+          "fieldConfig": { "defaults": { "unit": "Bps" }, "overrides": [] }
+        },
+        {
+          "type": "timeseries",
+          "title": "Load Average",
+          "id": 5,
+          "gridPos": { "x": 0, "y": 16, "w": 12, "h": 6 },
+          "targets": [{
+            "expr": "node_load1",
+            "legendFormat": "1m {{instance}}",
+            "refId": "A"
+          },{
+            "expr": "node_load5",
+            "legendFormat": "5m {{instance}}",
+            "refId": "B"
+          }],
+          "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+        },
+        {
+          "type": "timeseries",
+          "title": "Disk IOPS",
+          "id": 6,
+          "gridPos": { "x": 12, "y": 16, "w": 12, "h": 6 },
+          "targets": [{
+            "expr": "rate(node_disk_reads_completed_total[5m])",
+            "legendFormat": "reads {{instance}} {{device}}",
+            "refId": "A"
+          },{
+            "expr": "rate(node_disk_writes_completed_total[5m])",
+            "legendFormat": "writes {{instance}} {{device}}",
+            "refId": "B"
+          }],
+          "fieldConfig": { "defaults": { "unit": "iops" }, "overrides": [] }
+        }
+      ]
+    }
+  engine-pods.json: |-
+    {
+      "title": "Engine Pods",
+      "uid": "engine-pods",
+      "version": 1,
+      "schemaVersion": 39,
+      "tags": ["unionagents"],
+      "timezone": "browser",
+      "time": { "from": "now-1h", "to": "now" },
+      "refresh": "30s",
+      "panels": [
+        {
+          "type": "timeseries",
+          "title": "Pod CPU (unionagents)",
+          "id": 1,
+          "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+          "targets": [{
+            "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"unionagents\",container!=\"POD\"}[5m]))",
+            "legendFormat": "{{pod}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "cores" }, "overrides": [] }
+        },
+        {
+          "type": "timeseries",
+          "title": "Pod Memory (unionagents)",
+          "id": 2,
+          "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+          "targets": [{
+            "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"unionagents\",container!=\"POD\"})",
+            "legendFormat": "{{pod}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] }
+        },
+        {
+          "type": "stat",
+          "title": "Pod Restarts",
+          "id": 3,
+          "gridPos": { "x": 0, "y": 8, "w": 12, "h": 6 },
+          "targets": [{
+            "expr": "sum by (pod) (kube_pod_container_status_restarts_total{namespace=\"unionagents\"})",
+            "legendFormat": "{{pod}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+        },
+        {
+          "type": "stat",
+          "title": "Pod Status",
+          "id": 4,
+          "gridPos": { "x": 12, "y": 8, "w": 12, "h": 6 },
+          "targets": [{
+            "expr": "kube_pod_status_phase{namespace=\"unionagents\"}",
+            "legendFormat": "{{pod}} {{phase}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+        },
+        {
+          "type": "timeseries",
+          "title": "PVC Usage",
+          "id": 5,
+          "gridPos": { "x": 0, "y": 14, "w": 24, "h": 8 },
+          "targets": [{
+            "expr": "kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes",
+            "legendFormat": "{{namespace}}/{{persistentvolumeclaim}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "percentunit" }, "overrides": [] }
+        }
+      ]
+    }
+  business-metrics.json: |-
+    {
+      "title": "Business Metrics",
+      "uid": "business-metrics",
+      "version": 1,
+      "schemaVersion": 39,
+      "tags": ["unionagents"],
+      "timezone": "browser",
+      "time": { "from": "now-1h", "to": "now" },
+      "refresh": "30s",
+      "panels": [
+        {
+          "type": "timeseries",
+          "title": "Agent Count",
+          "id": 1,
+          "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+          "targets": [{
+            "expr": "unionagents_agent_count",
+            "legendFormat": "{{engine_type}} {{status}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+        },
+        {
+          "type": "stat",
+          "title": "Deployment Status",
+          "id": 2,
+          "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+          "targets": [{
+            "expr": "unionagents_deployment_count",
+            "legendFormat": "{{status}} {{engine_type}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+        },
+        {
+          "type": "timeseries",
+          "title": "Active SSE Connections",
+          "id": 3,
+          "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+          "targets": [{
+            "expr": "sum by (agent_id) (unionagents_sse_active_connections)",
+            "legendFormat": "{{agent_id}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+        },
+        {
+          "type": "timeseries",
+          "title": "Manager Request Rate",
+          "id": 4,
+          "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+          "targets": [{
+            "expr": "sum by (handler) (rate(http_requests_total{job=\"union-manager\"}[3m]))",
+            "legendFormat": "{{handler}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] }
+        },
+        {
+          "type": "timeseries",
+          "title": "Controller 5xx Error Rate",
+          "id": 5,
+          "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 },
+          "targets": [{
+            "expr": "sum(rate(http_requests_total{job=\"union-controller\",status=~\"5..\"}[3m])) / sum(rate(http_requests_total{job=\"union-controller\"}[3m]))",
+            "legendFormat": "5xx ratio",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "percentunit" }, "overrides": [] }
+        },
+        {
+          "type": "timeseries",
+          "title": "Controller Request Rate by Engine",
+          "id": 6,
+          "gridPos": { "x": 12, "y": 16, "w": 12, "h": 8 },
+          "targets": [{
+            "expr": "sum by (engine_type) (rate(unionagents_controller_requests_by_engine_total[3m]))",
+            "legendFormat": "{{engine_type}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] }
+        }
+      ]
+    }
+  alert-history.json: |-
+    {
+      "title": "Alert History",
+      "uid": "alert-history",
+      "version": 1,
+      "schemaVersion": 39,
+      "tags": ["unionagents"],
+      "timezone": "browser",
+      "time": { "from": "now-24h", "to": "now" },
+      "refresh": "30s",
+      "panels": [
+        {
+          "type": "stat",
+          "title": "Currently Firing",
+          "id": 1,
+          "gridPos": { "x": 0, "y": 0, "w": 8, "h": 6 },
+          "targets": [{
+            "expr": "count(ALERTS{alertstate=\"firing\"})",
+            "legendFormat": "firing",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+        },
+        {
+          "type": "stat",
+          "title": "Alerts Active (incl pending)",
+          "id": 2,
+          "gridPos": { "x": 8, "y": 0, "w": 8, "h": 6 },
+          "targets": [{
+            "expr": "count(ALERTS)",
+            "legendFormat": "total",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+        },
+        {
+          "type": "table",
+          "title": "Firing Alerts Detail",
+          "id": 3,
+          "gridPos": { "x": 16, "y": 0, "w": 8, "h": 6 },
+          "targets": [{
+            "expr": "ALERTS{alertstate=\"firing\"}",
+            "legendFormat": "",
+            "refId": "A",
+            "format": "table",
+            "instant": true
+          }]
+        },
+        {
+          "type": "bargauge",
+          "title": "Firing Count by Rule (24h)",
+          "id": 4,
+          "gridPos": { "x": 0, "y": 6, "w": 12, "h": 8 },
+          "targets": [{
+            "expr": "sum by (alertname) (count_over_time(ALERTS{alertstate=\"firing\"}[24h]))",
+            "legendFormat": "{{alertname}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+        },
+        {
+          "type": "timeseries",
+          "title": "Alerts Over Time",
+          "id": 5,
+          "gridPos": { "x": 12, "y": 6, "w": 12, "h": 8 },
+          "targets": [{
+            "expr": "sum by (alertname) (count_over_time(ALERTS{alertstate=\"firing\"}[5m]))",
+            "legendFormat": "{{alertname}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+        }
+      ]
+    }
+  logs.json: |-
+    {
+      "title": "Service Logs",
+      "uid": "service-logs",
+      "version": 1,
+      "schemaVersion": 39,
+      "tags": ["unionagents"],
+      "timezone": "browser",
+      "time": { "from": "now-1h", "to": "now" },
+      "refresh": "30s",
+      "panels": [
+        {
+          "type": "logs",
+          "title": "Manager / Gateway / Hub 实时日志",
+          "id": 1,
+          "gridPos": { "x": 0, "y": 0, "w": 24, "h": 16 },
+          "datasource": { "type": "loki", "uid": "loki" },
+          "targets": [{
+            "expr": "{namespace=\"unionagents\",service=~\"manager|gateway|hub\"}",
+            "refId": "A"
+          }],
+          "options": {
+            "showTime": true,
+            "showLabels": false,
+            "showCommonLabels": false,
+            "wrapLogMessage": true,
+            "prettifyLogMessage": false,
+            "enableLogDetails": true,
+            "dedupStrategy": "none",
+            "sortOrder": "Descending"
+          }
+        },
+        {
+          "type": "logs",
+          "title": "ERROR 异常日志（全 ns）",
+          "id": 2,
+          "gridPos": { "x": 0, "y": 16, "w": 12, "h": 12 },
+          "datasource": { "type": "loki", "uid": "loki" },
+          "targets": [{
+            "expr": "{level=\"ERROR\"}",
+            "refId": "A"
+          }],
+          "options": {
+            "showTime": true,
+            "showLabels": true,
+            "wrapLogMessage": true,
+            "enableLogDetails": true,
+            "sortOrder": "Descending"
+          }
+        },
+        {
+          "type": "stat",
+          "title": "请求量（5min，按 service）",
+          "id": 3,
+          "gridPos": { "x": 12, "y": 16, "w": 12, "h": 6 },
+          "datasource": { "type": "loki", "uid": "loki" },
+          "targets": [{
+            "expr": "sum by (service) (count_over_time({namespace=\"unionagents\",event=\"http.request\"}[5m]))",
+            "legendFormat": "{{service}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] }
+        },
+        {
+          "type": "stat",
+          "title": "错误率（5min，按 service）",
+          "id": 4,
+          "gridPos": { "x": 12, "y": 22, "w": 12, "h": 6 },
+          "datasource": { "type": "loki", "uid": "loki" },
+          "targets": [{
+            "expr": "sum by (service) (count_over_time({namespace=\"unionagents\",event=\"http.request\",result=\"error\"}[5m]))",
+            "legendFormat": "{{service}}",
+            "refId": "A"
+          }],
+          "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] }
+        }
+      ]
+    }

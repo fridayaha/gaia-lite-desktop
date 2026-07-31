@@ -1,0 +1,109 @@
+# Neo4j 5-community（Graph Layer，ADR-015 图关联推理）
+# 可选组件：仅启用图推理功能时部署（对应 docker-compose --profile graph）。
+# 数据是 object_state/links 的派生投影，可全量重建。
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gaia-neo4j-data
+  namespace: gaia
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: ${STORAGE_CLASS}
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: gaia-neo4j
+  namespace: gaia
+spec:
+  serviceName: gaia-neo4j
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gaia-neo4j
+  template:
+    metadata:
+      labels:
+        app: gaia-neo4j
+    spec:
+      containers:
+        - name: neo4j
+          image: neo4j:5-community
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          ports:
+            - containerPort: 7474
+              name: http
+            - containerPort: 7687
+              name: bolt
+          env:
+            # Neo4j 要求 NEO4J_AUTH 格式为 `neo4j/<password>`，secret 只存裸密码，
+            # 故用 GAIA_NEO4J_PASSWORD 中转（不能带 NEO4J_ 前缀，否则 Neo4j 会当配置项解析），
+            # 由下方 command 拼接前缀后再 exec entrypoint。
+            - name: GAIA_NEO4J_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: neo4j-password
+            - name: NEO4J_PLUGINS
+              value: '["apoc"]'
+            - name: NEO4J_db_memory_transaction_total_max
+              value: 512MB
+            - name: TZ
+              value: Asia/Shanghai
+          # 拼 NEO4J_AUTH=neo4j/$NEO4J_PASSWORD 后 exec 镜像原 ENTRYPOINT（/startup/docker-entrypoint.sh）
+          command:
+            - /bin/sh
+            - -c
+            - "export NEO4J_AUTH=neo4j/$${GAIA_NEO4J_PASSWORD}; exec /startup/docker-entrypoint.sh neo4j"
+          volumeMounts:
+            - mountPath: /data
+              name: data
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+          # readinessProbe 用 env $GAIA_NEO4J_PASSWORD（已从 secret 注入），不依赖额外 volume 挂载
+          # cypher-shell 启动 JVM 较慢，timeout 给 5s，failureThreshold 6 避免误杀
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "cypher-shell -u neo4j -p $GAIA_NEO4J_PASSWORD 'RETURN 1' || exit 1"
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 7474
+            initialDelaySeconds: 60
+            periodSeconds: 30
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: gaia-neo4j-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gaia-neo4j
+  namespace: gaia
+spec:
+  ports:
+    - port: 7474
+      name: http
+      targetPort: 7474
+    - port: 7687
+      name: bolt
+      targetPort: 7687
+  selector:
+    app: gaia-neo4j

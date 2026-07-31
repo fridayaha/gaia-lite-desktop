@@ -1,0 +1,8 @@
+#!/bin/sh
+# s6 finish script for gateway-profiles service
+# $1 = exit code, $2 = signal number (if killed)
+if [ "$1" -eq 0 ]; then
+    echo "[profile-supervisor] Stopped cleanly"
+else
+    echo "[profile-supervisor] Exited with code $1 (signal: ${2:-none}), s6 will restart"
+fi

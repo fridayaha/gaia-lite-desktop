@@ -1,0 +1,39 @@
+# Hazelcast config for the SeaTunnel Zeta master node (2.3.13).
+# Based on apache/seatunnel:2.3.13 /opt/seatunnel/config/hazelcast-master.yaml.
+#
+# Deviations from upstream defaults (intentional, required by Gaia):
+# - rest-api.enabled: true  (upstream default: false). The ontology API submits
+#   jobs and queries status via http://seatunnel-master:5801/hazelcast/rest/maps/*
+#   which require the Hazelcast REST API and the CLUSTER_WRITE / DATA groups.
+# - Heartbeat phi-accrual settings are kept from the 2.3.13 default to avoid the
+#   IMap init instability seen when upgrading from 2.3.11 (see issue #10649).
+hazelcast:
+  cluster-name: seatunnel
+  network:
+    rest-api:
+      enabled: true
+      endpoint-groups:
+        CLUSTER_WRITE:
+          enabled: true
+        DATA:
+          enabled: true
+    join:
+      tcp-ip:
+        enabled: true
+        member-list:
+          - localhost:5801
+          - seatunnel-worker:5802
+    port:
+      auto-increment: false
+      port: 5801
+  properties:
+    hazelcast.invocation.max.retry.count: 20
+    hazelcast.tcp.join.port.try.count: 30
+    hazelcast.logging.type: log4j2
+    hazelcast.operation.generic.thread.count: 50
+    hazelcast.heartbeat.failuredetector.type: phi-accrual
+    hazelcast.heartbeat.interval.seconds: 2
+    hazelcast.max.no.heartbeat.seconds: 180
+    hazelcast.heartbeat.phiaccrual.failuredetector.threshold: 10
+    hazelcast.heartbeat.phiaccrual.failuredetector.sample.size: 200
+    hazelcast.heartbeat.phiaccrual.failuredetector.min.std.dev.millis: 100

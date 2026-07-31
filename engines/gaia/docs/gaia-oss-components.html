@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gaia 开源组件镜像清单</title>
+<style>
+  :root {
+    --bg: #0f1419; --card: #1a2029; --border: #2a3340;
+    --txt: #e4e7eb; --muted: #8b95a5; --accent: #5b9dff;
+    --green: #4ade80; --red: #f87171; --amber: #fbbf24;
+    --th: #232c38;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px 32px 64px;
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    background: var(--bg); color: var(--txt); line-height: 1.6;
+  }
+  h1 { font-size: 24px; margin: 0 0 4px; }
+  h2 { font-size: 18px; margin: 40px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .meta { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin: 20px 0; }
+  .summary .item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .summary .item b { color: var(--accent); }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; min-width: 1200px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--th); position: sticky; top: 0; font-weight: 600; white-space: nowrap; color: var(--txt); }
+  tr:hover td { background: #1f2632; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .img { font-family: "SF Mono", Menlo, monospace; font-size: 12px; color: var(--accent); }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .b-min { background: #1e3a5f; color: #93c5fd; }
+  .b-full { background: #3f2a1a; color: #fbbf24; }
+  .b-opt { background: #2a2238; color: #c4b5fd; }
+  .b-aux { background: #1a2e26; color: #6ee7b7; }
+  .arm-yes { color: var(--green); font-weight: 600; }
+  .arm-no { color: var(--red); font-weight: 600; }
+  .size-bar { display: inline-block; height: 4px; background: var(--accent); border-radius: 2px; vertical-align: middle; margin-left: 6px; opacity: 0.6; }
+  .note { color: var(--muted); font-size: 12px; }
+  .warn { color: var(--amber); }
+  .ok { color: var(--green); }
+  code { background: #0d1117; padding: 1px 5px; border-radius: 3px; font-size: 12px; color: #e4e7eb; }
+  ul.facts { margin: 8px 0; padding-left: 20px; }
+  ul.facts li { margin-bottom: 8px; }
+  .legend { margin: 12px 0; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<h1>Gaia 开源组件镜像清单</h1>
+<div class="meta">
+  本地化安装方案设计 · 背景信息调研 · 2026-07-30<br>
+  数据口径：占盘 = <code>docker inspect .Size</code> 单架构实测（✅ 本地已拉 / approx 公开已知）；下载 ≈ 占盘 × 0.65；内存/启动来自 k8s manifest resources + healthcheck
+</div>
+
+<div class="legend">
+  profile 图例：
+  <span class="badge b-min">minimal</span> 默认（虚拟表/联邦查询）
+  <span class="badge b-full">full</span> 全量（托管表/Doris加速/CDC/流式）
+  <span class="badge b-opt">可选</span> 按需
+  <span class="badge b-aux">辅助</span> 非核心
+</div>
+
+<h2>表一：基础设施开源组件镜像</h2>
+<div class="table-wrap"><table>
+<thead><tr>
+  <th>#</th><th>组件</th><th>镜像</th><th>占盘</th><th>下载</th><th>用途</th><th>profile</th><th>arm64</th><th>内存上限</th><th>冷启动</th><th>依赖</th><th>本地化注意</th>
+</tr></thead>
+<tbody>
+<tr>
+  <td>1</td><td>Apache Doris BE</td><td class="img">apache/doris:be-4.0.5</td>
+  <td class="num">~1.8 GB</td><td class="num">~1.2 GB</td>
+  <td>在线读主源后端：存全量结构化属性 + 倒排/向量索引 + 向量化查询</td>
+  <td><span class="badge b-full">full</span></td><td class="arm-no">❌ 仅 amd64</td>
+  <td class="num">3 Gi</td><td class="num">~60s</td><td>Doris FE</td>
+  <td class="warn">docker.io 国内拉不动须换 daocloud；<b>无 arm64 官方镜像（Mac 最大风险点）</b></td>
+</tr>
+<tr>
+  <td>2</td><td>Apache Gravitino</td><td class="img">apache/gravitino:1.3.0</td>
+  <td class="num">1.85 GB ✅</td><td class="num">~1.2 GB</td>
+  <td>物理资产注册 + RBAC + access check；<b>内置 Iceberg REST Catalog</b>（9001 端点）</td>
+  <td><span class="badge b-min">minimal</span></td><td class="arm-yes">✅</td>
+  <td class="num">3 Gi (Xmx1024m)</td><td class="num">~90s</td><td>PostgreSQL</td>
+  <td>aux 模式配置必须走 env（挂 .conf 不生效）；国产库 JDBC 驱动需 initContainer 拷</td>
+</tr>
+<tr>
+  <td>3</td><td>Apache SeaTunnel</td><td class="img">apache/seatunnel:2.3.13</td>
+  <td class="num">~1.3 GB</td><td class="num">~850 MB</td>
+  <td>数据搬运：JDBC/S3File/Kafka/CDC → Iceberg，外部源→TimescaleDB</td>
+  <td><span class="badge b-full">full</span></td><td class="arm-no">❌ 仅 amd64</td>
+  <td class="num">512 Mi (Xmx256m)</td><td class="num">~45s</td><td>无</td>
+  <td class="warn">无 arm64；Zeta 单节点；<code>cancel-job</code> 坏用 <code>stop-job</code></td>
+</tr>
+<tr>
+  <td>4</td><td>Apache Doris FE</td><td class="img">apache/doris:fe-4.0.5</td>
+  <td class="num">~1.2 GB</td><td class="num">~800 MB</td>
+  <td>Doris 前端：元数据 + 查询规划 + Stream Load</td>
+  <td><span class="badge b-full">full</span></td><td class="arm-no">❌ 仅 amd64</td>
+  <td class="num">1 Gi (Xmx512m)</td><td class="num">~45s</td><td>Doris BE 注册</td>
+  <td>须固定 IP/DNS（k8s 用 headless Service）</td>
+</tr>
+<tr>
+  <td>5</td><td>Apache Trino</td><td class="img">trinodb/trino:478</td>
+  <td class="num">957 MB ✅</td><td class="num">~620 MB</td>
+  <td>联邦查询引擎；Virtual Table 唯一执行路径；Doris 降级时扫 Iceberg</td>
+  <td><span class="badge b-min">minimal</span></td><td class="arm-yes">✅</td>
+  <td class="num">1.5 Gi (Xmx768m)</td><td class="num">~10s</td><td>Gravitino metalake</td>
+  <td class="warn"><b>Gravitino connector JAR 仓库不提交</b>，需手动下 tarball 解压（32 jar）</td>
+</tr>
+<tr>
+  <td>6</td><td>Apache Kafka</td><td class="img">apache/kafka:4.3.0</td>
+  <td class="num">~430 MB</td><td class="num">~280 MB</td>
+  <td>实时同步总线（KRaft 单节点）；CDC 增量 + 时序流入口</td>
+  <td><span class="badge b-full">full</span></td><td class="arm-yes">✅</td>
+  <td class="num">512 Mi</td><td class="num">~30s</td><td>无</td>
+  <td>KRaft 模式免 ZooKeeper</td>
+</tr>
+<tr>
+  <td>7</td><td>Neo4j</td><td class="img">neo4j:5-community</td>
+  <td class="num">~400 MB</td><td class="num">~260 MB</td>
+  <td>图遍历：search_around 多跳、find_paths 最短路径；存 object_state 投影</td>
+  <td><span class="badge b-opt">可选</span></td><td class="arm-yes">✅</td>
+  <td class="num">1 Gi</td><td class="num">~90s</td><td>无</td>
+  <td>数据可重建（派生投影）；需 <code>NEO4J_PLUGINS=["apoc"]</code></td>
+</tr>
+<tr>
+  <td>8</td><td>PostgreSQL + PostGIS + TimescaleDB</td><td class="img">ngosang/timescaledb-postgis:2.24.0-pg16-postgis3.6</td>
+  <td class="num">398 MB ✅</td><td class="num">~260 MB</td>
+  <td><b>三合一</b>：业务本体元数据 + 空间属性(GiST) + 时序超表</td>
+  <td><span class="badge b-min">minimal</span></td><td class="arm-yes">✅</td>
+  <td class="num">1 Gi</td><td class="num">~15s</td><td>无</td>
+  <td class="ok">一体镜像省 50% 体积；init SQL 建 gravitino_store schema + 扩展</td>
+</tr>
+<tr>
+  <td>9</td><td>RustFS</td><td class="img">rustfs/rustfs:latest</td>
+  <td class="num">~80 MB</td><td class="num">~50 MB</td>
+  <td>S3 兼容对象存储，给 Iceberg 当 warehouse 底层</td>
+  <td><span class="badge b-full">full</span></td><td class="arm-yes">✅</td>
+  <td class="num">1 Gi</td><td class="num">~10s</td><td>无</td>
+  <td class="ok">Rust 写的体积小；替代进维护模式的 MinIO</td>
+</tr>
+<tr>
+  <td>10</td><td>nginx（辅助）</td><td class="img">nginx:alpine</td>
+  <td class="num">93 MB ✅</td><td class="num">~26 MB</td>
+  <td>Trino initContainer 等 metalake 用（wget 探活）；非核心</td>
+  <td><span class="badge b-aux">辅助</span></td><td class="arm-yes">✅</td>
+  <td class="num">—</td><td class="num">—</td><td>无</td>
+  <td>仅作探活 shim</td>
+</tr>
+</tbody></table></div>
+
+<div class="meta" style="margin-top:8px">
+  基础设施合计占盘：<b>minimal</b>（#2,5,8,10）≈ 3.3 GB　|　<b>full</b>（+#1,3,4,6,7,9）≈ 8.6 GB
+</div>
+
+<h2>表二：Gaia 自定义镜像（基于开源基础镜像构建）</h2>
+<div class="table-wrap"><table>
+<thead><tr>
+  <th>#</th><th>镜像</th><th>基础镜像</th><th>占盘</th><th>下载</th><th>用途</th><th>构建产物</th><th>arm64</th><th>本地化注意</th>
+</tr></thead>
+<tbody>
+<tr>
+  <td>1</td><td class="img">unionagents/gaia-api</td><td>python:3.12-slim</td>
+  <td class="num">134 MB ✅</td><td class="num">~90 MB</td>
+  <td>FastAPI 后端：路由 + 22 Service + 本体工具层 + AG-UI Agent + MCP。<b>migrate Job 复用此镜像跑 alembic</b></td>
+  <td>Dockerfile</td><td class="arm-yes">✅ 原生</td>
+  <td>apt 用 TUNA 源加速；<code>uv sync --frozen</code> 装依赖；Python 走 PYTHONPATH 不进 site-packages</td>
+</tr>
+<tr>
+  <td>2</td><td class="img">unionagents/gaia-better-auth</td><td>node:20-slim</td>
+  <td class="num">90 MB ✅</td><td class="num">~60 MB</td>
+  <td>Better Auth 认证服务（JWT 签发 + JWKS + 用户/组管理）</td>
+  <td>auth-server/Dockerfile</td><td class="arm-yes">✅ 原生</td>
+  <td>容器内 <code>npm ci</code> 自包含；EdDSA/Ed25519 签名</td>
+</tr>
+<tr>
+  <td>3</td><td class="img">unionagents/gaia-trino-plugins</td><td>nginx:alpine</td>
+  <td class="num">56 MB ✅</td><td class="num">~36 MB</td>
+  <td>仅含 Gravitino Trino Connector 插件（32 jar）；Trino initContainer 拷到 emptyDir</td>
+  <td>Dockerfile.trino-plugins</td><td class="arm-yes">✅ 原生</td>
+  <td class="warn"><b>源 JAR 不在仓库</b>，需先下 <code>gravitino-trino-connector-473-478-1.3.0.tar.gz</code> 解压到 <code>config/trino/gravitino/</code> 再 build</td>
+</tr>
+<tr>
+  <td>4</td><td class="img">unionagents/gaia-gravitino-libs</td><td>nginx:alpine</td>
+  <td class="num">30 MB ✅</td><td class="num">~20 MB</td>
+  <td>仅含国产库 JDBC 驱动（opengauss/kingbase/oceanbase）；gravitino initContainer 拷</td>
+  <td>Dockerfile.gravitino-libs</td><td class="arm-yes">✅ 原生</td>
+  <td class="warn"><code>make docker-all</code> 漏建此镜像，需手动 build</td>
+</tr>
+<tr>
+  <td>5</td><td class="img">unionagents/gaia-web-ui</td><td>nginx:alpine</td>
+  <td class="num">26 MB ✅</td><td class="num">~17 MB</td>
+  <td>前端：两阶段构建（pnpm install + vite build → nginx 托管 SPA + API 反代）</td>
+  <td>src/web-ui/Dockerfile</td><td class="arm-yes">✅ 原生</td>
+  <td>容器内 pnpm install；构建期注入 API base URL</td>
+</tr>
+</tbody></table></div>
+
+<div class="meta" style="margin-top:8px">
+  自定义镜像合计占盘：5 个 ≈ 336 MB（很小）
+</div>
+
+<h2>方案设计关键事实</h2>
+<div class="summary">
+  <div class="item">📊 <b>体积分布</b><br>基础设施占绝对大头（minimal 3.3GB / full 8.6GB），自定义镜像仅 336MB。本地化瓶颈是基础设施镜像分发，不是 Gaia 代码。</div>
+  <div class="item">🖥 <b>ARM 兼容</b><br>全 arm64：Gravitino/Trino/Kafka/Neo4j/PG一体/RustFS/nginx/自定义。<br><span class="arm-no">❌ 仅 amd64：Doris FE+BE、SeaTunnel</span> —— arm64 本地化硬障碍。</div>
+  <div class="item">🚀 <b>国内拉取</b><br>docker.io 直拉卡死（Trino 2.37GB 实测 19min 未完成）。<code>docker.1ms.run</code> 稳定（Trino 12s 下完）。建议预置 registry mirror 或离线 OCI tar（<code>make package</code> 已支持）。</div>
+  <div class="item">💾 <b>JVM 内存</b><br>Gravitino/Trino/Doris 都是 JVM，冷启动 30-90s，内存 1-3GB。8GB 机器跑 minimal 勉强，full 至少 16GB。</div>
+  <div class="item">⚠️ <b>仓库不提交的坑</b><br>① <code>config/trino/gravitino/</code> connector JAR 需下 GitHub release<br>② <code>make docker-all</code> 漏建 gaia-gravitino-libs</div>
+  <div class="item">⚙️ <b>colima k3s</b><br>docker+k3s profile 共享镜像 store，<code>docker build/pull</code> 即 k3s 可见，<b>不需要 ctr import</b>（README 的 import 步骤多余）。</div>
+</div>
+
+</body>
+</html>

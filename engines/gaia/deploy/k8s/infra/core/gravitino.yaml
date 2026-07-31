@@ -1,0 +1,201 @@
+# Gravitino 1.3.0（物理资产注册 + 内置 Iceberg REST Catalog aux service）
+#
+# 架构：用官方 apache/gravitino:1.3.0 镜像的默认 ENTRYPOINT（docker-entrypoint.sh），
+#       通过 wrapper command 在 entrypoint 之前拷贝 JDBC 驱动，再 exec entrypoint。
+#       entrypoint 自动完成：
+#         1. rewrite_gravitino_server_config.py — 从 GRAVITINO_* env 重写 gravitino.conf
+#            （entity store → PG JDBCBackend；iceberg-rest aux service 配置）
+#         2. symlink jdbc-drivers/postgresql-*.jar 到 libs/（entity store 用 PG 驱动）
+#         3. exec gravitino.sh run — 单进程，内嵌 iceberg-rest aux service（监听 9001）
+#
+#       aux service 模式：GravitinoServer 主进程内嵌加载 IcebergRESTService 到 9001，
+#       无需独立的 gravitino-iceberg-rest-server.sh（双脚本模式会端口冲突）。
+#       详见 docs/bugfix/gravitino-1.3.0-upgrade.md（BC-2 结论已修正：aux service 可用）。
+#
+# JDBC 驱动（MySQL 官方 + 国产库）通过 initContainer 从 gaia-gravitino-libs 镜像
+# 拷贝到 emptyDir，主容器 wrapper command 在启动前 cp 到各 catalog 的 libs 目录。
+# 为什么不用 volumeMount 直接挂到 catalog libs：emptyDir/subPath 都会遮蔽原目录，
+# 导致 Gravitino 自带的 catalog provider jar 丢失（"No catalog provider found"）。
+# 为什么不用 initContainer 直接写镜像目录：initContainer 与主容器是不同容器层，
+# 看不到主容器镜像的文件系统，无法写 /opt/gravitino/catalogs/*/libs/。
+# 故 wrapper command 在主容器启动时 cp（唯一不遮蔽原目录的方式）。
+# 注：entrypoint 的 symlink glob 只认 mysql-connector-java-*.jar（旧名），官方驱动现名
+#     mysql-connector-j-*.jar 匹配不到，故 MySQL 驱动必须放 catalog libs 而非 jdbc-drivers/。
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gaia-gravitino
+  namespace: gaia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gaia-gravitino
+  template:
+    metadata:
+      labels:
+        app: gaia-gravitino
+    spec:
+      initContainers:
+        # 拷贝 JDBC 驱动到 emptyDir（按 catalog 分目录），主容器 wrapper 读取后 cp 到 catalog libs。
+        - name: copy-jdbc-drivers
+          image: unionagents/gaia-gravitino-libs:${VERSION}
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              echo "[init] 拷贝 JDBC 驱动到 /drivers ..."
+              cp -r /gravitino-drivers/* /drivers/
+              echo "[init] 驱动清单："
+              ls -lhR /drivers/
+          volumeMounts:
+            - name: jdbc-drivers
+              mountPath: /drivers
+      containers:
+        - name: gravitino
+          image: apache/gravitino:1.3.0
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          ports:
+            - containerPort: 8090
+              name: api
+            - containerPort: 9001
+              name: iceberg-rest
+          env:
+            - name: GRAVITINO_SERVER_WEBSERVER_HTTP_PORT
+              value: "8090"
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms512m -Xmx1024m"
+            # ── PostgreSQL Entity Store（持久化，重启不丢 metalake/catalog）──
+            # entrypoint 的 rewrite 脚本把这些 env 写进 gravitino.conf：
+            #   gravitino.entity.store = relational
+            #   gravitino.entity.store.relational.backend = JDBCBackend
+            #   gravitino.entity.store.relational.jdbcUrl = ...
+            - name: GRAVITINO_ENTITY_STORE
+              value: relational
+            - name: GRAVITINO_ENTITY_STORE_RELATIONAL
+              value: JDBCBackend
+            - name: GRAVITINO_ENTITY_STORE_RELATIONAL_JDBC_URL
+              value: jdbc:postgresql://gaia-postgres:5432/ontology?currentSchema=gravitino_store
+            - name: GRAVITINO_ENTITY_STORE_RELATIONAL_JDBC_DRIVER
+              value: org.postgresql.Driver
+            - name: GRAVITINO_ENTITY_STORE_RELATIONAL_JDBC_USER
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-user
+            - name: GRAVITINO_ENTITY_STORE_RELATIONAL_JDBC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-password
+            # ── Iceberg REST Catalog aux service（rewrite 写成 gravitino.iceberg-rest.*）──
+            # aux service 由 GravitinoServer 主进程内嵌加载到 9001，无需独立脚本
+            - name: GRAVITINO_ICEBERG_REST_CATALOG_BACKEND
+              value: jdbc
+            - name: GRAVITINO_ICEBERG_REST_CATALOG_BACKEND_NAME
+              value: ontology
+            - name: GRAVITINO_ICEBERG_REST_WAREHOUSE
+              value: s3://ontology-warehouse
+            - name: GRAVITINO_ICEBERG_REST_IO_IMPL
+              value: org.apache.iceberg.aws.s3.S3FileIO
+            - name: GRAVITINO_ICEBERG_REST_S3_ENDPOINT
+              value: http://gaia-rustfs:9000
+            # ⚠️ Gravitino 1.3.0 rewrite 脚本的映射 key 是 S3_ACCESS_KEY / S3_SECRET_KEY（无 _ID 后缀）
+            - name: GRAVITINO_ICEBERG_REST_S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: s3-access-key-id
+            - name: GRAVITINO_ICEBERG_REST_S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: s3-secret-access-key
+            - name: GRAVITINO_ICEBERG_REST_S3_REGION
+              value: us-east-1
+            - name: GRAVITINO_ICEBERG_REST_S3_PATH_STYLE_ACCESS
+              value: "true"
+            - name: GRAVITINO_ICEBERG_REST_CLIENT_REGION
+              value: us-east-1
+            - name: GRAVITINO_ICEBERG_REST_URI
+              value: jdbc:postgresql://gaia-postgres:5432/ontology
+            - name: GRAVITINO_ICEBERG_REST_JDBC_DRIVER
+              value: org.postgresql.Driver
+            - name: GRAVITINO_ICEBERG_REST_JDBC_USER
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-user
+            - name: GRAVITINO_ICEBERG_REST_JDBC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-password
+            - name: GRAVITINO_ICEBERG_REST_JDBC_INITIALIZE
+              value: "true"
+          # wrapper command：先拷贝 JDBC 驱动到各 catalog libs（追加，不遮蔽原 catalog provider），
+          # 再 exec 镜像原 ENTRYPOINT（docker-entrypoint.sh），它负责 rewrite conf + symlink + 启动。
+          command:
+            - /bin/bash
+            - -c
+            - |
+              set -e
+              # 拷贝 JDBC 驱动到 catalog libs（cp -n 不覆盖已存在的 catalog provider jar）
+              cp -n /mnt/jdbc-drivers/jdbc-mysql/*.jar      /opt/gravitino/catalogs/jdbc-mysql/libs/      2>/dev/null || true
+              cp -n /mnt/jdbc-drivers/jdbc-postgresql/*.jar /opt/gravitino/catalogs/jdbc-postgresql/libs/ 2>/dev/null || true
+              echo "[gravitino] jdbc-mysql libs:";      ls /opt/gravitino/catalogs/jdbc-mysql/libs/
+              echo "[gravitino] jdbc-postgresql libs:"; ls /opt/gravitino/catalogs/jdbc-postgresql/libs/
+              # exec 镜像原 ENTRYPOINT（docker-entrypoint.sh）
+              # 它会：① rewrite conf（env → gravitino.conf）② symlink jdbc-drivers ③ exec gravitino.sh run
+              exec /opt/gravitino/docker/docker-entrypoint.sh
+          volumeMounts:
+            - name: jdbc-drivers
+              mountPath: /mnt/jdbc-drivers
+              readOnly: true
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "1536Mi"
+            limits:
+              cpu: "1"
+              memory: "3Gi"
+          # Gravitino 启动慢（JVM + 连 PG entity store 初始化 + aux service 注册），
+          # probe 延迟需足够大，否则启动期间被 liveness kill 导致反复重启。
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 8090
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 12
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 8090
+            initialDelaySeconds: 180
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 6
+      volumes:
+        - name: jdbc-drivers
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gaia-gravitino
+  namespace: gaia
+spec:
+  ports:
+    - port: 8090
+      name: api
+      targetPort: 8090
+    - port: 9001
+      name: iceberg-rest
+      targetPort: 9001
+  selector:
+    app: gaia-gravitino

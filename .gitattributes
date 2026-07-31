@@ -1,0 +1,5 @@
+# 强制 shell 脚本和 Python 文件用 LF 行尾
+# 避免 Windows 编辑/提交时带入 CRLF 导致 Linux 容器 exec 失败
+*.sh text eol=lf
+entrypoint*.sh text eol=lf
+*.py text eol=lf

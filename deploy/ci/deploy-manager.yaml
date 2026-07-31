@@ -1,0 +1,103 @@
+# ============================================================
+# UnionAgents 知行 — Manager 部署清单
+# 使用方式:
+#   ${VERSION} / ${REGISTRY} 由 Gitee Go deploy@k8s 的 params 自动替换（REGISTRY 在 Gitee Go 配置为变量）
+# ============================================================
+
+---
+# ── 管理 API ──
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manager
+  namespace: unionagents
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: manager }
+  template:
+    metadata:
+      labels: { app: manager }
+      annotations:
+        unionagents/rollUpdate: "${GITEE_COMMIT}"
+    spec:
+      imagePullSecrets:
+      - name: registry-secret
+      initContainers:
+      - name: decode-keystore
+        image: busybox:1.36
+        command:
+        - sh
+        - -c
+        - 'echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > /keystore/release.keystore && chmod 400 /keystore/release.keystore'
+        env:
+        - name: RELEASE_KEYSTORE_BASE64
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: release-keystore-base64
+        volumeMounts:
+        - { name: keystore, mountPath: /keystore }
+      containers:
+      - name: manager
+        image: "${REGISTRY}/unionagents/manager:${VERSION}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8002
+        env:
+        - name: UA_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: database-url
+        - name: UA_JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: jwt-secret
+        # --- APK 发布 keystore 注入（APP 管理重签用）---
+        - name: UA_APK_KEYSTORE_PATH
+          value: /keystore/release.keystore
+        - name: UA_APK_KEYSTORE_ALIAS
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: keystore-alias
+        - name: UA_APK_KEYSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: keystore-password
+        - name: UA_APK_KEY_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: key-password
+        volumeMounts:
+        - { name: keystore, mountPath: /keystore, readOnly: true }
+        resources:
+          requests: { cpu: "100m", memory: "256Mi" }
+          limits: { cpu: "500m", memory: "512Mi" }
+        livenessProbe:
+          httpGet: { path: /health, port: 8002 }
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet: { path: /health, port: 8002 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      volumes:
+      - name: keystore
+        emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: manager
+  namespace: unionagents
+spec:
+  ports:
+  - port: 8002
+    targetPort: 8002
+  selector: { app: manager }

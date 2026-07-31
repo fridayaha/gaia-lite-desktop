@@ -1,0 +1,122 @@
+# Kafka 4.3.0（KRaft combined mode，实时索引同步总线）
+# 单节点 broker+controller 合一，开发环境足够。
+#
+# ⚠️ 默认 replicas: 0（暂不启用实时索引同步总线）。
+# 配套 Kestra/数据管道暂未启用；需要时改 replicas: 1。
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gaia-kafka-data
+  namespace: gaia
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: ${STORAGE_CLASS}
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: gaia-kafka
+  namespace: gaia
+spec:
+  serviceName: gaia-kafka
+  replicas: 0
+  selector:
+    matchLabels:
+      app: gaia-kafka
+  template:
+    metadata:
+      labels:
+        app: gaia-kafka
+    spec:
+      containers:
+        - name: kafka
+          image: apache/kafka:4.3.0
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          ports:
+            - containerPort: 9092
+              name: client
+          env:
+            - name: KAFKA_NODE_ID
+              value: "1"
+            - name: KAFKA_PROCESS_ROLES
+              value: broker,controller
+            - name: KAFKA_LISTENERS
+              value: PLAINTEXT://:9092,CONTROLLER://:9093
+            # advertised 用 Pod 稳定 FQDN（headless Service + StatefulSet）
+            # 其他 Pod 通过 gaia-kafka-0.gaia-kafka:9092 或 gaia-kafka:9092 访问
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: PLAINTEXT://gaia-kafka-0.gaia-kafka.gaia.svc.cluster.local:9092
+            - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+              value: 1@localhost:9093
+            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+              value: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+            - name: KAFKA_CONTROLLER_LISTENER_NAMES
+              value: CONTROLLER
+            - name: KAFKA_INTER_BROKER_LISTENER_NAME
+              value: PLAINTEXT
+            - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+              value: "true"
+            - name: KAFKA_NUM_PARTITIONS
+              value: "3"
+            - name: KAFKA_DEFAULT_REPLICATION_FACTOR
+              value: "1"
+            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+              value: "1"
+            - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+              value: "1"
+            - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+              value: "1"
+            - name: KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS
+              value: "0"
+            - name: KAFKA_LOG_DIRS
+              value: /var/lib/kafka/data
+          volumeMounts:
+            - mountPath: /var/lib/kafka/data
+              name: data
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "timeout 5 bash -c 'echo > /dev/tcp/localhost/9092' 2>/dev/null"
+            initialDelaySeconds: 45
+            periodSeconds: 15
+            failureThreshold: 10
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "timeout 5 bash -c 'echo > /dev/tcp/localhost:9092' 2>/dev/null"
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            failureThreshold: 6
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: gaia-kafka-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gaia-kafka
+  namespace: gaia
+spec:
+  # headless：DNS 直接返回 Pod IP，advertised 用 Pod FQDN 可回环
+  clusterIP: None
+  ports:
+    - port: 9092
+      targetPort: 9092
+  selector:
+    app: gaia-kafka

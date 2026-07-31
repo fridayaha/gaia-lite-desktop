@@ -1,0 +1,275 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
+  namespace: monitoring
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus
+rules:
+  - apiGroups: [""]
+    resources:
+      - nodes
+      - nodes/metrics
+      - services
+      - endpoints
+      - pods
+      - namespaces
+      - persistentvolumes
+      - persistentvolumeclaims
+    verbs: [get, list, watch]
+  - apiGroups: [""]
+    resources: [configmaps]
+    verbs: [get]
+  - apiGroups: ["networking.k8s.io"]
+    resources: [ingresses]
+    verbs: [get, list, watch]
+  - nonResourceURLs: ["/metrics", "/metrics/cadvisor"]
+    verbs: [GET]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+  - kind: ServiceAccount
+    name: prometheus
+    namespace: monitoring
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitoring
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      external_labels:
+        cluster: unionagents
+
+    alerting:
+      alertmanagers:
+        - static_configs:
+            - targets: ['alertmanager:9093']
+
+    rule_files:
+      - /etc/prometheus/alerts.yml
+
+    scrape_configs:
+      - job_name: 'union-manager'
+        metrics_path: /metrics
+        static_configs:
+          - targets: ['manager.unionagents:8002']
+      - job_name: 'node-exporter'
+        kubernetes_sd_configs:
+          - role: node
+        relabel_configs:
+          - source_labels: [__address__]
+            regex: '(.*):.*'
+            target_label: __address__
+            replacement: '${1}:9100'
+          - source_labels: [__meta_kubernetes_node_name]
+            target_label: node
+      - job_name: 'cadvisor'
+        kubernetes_sd_configs:
+          - role: node
+        relabel_configs:
+          - source_labels: [__address__]
+            regex: '(.*):.*'
+            target_label: __address__
+            replacement: '${1}:8080'
+          - source_labels: [__meta_kubernetes_node_name]
+            target_label: node
+      - job_name: 'kube-state-metrics'
+        static_configs:
+          - targets: ['kube-state-metrics.monitoring:8080']
+      - job_name: 'blackbox-external'
+        metrics_path: /probe
+        params:
+          module: [http_2xx]
+        static_configs:
+          - targets:
+            - http://manager.unionagents:8002/health
+            - http://gateway.unionagents:8010/health
+            - http://litellm.unionagents:4000/health/liveliness
+            - http://langfuse.monitoring:3000/api/public/health
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: blackbox-exporter.monitoring:9115
+      - job_name: 'blackbox-tcp'
+        metrics_path: /probe
+        params:
+          module: [tcp_connect]
+        static_configs:
+          - targets:
+            - postgres.unionagents:5432
+            - minio.unionagents:9000
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: blackbox-exporter.monitoring:9115
+      - job_name: 'loki'
+        metrics_path: /metrics
+        static_configs:
+          - targets: ['loki.monitoring:3100']
+      - job_name: 'langfuse'
+        metrics_path: /metrics
+        static_configs:
+          - targets: ['langfuse.monitoring:3000']
+      - job_name: 'engine-hermes'
+        metrics_path: /metrics
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            regex: 'engine-hermes-.*'
+            action: keep
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            regex: 'true'
+            action: keep
+          - source_labels: [__meta_kubernetes_pod_container_port_number]
+            regex: '8080'
+            action: keep
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_pod_label_agent_id]
+            target_label: agent_id
+          - target_label: __address__
+            source_labels: [__meta_kubernetes_pod_ip]
+            regex: '(.*)'
+            replacement: '${1}:8080'
+
+  alerts.yml: |
+    groups:
+      - name: unionagents-p0
+        rules:
+          - alert: NodeHighCpu
+            expr: 1 - avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) > 0.8
+            for: 5m
+            labels:
+              severity: p0
+            annotations:
+              summary: "Node {{ $labels.instance }} CPU > 80%"
+              description: "Node CPU usage sustained above 80% for 5 minutes."
+
+          - alert: NodeHighMemory
+            expr: 1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) > 0.9
+            for: 5m
+            labels:
+              severity: p0
+            annotations:
+              summary: "Node {{ $labels.instance }} memory > 90%"
+              description: "Node memory usage sustained above 90% for 5 minutes."
+
+          - alert: PodNotReady
+            expr: kube_pod_status_phase{namespace="unionagents",phase!="Running"} == 1
+            for: 2m
+            labels:
+              severity: p0
+            annotations:
+              summary: "Pod {{ $labels.pod }} not Running"
+              description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has not been Running for 2 minutes."
+
+          - alert: PVCUsageHigh
+            expr: kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes > 0.85
+            for: 5m
+            labels:
+              severity: p0
+            annotations:
+              summary: "PVC {{ $labels.persistentvolumeclaim }} > 85% used"
+              description: "PVC {{ $labels.persistentvolumeclaim }} in ns {{ $labels.namespace }} usage above 85%."
+
+          - alert: ManagerDown
+            expr: up{job="union-manager"} == 0
+            for: 1m
+            labels:
+              severity: p0
+            annotations:
+              summary: "Manager /metrics unreachable"
+              description: "Prometheus cannot scrape manager /metrics endpoint."
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-data
+  namespace: monitoring
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: { requests: { storage: 20Gi } }
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: prometheus
+  namespace: monitoring
+  labels:
+    app: prometheus
+spec:
+  serviceName: prometheus
+  replicas: 1
+  selector:
+    matchLabels: { app: prometheus }
+  template:
+    metadata:
+      labels: { app: prometheus }
+    spec:
+      serviceAccountName: prometheus
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v3.2.1
+          args:
+            - --config.file=/etc/prometheus/prometheus.yml
+            - --storage.tsdb.path=/prometheus
+            - --storage.tsdb.retention.time=30d
+            - --web.enable-lifecycle
+          ports:
+            - containerPort: 9090
+              name: http
+          volumeMounts:
+            - name: config
+              mountPath: /etc/prometheus
+              readOnly: true
+            - name: data
+              mountPath: /prometheus
+          resources:
+            requests: { cpu: "200m", memory: "512Mi" }
+            limits: { cpu: "1", memory: "1Gi" }
+      volumes:
+        - name: config
+          configMap:
+            name: prometheus-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: prometheus-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: monitoring
+  labels:
+    app: prometheus
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9090
+      targetPort: 9090
+      name: http
+  selector: { app: prometheus }

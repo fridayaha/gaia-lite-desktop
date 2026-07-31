@@ -1,0 +1,17 @@
+flowchart TD
+    Req["用户首次发起会话<br/>X-Agent-ID + user_id"] --> Resolve[ProfileResolver.resolve]
+    Resolve --> ChkAcl{access_scope 校验?}
+    ChkAcl -->|拒绝| Deny["403 拒绝"]
+    ChkAcl -->|通过| DerScope["派生 scope<br/>ALL / USER / USER_GROUP"]
+    DerScope --> PName["profile_name = agent[:8]-scope_hash[:6]-user[:8]"]
+    PName --> FindDep["查 agent_deployments<br/>_select_pod_by_load"]
+    FindDep --> Cap{Pod 有余量?}
+    Cap -->|是 复用| Reuse["复用现有 Deployment"]
+    Cap -->|否 新建| NewPod["_ensure_pod_exists<br/>seq++ → pod_name=engine-hermes-{short}-{shash}<br/>新建 Deployment+Service+PVC"]
+    Reuse --> EnsureProf
+    NewPod --> EnsureProf
+    EnsureProf["确保 AgentProfile 记录<br/>hermes_home=/opt/data/profiles/{name}<br/>internal_port=port_map.next_port++"]
+    EnsureProf --> PortMap["写 internal_port_map<br/>profiles name:port, next_port=8644"]
+    PortMap --> Ctl["调 controller /profiles/ensure"]
+    Ctl --> Mount["Pod 内按端口挂载 Profile 目录<br/>nginx 反代 port→profile"]
+    Mount --> Ready["返回 engine_url<br/>http pod.ns.svc:8642"]

@@ -1,0 +1,105 @@
+# Gaia PostgreSQL（业务本体元数据 + PostGIS + TimescaleDB + Gravitino entity store）
+# 独立实例，与 UnionAgents 平台 postgres（unionagents ns）隔离。
+# 镜像 ngosang/timescaledb-postgis 一体化：PostGIS 3.6.1 + TimescaleDB 2.24.0 on PG16。
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gaia-postgres-data
+  namespace: gaia
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: ${STORAGE_CLASS}
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: gaia-postgres
+  namespace: gaia
+spec:
+  serviceName: gaia-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gaia-postgres
+  template:
+    metadata:
+      labels:
+        app: gaia-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: ngosang/timescaledb-postgis:2.24.0-pg16-postgis3.6
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          # 保留镜像 entrypoint（它会切到 postgres 用户），通过 args 传 config_file
+          # 让 shared_preload_libraries='timescaledb' 生效
+          args: ["-c", "config_file=/etc/postgresql/postgresql.conf"]
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-database
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-password
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: data
+            - mountPath: /etc/postgresql/postgresql.conf
+              subPath: postgresql.conf
+              name: config
+            - mountPath: /docker-entrypoint-initdb.d/00-extensions.sql
+              subPath: 00-extensions.sql
+              name: config
+            - mountPath: /docker-entrypoint-initdb.d/01-init-schema.sql
+              subPath: 01-init-schema.sql
+              name: config
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "ontology"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "ontology"]
+            initialDelaySeconds: 30
+            periodSeconds: 30
+      volumes:
+        - name: config
+          configMap:
+            name: gaia-postgres-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: gaia-postgres-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gaia-postgres
+  namespace: gaia
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: gaia-postgres

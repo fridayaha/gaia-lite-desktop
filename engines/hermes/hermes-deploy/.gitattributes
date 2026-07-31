@@ -1,0 +1,22 @@
+# 强制所有文件使用 LF 换行符，防止 Windows CRLF 导致 Linux 上 bash 脚本执行失败
+# 参考: https://git-scm.com/docs/gitattributes
+
+# 默认所有文件使用 LF
+* text=auto eol=lf
+
+# Shell 脚本必须使用 LF（bash 无法解析 CRLF 的 \r）
+*.sh text eol=lf
+
+# s6 服务脚本
+s6/**/* text eol=lf
+
+# Docker 和 K8s 配置文件
+*.yml text eol=lf
+*.yaml text eol=lf
+Dockerfile* text eol=lf
+
+# 模板文件
+*.template text eol=lf
+
+# Markdown 文档
+*.md text eol=lf

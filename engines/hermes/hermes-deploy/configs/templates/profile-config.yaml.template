@@ -1,0 +1,65 @@
+# Hermes Agent Profile 配置文件
+# Profile: {{PROFILE_NAME}}
+# 文档参考: https://hermes-agent.nousresearch.com/docs/user-guide/configuration
+
+# ==================== 终端后端配置 ====================
+terminal:
+  backend: local
+  timeout: 180
+
+# ==================== 记忆系统配置 ====================
+memory:
+  memory_enabled: true
+  memory_file: MEMORY.md
+  user_file: USER.md
+
+# ==================== 会话配置 ====================
+session:
+  db_path: state.db
+  retention_days: 0
+
+# ==================== Agent 行为配置 ====================
+agent:
+  max_turns: 50
+  default_model: {{MODEL}}
+  default_provider: {{PROVIDER}}
+
+# ==================== 工具配置 ====================
+tools:
+  file_read_max_chars: 100000
+  browser_enabled: false
+  web_backend: firecrawl
+
+# ==================== 代码执行配置 ====================
+code_execution:
+  mode: project
+  allowed_languages:
+    - python
+    - javascript
+    - typescript
+    - bash
+
+# ==================== 安全配置 ====================
+security:
+  redact_secrets: true
+  confirm_dangerous_ops: true
+
+# ==================== 隐私配置 ====================
+privacy:
+  redact_pii: false
+
+# ==================== 审批配置 ====================
+approvals:
+  mode: manual
+  required_for:
+    - file_write
+    - command_execution
+    - network_request
+
+# ==================== 群聊会话隔离 ====================
+group_sessions_per_user: true
+
+# ==================== 显示配置 ====================
+display:
+  tool_progress: all
+  show_token_usage: true

@@ -1,0 +1,22 @@
+# Kestra 镜像（预装 DuckDB Iceberg 扩展）
+#
+# 背景：DuckDB Iceberg 扩展二进制 ~18MB（解压后 49MB），超过 gitcode 仓库 10MB
+# 文件大小限制，不能随 git 仓库分发（见 git 历史 cacc67e 移除记录 + CLAUDE.md
+# 运维红线）。部署环境从 GitHub releases 外网下载困难，故把扩展预装进镜像、
+# 经 ACR 分发——`docker pull` 即自带扩展，零外网依赖。
+#
+# 构建（需先把 iceberg.duckdb_extension.gz 放到 infra/extensions/，该目录已 gitignore）：
+#   docker build -f infra/Dockerfile.kestra \
+#     -t <ACR_REGISTRY>/kestra:<version> .
+#   docker push <ACR_REGISTRY>/kestra:<version>
+#
+# 扩展来源：https://github.com/duckdb/duckdb_iceberg/releases
+#   选 duckdb 1.5.3 linux_amd64 对应的 iceberg.duckdb_extension.gz
+#
+# 部署：docker-compose.yml 里 kestra.image 改为 <ACR_REGISTRY>/kestra:<version>
+#   即可；entrypoint 会自动检测并解压扩展到 DuckDB 扩展缓存目录。
+
+FROM kestra/kestra:latest
+
+# 预装 DuckDB Iceberg 扩展（构建上下文需提供此文件，不入 git）
+COPY infra/extensions/iceberg.duckdb_extension.gz /opt/kestra/extensions/iceberg.duckdb_extension.gz

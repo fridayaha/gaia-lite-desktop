@@ -1,0 +1,61 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.17
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.15.0
+    hooks:
+      - id: mypy
+        args: [src/]
+        pass_filenames: false
+        additional_dependencies:
+          - pydantic>=2.9.0
+          - pydantic-settings>=2.5.0
+          - pydantic-ai-slim
+          - sqlalchemy[asyncio]>=2.0.35
+          - httpx>=0.27.0
+          - fastapi>=0.115.0
+          - trino>=0.330.0
+          - pyiceberg>=0.7.0
+          - aiomysql>=0.2.0
+          - jinja2>=3.1.0
+          - structlog>=24.0.0
+          - prometheus-client>=0.20.0
+
+  - repo: local
+    hooks:
+      - id: uv-lock-check
+        name: uv lock check
+        entry: uv lock --check
+        language: system
+        pass_filenames: false
+
+      # NOTE: `uv audit` 已移至 CI (`.github/workflows/ci.yml` 的 audit job)。
+      # 原因: uv audit 是实验性功能, 依赖外部服务 api.osv.dev (Google OSV),
+      # 偶发慢响应会触发 uv 的 read timeout (默认不重试), 从而阻塞本地提交。
+      # 漏洞扫描放 CI 更合适 —— CI 网络稳定且不阻塞开发流。
+
+      # ── Frontend (TypeScript/React) ──
+      - id: frontend-build
+        name: Vite build (web-ui)
+        entry: bash -c 'cd src/web-ui && npx tsc --noEmit && npx vite build'
+        language: system
+        pass_filenames: false
+
+      - id: frontend-prettier
+        name: Prettier (web-ui)
+        entry: bash -c 'cd src/web-ui && npx prettier --check "src/**/*.{ts,tsx,css,json}"'
+        language: system
+        pass_filenames: false
+        types_or: [ts, tsx, css, json]
+
+      - id: frontend-eslint
+        name: ESLint (web-ui)
+        entry: bash -c 'cd src/web-ui && npx eslint .'
+        language: system
+        pass_filenames: false
+        types_or: [ts, tsx]

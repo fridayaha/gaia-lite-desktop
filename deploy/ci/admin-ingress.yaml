@@ -1,0 +1,57 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: admin-ingress
+  annotations:
+    kubernetes.io/ingress.class: __INGRESS_CLASS__
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  tls:
+  - hosts:
+    - admin.__DOMAIN__
+    secretName: unionagentservice-tls
+  rules:
+  - host: admin.__DOMAIN__
+    http:
+      paths:
+      # Controller API（Agent 部署、状态管理 — controller 已并入 manager，由 manager:8002 提供）
+      - pathType: Prefix
+        path: "/api/controller"
+        backend:
+          service:
+            name: manager
+            port:
+              number: 8002
+      # Gateway（少用，但管理台的智能体管理页面可能需要通过 Gateway 测试连接）
+      - pathType: Prefix
+        path: "/api/gateway"
+        backend:
+          service:
+            name: gateway
+            port:
+              number: 8010
+      # Hub 能力中心（经 manager 反代鉴权 + 注入 X-* 头，hub header 模式做 RBAC）
+      - pathType: Prefix
+        path: "/api/hub"
+        backend:
+          service:
+            name: manager
+            port:
+              number: 8002
+      # Manager API（所有管理接口：auth / users / roles / agents / user-groups）
+      - pathType: Prefix
+        path: "/api"
+        backend:
+          service:
+            name: manager
+            port:
+              number: 8002
+      # 前端 SPA
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: console-admin
+            port:
+              number: 80

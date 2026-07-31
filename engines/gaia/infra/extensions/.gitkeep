@@ -1,0 +1,12 @@
+# DuckDB Iceberg 扩展不随 git 仓库分发（二进制 ~18MB 超 gitcode 10MB 限制）。
+#
+# 部署时保证扩展可用的三种方式（详见 ADR-018 D1 部署附注 + CLAUDE.md 运维红线）：
+#   1. 主路径：自定义 Kestra 镜像预装 → ACR 分发（infra/Dockerfile.kestra）
+#   2. 备路径：把 iceberg.duckdb_extension.gz 手动放到此目录（.gitignore 已忽略）
+#   3. 兜底  ：DuckDB 首次 LOAD iceberg 在线下载（需外网，不推荐）
+#
+# 扩展下载来源：https://github.com/duckdb/duckdb_iceberg/releases
+#   选 duckdb 1.5.3 linux_amd64 对应的 iceberg.duckdb_extension.gz
+#
+# kestra-entrypoint.sh §2 会检测此目录下的 .gz 并自动解压到 DuckDB 扩展缓存；
+# 目录为空时安全跳过，不影响 Kestra 启动。

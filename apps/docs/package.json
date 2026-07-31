@@ -1,0 +1,14 @@
+{
+  "name": "unionagents-docs",
+  "version": "0.8.85",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "dependencies": {
+    "vitepress": "^1.5.0"
+  }
+}

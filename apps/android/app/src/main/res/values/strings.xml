@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">知行</string>
+    <string name="login_username">用户名</string>
+    <string name="login_password">密码</string>
+    <string name="login_button">登 录</string>
+    <string name="login_error_default">登录失败，请重试</string>
+    <string name="agent_list_title">历史会话</string>
+    <string name="agent_list_empty">暂无可访问的智能体</string>
+    <string name="menu_logout">退出登录</string>
+    <string name="tab_chat">对话</string>
+    <string name="tab_mine">我的</string>
+    <string name="tab_cloud_drive">云盘</string>
+    <string name="tab_workspace">工作区</string>
+    <string name="mine_about">关于</string>
+    <string name="mine_version">版本</string>
+    <string name="mine_logout">退出登录</string>
+    <string name="session_new">新建会话</string>
+    <string name="session_delete">删除</string>
+    <string name="session_rename">重命名</string>
+    <string name="composer_placeholder">发送消息给智能体…</string>
+    <string name="composer_send">发送</string>
+    <string name="composer_stop">停止</string>
+    <string name="composer_waiting">等待回复…</string>
+    <string name="model_sheet_title">选择模型</string>
+    <string name="approval_title">需要确认</string>
+    <string name="approval_choice_once">本次</string>
+    <string name="approval_choice_session">本次会话</string>
+    <string name="approval_choice_always">总是</string>
+    <string name="approval_choice_deny">拒绝</string>
+    <string name="error_offline">网络不可用</string>
+    <string name="error_generic">加载失败，请重试</string>
+</resources>

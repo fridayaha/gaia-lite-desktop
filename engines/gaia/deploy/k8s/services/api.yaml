@@ -1,0 +1,265 @@
+# Gaia Ontology API（FastAPI 后端）
+# 相比 docker-compose 的优化：连接地址全用 k8s Service 名，凭据走 Secret。
+# SeaTunnel 容器视角的地址（seatunnel_*_host）也改用 k8s Service 名。
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gaia-api
+  namespace: gaia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gaia-api
+  template:
+    metadata:
+      labels:
+        app: gaia-api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      initContainers:
+        - name: wait-migrate
+          image: postgres:16-alpine
+          env:
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-user
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-password
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-database
+          command:
+            - sh
+            - -c
+            - |
+              echo "等待 migrate Job 完成（检测 alembic_version 表）..."
+              until psql -h gaia-postgres -U "$PGUSER" -d "$PGDATABASE" -tAc \
+                "SELECT 1 FROM alembic_version LIMIT 1" 2>/dev/null | grep -q 1; do
+                sleep 5
+              done
+              echo "alembic_version 表已就绪，schema 迁移完成"
+      containers:
+        - name: api
+          image: unionagents/gaia-api:${VERSION}
+          imagePullPolicy: ${IMAGE_PULL_POLICY_SERVICES}
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            # ── PostgreSQL ──
+            - name: PG_HOST
+              value: gaia-postgres
+            - name: PG_PORT
+              value: "5432"
+            - name: PG_USER
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-user
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-password
+            - name: PG_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: pg-database
+            # ── Gravitino + Iceberg REST ──
+            - name: GRAVITINO_HOST
+              value: gaia-gravitino
+            - name: GRAVITINO_PORT
+              value: "8090"
+            - name: ICEBERG_REST_URI
+              value: http://gaia-gravitino:9001/iceberg
+            - name: ICEBERG_WAREHOUSE
+              value: s3://ontology-warehouse/
+            # ── S3 / RustFS ──
+            - name: S3_ENDPOINT
+              value: http://gaia-rustfs:9000
+            - name: S3_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: s3-access-key-id
+            - name: S3_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: s3-secret-access-key
+            - name: S3_PATH_STYLE_ACCESS
+              value: "true"
+            - name: S3_REGION
+              value: us-east-1
+            - name: AWS_REGION
+              value: us-east-1
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: s3-access-key-id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: s3-secret-access-key
+            - name: AWS_ENDPOINT_URL
+              value: http://gaia-rustfs:9000
+            - name: S3_ENDPOINT_OVERRIDE
+              value: http://gaia-rustfs:9000
+            # ── Doris ──
+            - name: DORIS_HOST
+              value: gaia-doris-fe
+            - name: DORIS_PORT
+              value: "9030"
+            - name: DORIS_FE_HTTP_PORT
+              value: "8030"
+            - name: DORIS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: doris-user
+            - name: DORIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: doris-password
+            # ── Trino ──
+            - name: TRINO_HOST
+              value: gaia-trino
+            - name: TRINO_PORT
+              value: "8080"
+            - name: TRINO_USER
+              value: ontology-api
+            - name: TRINO_CATALOG
+              value: gravitino
+            - name: TRINO_SCHEMA
+              value: ontology
+            # ── Kafka ──
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: gaia-kafka:9092
+            # ── SeaTunnel（容器视角地址，用于渲染 pipeline 配置）──
+            - name: SEATUNNEL_HOST
+              value: gaia-seatunnel
+            - name: SEATUNNEL_REST_PORT
+              value: "5801"
+            - name: SEATUNNEL_ICEBERG_REST_URI
+              value: http://gaia-gravitino:9001/iceberg
+            - name: SEATUNNEL_S3_ENDPOINT
+              value: http://gaia-rustfs:9000
+            - name: SEATUNNEL_DORIS_HOST
+              value: gaia-doris-fe
+            - name: SEATUNNEL_PG_HOST
+              value: gaia-postgres
+            - name: SEATUNNEL_KAFKA_BOOTSTRAP_SERVERS
+              value: gaia-kafka:9092
+            # ── Kestra ──
+            - name: KESTRA_HOST
+              value: gaia-kestra
+            - name: KESTRA_PORT
+              value: "8080"
+            - name: KESTRA_PASSWORD
+              value: ""
+            # ── Neo4j（可选，未部署时 graph 层降级）──
+            - name: NEO4J_URI
+              value: bolt://gaia-neo4j:7687
+            - name: NEO4J_USER
+              value: neo4j
+            - name: NEO4J_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: neo4j-password
+            # ── 应用 ──
+            - name: APP_LOG_LEVEL
+              value: INFO
+            - name: AUTHZ_DEV_MODE
+              value: "true"
+            - name: BETTER_AUTH_URL
+              value: http://gaia-better-auth:3000
+            - name: AI_MODEL
+              value: ${GAIA_AI_MODEL}
+            # Custom OpenAI-compatible endpoint base URL (GLM/Pangu/ZhipuAI/
+            # vLLM/LiteLLM gateways, ...). Empty = OpenAI default. Only takes
+            # effect when AI_MODEL uses the openai:/openai-chat: prefix.
+            # Settings.py re-exports this to OPENAI_BASE_URL (non-empty only).
+            - name: AI_OPENAI_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: openai-base-url
+            # AI Provider Keys（按 AI_MODEL 前缀生效）
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: openai-api-key
+            - name: DEEPSEEK_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: deepseek-api-key
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: anthropic-api-key
+            - name: GOOGLE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: google-api-key
+            - name: MOONSHOT_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: moonshot-api-key
+            - name: ALIBABA_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: alibaba-api-key
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gaia-api
+  namespace: gaia
+spec:
+  ports:
+    - port: 8000
+      targetPort: 8000
+  selector:
+    app: gaia-api

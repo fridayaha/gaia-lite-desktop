@@ -1,0 +1,89 @@
+# Gaia Better Auth Server（ADR-016/017 Phase 5，认证服务）
+# 独立镜像 gaia-better-auth，共享 Gaia PG（独立 better_auth schema）。
+# 可选组件：dev 模式（X-User-Id header）可不部署，api 仍可运行。
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gaia-better-auth
+  namespace: gaia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gaia-better-auth
+  template:
+    metadata:
+      labels:
+        app: gaia-better-auth
+    spec:
+      initContainers:
+        - name: wait-postgres
+          image: postgres:16-alpine
+          command:
+            - sh
+            - -c
+            - "until pg_isready -h gaia-postgres -U ontology; do sleep 2; done"
+      containers:
+        - name: better-auth
+          image: unionagents/gaia-better-auth:${VERSION}
+          imagePullPolicy: ${IMAGE_PULL_POLICY_SERVICES}
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: database-url-sync
+            - name: BETTER_AUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: better-auth-secret
+            - name: BETTER_AUTH_URL
+              value: http://gaia-better-auth:3000
+            - name: TRUSTED_ORIGINS
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: trusted-origins
+            - name: GAIA_API_URL
+              value: http://gaia-api:8000
+            - name: GAIA_PROVISION_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: gaia-provision-token
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gaia-better-auth
+  namespace: gaia
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+  selector:
+    app: gaia-better-auth

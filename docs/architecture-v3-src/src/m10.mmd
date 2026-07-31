@@ -1,0 +1,8 @@
+flowchart TD
+    Create["create_instance<br/>access_scope + access_groups"] --> DerTeam["_derive_team<br/>USER_GROUP → access_groups[0] Team<br/>ALL/USER → default Team"]
+    DerTeam --> Prov["_provision_litellm<br/>POST /key/generate<br/>metadata=instance_id,group_id<br/>alias=instance:id[:8]<br/>归属 Team"]
+    Prov --> Store["存 instance.litellm_config<br/>per-instance key"]
+    Store --> Run["引擎经 key 调 LiteLLM → 上游 LLM"]
+    Run --> Log["LiteLLM spend_logs<br/>按 key 归因 Team/instance"]
+    Log --> Met["metrics_service<br/>/spend/logs?api_key=key<br/>start_date 过滤, end_date+1"]
+    Upd["update_instance<br/>scope/groups/version 变更"] --> Prov

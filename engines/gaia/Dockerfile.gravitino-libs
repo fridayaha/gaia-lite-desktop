@@ -1,0 +1,41 @@
+# 极小镜像：只含 Gravitino JDBC 驱动（MySQL 官方 + 国产库，~5MB）
+#
+# 用途：gravitino Pod 的 initContainer 从此镜像拷贝驱动到 emptyDir，
+#       再 volumeMount 到各 catalog 的 libs 目录（jdbc-mysql / jdbc-postgresql）。
+#       这样主容器用官方 apache/gravitino:1.3.0 镜像（自带 catalog provider jar），
+#       驱动通过 initContainer 追加，不覆盖原目录内容。
+#
+# 为什么需要独立镜像（而非运行时 curl 下载）：
+#   1. 声明式：驱动版本在 Dockerfile 里固定，可审计、可复现
+#   2. 离线友好：部署环境无外网时镜像已含驱动（curl 下载会失败）
+#   3. 一致性：k8s / docker-compose / CI 用同一份驱动清单
+#
+# 驱动清单：
+#   - mysql-connector-j 8.4.0 (LTS)：jdbc-mysql catalog 联邦 MySQL 源必需
+#     （Gravitino 1.3.0 entrypoint 的 symlink glob 只找 mysql-connector-java-*.jar，
+#      官方驱动现名 mysql-connector-j-*.jar，匹配不到，必须手动放）
+#   - opengaussjdbc / kingbase8：jdbc-postgresql catalog 联邦国产库（ADR-014）
+#   - oceanbase-client：jdbc-mysql catalog 联邦 OceanBase（ADR-014）
+#
+# 基础镜像用 nginx:alpine（与 Dockerfile.trino-plugins 一致，mirror 可靠）
+FROM nginx:alpine
+
+# ── MySQL 官方驱动（8.4.0 LTS）──
+# jdbc-mysql catalog 联邦 MySQL 源必需。Gravitino 1.3.0 entrypoint 的 symlink glob
+# 只找 mysql-connector-java-*.jar（旧名），官方驱动现名 mysql-connector-j-*.jar，
+# 匹配不到，必须手动放 catalog libs。
+# jar 预下载到 infra/jars/（与国产库驱动同目录），COPY 保证离线可复现构建。
+COPY infra/jars/mysql-connector-j-8.4.0.jar /gravitino-drivers/jdbc-mysql/mysql-connector-j-8.4.0.jar
+
+# ── 国产库 JDBC 驱动（ADR-014，仓库内 infra/jars/ 已 gitignore 大文件，构建时需存在）──
+# openGauss / 金仓 → jdbc-postgresql catalog；OceanBase → jdbc-mysql catalog
+# 这些 jar 非 Maven 中央仓库，必须从本地 infra/jars/ 拷贝（构建前确保存在）
+COPY infra/jars/opengaussjdbc-506.0.T35.jar /gravitino-drivers/jdbc-postgresql/opengaussjdbc-506.0.T35.jar
+COPY infra/jars/kingbase8-8.6.1.jar         /gravitino-drivers/jdbc-postgresql/kingbase8-8.6.1.jar
+COPY infra/jars/oceanbase-client-2.4.14.jar /gravitino-drivers/jdbc-mysql/oceanbase-client-2.4.14.jar
+
+# 按目标 catalog 分目录存放，initContainer 按目录名挂载到对应 catalog libs
+# /gravitino-drivers/jdbc-mysql/      → catalogs/jdbc-mysql/libs/
+# /gravitino-drivers/jdbc-postgresql/ → catalogs/jdbc-postgresql/libs/
+RUN echo "gravitino-jdbc-drivers-1.0" > /gravitino-drivers/VERSION && \
+    ls -lhR /gravitino-drivers/

@@ -1,0 +1,62 @@
+# ============================================================
+# UnionAgents 知行 — Hub 能力中心部署清单
+# 使用方式:
+#   ${VERSION} / ${REGISTRY} 由 Gitee Go deploy@k8s 的 params 自动替换（REGISTRY 在 Gitee Go 配置为变量）
+# ============================================================
+
+---
+# ── Hub 能力中心服务 ──
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hub
+  namespace: unionagents
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: hub }
+  template:
+    metadata:
+      labels: { app: hub }
+      annotations:
+        unionagents/rollUpdate: "${GITEE_COMMIT}"
+    spec:
+      imagePullSecrets:
+      - name: registry-secret
+      containers:
+      - name: hub
+        image: "${REGISTRY}/unionagents/hub:${VERSION}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8003
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: hub-database-url
+        - name: HUB_AUTH_MODE
+          value: "header"
+        resources:
+          requests: { cpu: "100m", memory: "128Mi" }
+          limits: { cpu: "500m", memory: "512Mi" }
+        livenessProbe:
+          httpGet: { path: /api/hub/health, port: 8003 }
+          initialDelaySeconds: 15
+          periodSeconds: 30
+        readinessProbe:
+          httpGet: { path: /api/hub/health, port: 8003 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hub
+  namespace: unionagents
+spec:
+  ports:
+  - port: 8003
+    targetPort: 8003
+  selector: { app: hub }

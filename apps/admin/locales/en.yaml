@@ -1,0 +1,2100 @@
+nav:
+  docs: Docs
+  notice: Notifications
+  community: Community
+  translation: Language
+buttons:
+  pureAccountSettings: Account
+  pureLoginOut: LoginOut
+  pureLogin: Login
+  pureOpenSystemSet: Open System Configs
+  pureReload: Reload
+  pureCloseCurrentTab: Close CurrentTab
+  pureCloseLeftTabs: Close LeftTabs
+  pureCloseRightTabs: Close RightTabs
+  pureCloseOtherTabs: Close OtherTabs
+  pureCloseAllTabs: Close AllTabs
+  pureContentFullScreen: Content FullScreen
+  pureContentExitFullScreen: Content ExitFullScreen
+  pureClickCollapse: Collapse
+  pureClickExpand: Expand
+  pureConfirm: Confirm
+  pureSwitch: Switch
+  pureClose: Close
+  pureBackTop: BackTop
+  pureOpenText: Open
+  pureCloseText: Close
+  pureWatchMore: Watch More
+  pureMarkAsRead: Mark As Read
+search:
+  pureTotal: Total
+  pureHistory: History
+  pureCollect: Collect
+  pureDragSort: （Drag Sort）
+  pureEmpty: Empty
+  purePlaceholder: Search Menu
+panel:
+  pureSystemSet: System Configs
+  pureCloseSystemSet: Close System Configs
+  pureClearCacheAndToLogin: Clear cache and return to login page
+  pureClearCache: Clear Cache
+  pureThemeMode: Theme Mode
+  pureThemeModeLight: Light
+  pureThemeModeLightTip: Set sail freshly and light up the comfortable work interface
+  pureThemeModeDark: Dark
+  pureThemeModeDarkTip: Moonlight Overture, indulge in the tranquility and elegance of the night
+  pureThemeModeSystem: Auto
+  pureThemeModeSystemTip: Synchronize time, the interface naturally responds to morning and dusk
+  pureThemeColor: Theme Color
+  pureMenuLayout: Menu Layout
+  pureVerticalTip: The menu on the left is familiar and friendly
+  pureHorizontalTip: Top menu, concise overview
+  pureMixTip: Mixed menu, flexible
+  pureStretch: Stretch Page
+  pureStretchFixed: Fixed
+  pureStretchFixedTip: Compact pages make it easy to find the information you need
+  pureStretchCustom: Custom
+  pureStretchCustomTip: Minimum 1280, maximum 1600
+  pureTagsStyle: Tags Style
+  pureTagsStyleSmart: Smart
+  pureTagsStyleSmartTip: Smart tags add fun and brilliance
+  pureTagsStyleCard: Card
+  pureTagsStyleCardTip: Card tags for efficient browsing
+  pureTagsStyleChrome: Chrome
+  pureTagsStyleChromeTip: Chrome style is classic and elegant
+  pureFullScreenWatermark: FullScreen Watermark
+  pureEnableWatermark: Watermark
+  pureWatermarkText: Text
+  pureWatermarkTextPlaceholder: Please enter text
+  pureInterfaceDisplay: Interface Display
+  pureGreyModel: Grey Model
+  pureWeakModel: Weak Model
+  pureHiddenTags: Hidden Tags
+  pureHiddenFooter: Hidden Footer
+  pureMultiTagsCache: MultiTags Cache
+menus:
+  pureHome: Home
+  pureLogin: Login
+  pureEmpty: Empty Page
+  pureCommunity: Community
+  pureAgentDevelopment: Agent Template
+  pureSkillStudio: Skill Development
+  pureAgentInstance: Agent
+  pureResourcePools: Resource Pool
+  pureLiteLLM: Model Gateway
+  pureLiteLLMModels: Models
+  pureLiteLLMKeys: API Keys
+  pureMonitoring: Monitoring
+  pureMonitoringTrace: Traces
+  pureMonitoringResources: Resources
+  pureMonitoringServiceHealth: Service Health
+  pureMonitoringUsage: Usage
+  pureMonitoringCalls: Analytics
+  pureMonitoringAlerts: Alerts
+  pureMonitoringOperationLog: Operation Log
+  pureMonitoringLogSearch: Service Logs
+  pureKnowledge: Knowledge
+  pureHub: Capability Hub
+  pureSysManagement: System
+  pureUser: Users
+  pureRole: Roles
+  pureSystemMenu: Menus
+  pureUserGroup: User Groups
+  pureEngineConfig: Engine Config
+  pureSecurityConfig: Security Config
+  pureAppRelease: App
+  pureAbnormal: Error
+  purePageNotFound: "404"
+  pureAccessDenied: "403"
+  pureServerError: "500"
+  pureChildMenuOverflow: Child Menu Overflow Show Tooltip Text
+status:
+  pureLoad: Loading...
+  pureMessage: Message
+  pureNotify: Notify
+  pureTodo: Todo
+  pureNoMessage: No Message
+  pureNoNotify: No Notify
+  pureNoTodo: No Todo
+login:
+  slogan: Unity of knowing and doing, steadfast reach afar
+  tabs:
+    account: Account
+    email: Email
+    phone: Phone
+    smsCode: SMS Code
+  email: Email
+  phone: Phone
+  smsLogin:
+    sendCode: Send Code
+    code: Verify Code
+    codeSent: Verification code has been sent
+    invalidCode: Verification code is incorrect or expired
+    loginFailed: Login failed, please retry
+  pureUsername: Username
+  purePassword: Password
+  pureVerifyCode: VerifyCode
+  pureSure: Sure Password
+  pureForget: Forget Password?
+  pureLogin: Login
+  pureThirdLogin: Third Login
+  purePhoneLogin: Phone Login
+  pureQRCodeLogin: QRCode Login
+  pureRegister: Register
+  pureWeChatLogin: WeChat Login
+  pureAlipayLogin: Alipay Login
+  pureQQLogin: QQ Login
+  pureWeiBoLogin: Weibo Login
+  purePhone: Phone
+  pureSmsVerifyCode: SMS VerifyCode
+  pureBack: Back
+  pureTest: Mock Test
+  pureTip: After scanning the code, click "Confirm" to complete the login
+  pureDefinite: Definite
+  pureLoginSuccess: Login Success
+  pureLoginFail: Login Fail
+  pureRegisterSuccess: Regist Success
+  pureTickPrivacy: Please tick Privacy Policy
+  pureReadAccept: I have read it carefully and accept
+  purePrivacyPolicy: Privacy Policy
+  pureGetVerifyCode: Get VerifyCode
+  pureInfo: Seconds
+  pureUsernameReg: Please enter username
+  purePassWordReg: Please enter password
+  pureVerifyCodeReg: Please enter verify code
+  pureVerifyCodeCorrectReg: Please enter correct verify code
+  pureVerifyCodeSixReg: Please enter a 6-digit verify code
+  purePhoneReg: Please enter the phone
+  purePhoneCorrectReg: Please enter the correct phone number format
+  purePassWordRuleReg: The password format should be any combination of 8-18 digits
+  purePassWordSureReg: Please enter confirm password
+  purePassWordDifferentReg: The two passwords do not match!
+  purePassWordUpdateReg: Password has been updated
+  pureLoginExpired: Login expired, please login again
+  failed:
+    invalidCredentials: Invalid username or password
+    accountLocked: Account locked, please try again in {minutes} minutes
+    tooManyRequests: Too many requests, please try again later
+    ipBanned: This IP has been temporarily banned, please try again later
+    noMenuPermission: Login successful, but this account has no menu permissions configured
+  captcha:
+    label: Captcha
+    placeholder: Enter the digits in the image
+    refresh: Click to refresh
+    invalid: Captcha is incorrect or expired
+    required: Unusual login attempts detected. Please complete the captcha and retry
+  forgetPassword:
+    title: Forgot Password
+    noChannel: No verification channel is configured. Please contact the system administrator to reset your password
+    invalidCode: Invalid code
+    verifyFailed: Verification failed, please retry
+    ticketInvalid: Code is no longer valid, please start over
+    success: Password has been reset, please log in with the new password
+    resetFailed: Reset failed, please retry
+    step1:
+      emailChannel: Email
+      smsChannel: SMS
+      targetRequired: Please enter email or phone
+      emailPlaceholder: Enter your registered email
+      phonePlaceholder: Enter your registered phone
+      sendCode: Send Code
+      codeSent: Code sent, please check your inbox
+      tooFrequent: Too many requests, please try later
+      ipBanned: This IP has been temporarily banned
+      sendFailed: Failed to send code, please retry
+    step2:
+      codePlaceholder: Enter the 6-digit code
+      verify: Verify
+    step3:
+      newPassword: New Password
+      confirmPassword: Confirm Password
+      reset: Reset Password
+  changeEmail:
+    title: Change Email
+    newEmail: New Email
+    sendCode: Send Code
+    code: Code
+    confirm: Confirm
+    inUse: This email is already in use
+    codeSent: Code sent to new email
+    invalidCode: Invalid code
+    success: Email changed successfully
+    failed: Failed to change email
+  changePhone:
+    title: Change Phone
+    newPhone: New Phone
+    sendCode: Send Code
+    code: Code
+    confirm: Confirm
+    inUse: This phone is already in use
+    codeSent: Code sent to new phone
+    invalidCode: Invalid code
+    success: Phone changed successfully
+    failed: Failed to change phone
+  verifyEmail:
+    title: Verify Email
+    sendCode: Send Code
+    code: Code
+    confirm: Confirm
+    codeSent: Code sent to current email
+    invalidCode: Invalid or expired code
+    alreadyVerified: This email is already verified by another user
+    success: Email verified successfully
+    failed: Failed to verify email
+  verifyPhone:
+    title: Verify Phone
+    sendCode: Send Code
+    code: Code
+    confirm: Confirm
+    codeSent: Code sent to current phone
+    invalidCode: Invalid or expired code
+    alreadyVerified: This phone is already verified by another user
+    success: Phone verified successfully
+    failed: Failed to verify phone
+tableBar:
+  pureList: List
+  pureLarge: Large
+  pureDefault: Default
+  pureSmall: Small
+  pureColumnSettings: ColumnSettings
+  pureCollapse: Collapse
+  pureExpand: Expand
+  pureRefresh: Refresh
+  pureDensity: Density
+  pureColumnDisplay: ColumnDisplay
+  pureReset: Reset
+  pureExitFullScreen: ExitFullScreen
+  pureFullScreen: FullScreen
+  purePinLeft: Pin Left
+  purePinRight: Pin Right
+  pureUnpin: Unpin
+
+# ── Business common ──
+common:
+  action:
+    edit: Edit
+    create: Create
+    add: Add
+    delete: Delete
+    clone: Clone
+    publish: Publish
+    offline: Unpublish
+    save: Save
+    cancel: Cancel
+    confirm: Confirm
+    confirmDelete: Confirm Delete
+    copy: Copy
+    next: Next
+    ok: OK
+    prev: Previous
+    log: Logs
+    uninstall: Uninstall
+    install: Install
+    retry: Retry
+    later: Later
+    operation: Operation
+    refresh: Refresh
+  tip: Tip
+  status:
+    draft: Draft
+    published: Published
+    offline: Unpublished
+    running: Running
+    suspended: Suspended
+    failed: Failed
+    pending: Pending
+    deploying: Deploying
+    archived: Archived
+    stopped: Stopped
+    enabled: Enabled
+    disabled: Disabled
+  scope:
+    all: Everyone
+    allFull: Available to all
+    user: Specific user
+    userGroup: Specific group
+    allProfile: Everyone (Independent Profile)
+    userProfile: Specific user (Independent Profile)
+    groupProfile: Group (Shared Profile)
+  profile:
+    independent: Independent
+    shared: Shared
+  msg:
+    loadFailed: Failed to load
+    saveSuccess: Saved successfully
+    operationFailed: Operation failed
+    deleteSuccess: Deleted successfully
+    deleteFailed: Failed to delete
+    copied: Copied
+
+# ── Agent module ──
+# V3: generic agent.* / engine.* keys reused by definition/instance/resourcePool views.
+definition:
+  detailTitle: Agent Template Detail
+  create: New Agent Template
+  publishVersion: Publish Version
+  unpublishedChanges: Unpublished changes
+  stats:
+    published: Published
+    draft: Draft
+  version:
+    title: Versions
+    current: Current Version
+    changeLog: Change Log
+    empty: No versions yet; publish to create the first snapshot
+  msg:
+    createOk: Template created
+    editOk: Template updated
+    published: Version published
+    deleted: "Deleted definition {name}"
+
+instance:
+  detailTitle: Agent Detail
+  create: New Agent
+  editTitle: Edit Agent
+  online: Online
+  offline: Offline
+  resume: Resume
+  restart: Restart
+  destroy: Destroy
+  deploy: Deploy
+  switchVersion: Switch Version
+  noDescription: No description
+  empty: No agents
+  notFound: "Agent {name} not found"
+  filter:
+    allStatus: All Status
+    allEngine: All Engines
+    searchPlaceholder: Search agent name
+  stats:
+    published: Online
+    draft: Draft
+    offline: Offline
+  detail:
+    restarting: Restarting
+    restartingHint: Engine is rolling restart, ~30-60s. Operations disabled until ready.
+    restartReady: Engine ready
+    restartTimeout: Restart timeout, check Pod status in "Runtime" tab
+    restartSubmitted: Restart submitted, waiting for engine...
+    confirmRedeploy: Instance is running. Redeploy will rebuild the engine Pod and briefly interrupt conversations. Continue?
+    redeployTitle: Redeploy Confirm
+    confirmDestroy: Destroy will clean up the engine Pod and all session data (MinIO archive retained). This cannot be undone. Continue?
+    destroyTitle: Destroy Confirm
+    deployReady: Engine deployed and ready
+    label:
+      definition: Template
+      version: Version
+      resourcePool: Resource Pool
+      engineType: Engine Type
+      accessScope: Access Scope
+      creator: Creator
+      updatedAt: Updated
+  version:
+    hasUpdate: New version available
+    upgrade: Upgrade version
+    upgradeHot: Applied without restart
+    upgradeRestart: Model group changed, rolling restart in progress (~30-60s)
+    upgradeNotRunning: Version binding updated. Instance not running, takes effect on deploy/resume
+    upgradeFailed: "Upgrade failed: {detail}"
+    changeLog: Changes
+    targetVersion: Target version
+    noChangeLog: (no change log)
+    confirm: This will incrementally push the new version's persona/skills/model to the running engine without redeploying the Pod. Continue?
+  deployStep:
+    title: Deploy Progress
+    subscribed: Subscribed to deploy event stream
+    waiting: Waiting for deploy events…
+    starting: Starting deploy
+    buildImage: Build Image
+    createPod: Create Pod
+    configuring: Injecting engine config
+    waitRunning: Wait Pod Ready
+    healthCheck: Health Check
+    ready: Engine Ready
+    unknown: Unknown Step
+    connectFailed: Deploy event stream connection failed
+    streamEndNoEvent: Deploy event stream ended without a completion event
+    failedUnknown: Deploy failed
+    failedReason: "Failure reason: {reason}"
+    deployFailed: "Deploy failed: {reason}"
+    timeout: Deploy timed out, please retry later
+  form:
+    step:
+      basic: Basic Info
+      pool: Definition & Pool
+      access: Access Scope
+      dify: Dify App
+    field:
+      name: Instance Name
+      namePlaceholder: Enter instance name, e.g. Assistant-Prod
+      description: Description
+      descriptionPlaceholder: Briefly describe this instance (optional)
+      definition: Agent Template
+      definitionPlaceholder: Select agent template
+      version: Version
+      versionPlaceholder: Select version
+      resourcePool: Resource Pool
+      resourcePoolPlaceholder: Select resource pool
+      browserSandbox: Browser Sandbox
+      browserSandboxEnable: Enable browser sandbox
+      browserSandboxHint: When enabled, the agent can operate a dedicated browser, and users can take over via the cloud desktop to complete actions such as sign-in
+      browserSandboxResourceHint: Resource-intensive; enable only when needed
+      accessScope: Access Scope
+      selectUser: Users
+      selectUserPlaceholder: Select users
+      selectGroup: User Groups
+      selectGroupPlaceholder: Select user groups
+    rule:
+      nameRequired: Please enter instance name
+      definitionRequired: Please select agent template
+      versionRequired: Please select version
+      resourcePoolRequired: Please select resource pool
+      groupRequired: Please select at least one user group
+      userRequired: Please select at least one user
+  msg:
+    createOk: Instance created
+    createOkAndOnline: Instance created and auto-published
+    createOkButOnlineFailed: Instance created, but auto-publish failed — click "Online" manually later
+    editOk: Instance updated
+    onlined: Instance online
+    onlinedFailed: Online failed
+    offlined: Instance offline
+    offlineFailed: Offline failed
+    deployed: Deployment started
+    deployFailed: "Deploy failed: {detail}"
+    suspended: Suspended
+    suspendFailed: "Suspend failed: {detail}"
+    resumed: Resumed
+    resumeFailed: "Resume failed: {detail}"
+    restarted: Restart submitted
+    restartFailed: "Restart failed: {detail}"
+    destroyed: Destroyed
+    destroyFailed: "Destroy failed: {detail}"
+    deleted: "Deleted instance {name}"
+    deleteFailed: Delete failed
+    deleteFailedDetail: "Delete failed: {detail}"
+    cloneOk: Cloned
+    cloneFailed: Clone failed
+    fetchListFailed: Failed to load instance list
+    loadFailed: Failed to load instance info
+    loadVersionsFailed: Failed to load versions
+
+resourcePool:
+  detailTitle: Resource Pool Detail
+  create: New Resource Pool
+
+agent:
+  name: Agent
+  instanceUnit: Instance(s)
+  create: Create Agent
+  editTitle: Edit Agent
+  detailTitle: Agent Detail
+  noDescription: No description
+  unboundEngine: No engine bound
+  difyExternalNoPool: Dify External
+  unbound: Unbound
+  empty: No agents
+  notFound: "Agent {name} does not exist"
+  filter:
+    allStatus: All status
+    allEngine: All engines
+    searchPlaceholder: Search agent name
+  stats:
+    published: Published
+    draft: Draft
+    offline: Unpublished
+  dialogTitle: "{title} Agent"
+  msg:
+    fetchListFailed: Failed to load agent list
+    loadFailed: Failed to load agent info
+    published: Agent published
+    publishFailed: Failed to publish
+    publishNoEngine: This agent has no bound engine and cannot be published
+    offlined: Agent unpublished
+    offlineFailed: Failed to unpublish
+    deleted: "Deleted agent {name}"
+    deleteFailed: Failed to delete
+    cloneOk: Cloned successfully
+    cloneFailed: Failed to clone
+    deployStarted: Deployment started
+    deployFailed: "Deploy failed: {detail}"
+    suspendSent: Suspend command sent; data will be archived to MinIO
+    suspendFailed: "Suspend failed: {detail}"
+    redeployStarted: Redeployment started; estimated 30-60s
+    redeployFailed: "Redeploy failed: {detail}"
+    destroyed: K8s resources cleaned up; MinIO archive retained
+    destroyFailed: "Destroy failed: {detail}"
+    deleteFailedDetail: "Failed to delete: {detail}"
+  detail:
+    suspend: Suspend
+    redeploy: Redeploy
+    destroy: Destroy
+    deploy: Deploy
+    confirmRedeploy: The agent is running. Redeploying will recreate the engine Pod; conversations will be briefly interrupted. Continue?
+    redeployTitle: Redeploy Confirmation
+    confirmDestroy: Destroying will clean up the engine Pod and all session/profile data (MinIO archive retained). This cannot be undone. Continue?
+    destroyTitle: Destroy Confirmation
+    unboundAlert: This agent has no bound engine and cannot be published. Please edit and bind an engine instance first.
+    label:
+      engineType: Engine Type
+      resourcePool: Resource Pool
+      modelGroup: Model Group
+      accessScope: Access Scope
+      creator: Creator
+      updatedAt: Updated At
+      browserSandbox: Browser Sandbox
+    browserSandboxEnabled: Enabled
+    browserSandboxDisabled: Disabled
+    tabs:
+      overview: Overview
+      monitor: Monitor
+      memory: Memory
+      skills: Skills
+      persona: Persona
+      channels: Channels
+      apiKeys: API Key
+      runtime: Runtime
+  form:
+    step:
+      basic: Basic Info
+      persona: Persona
+      access: Access Control
+    field:
+      name: Template Name
+      namePlaceholder: Enter template name, e.g. General Assistant
+      avatarColor: Avatar Color
+      avatarColorHint: Card avatar background color
+      description: Description
+      descriptionPlaceholder: Briefly describe the agent's purpose
+      engineInstance: Resource Pool
+      engineInstancePlaceholder: Select resource pool
+      memory: Memory
+      systemPrompt: System Prompt
+      systemPromptPlaceholder: Define the agent's identity, rules, and capabilities...
+      modelConfig: Model Config
+      modelGroup: Model Group
+      modelGroupPlaceholder: Select model group (from LiteLLM model management)
+      litellmHint: The engine only goes through the LiteLLM gateway; no need to configure providers or API keys separately. A virtual key is auto-generated per billing team on save.
+      contextLength: Context Length
+      difyConfig: Dify Engine Config
+      difyAppType: App Type
+      difyAppTypePlaceholder: Select Dify app type
+      difyAppTypeHint: Chat=conversational app; Agent=agent with tool calls; Workflow=workflow (stateless, outputs fallback uses text/answer/output).
+      difyBaseUrl: External Instance URL
+      difyBaseUrlPlaceholder: https://your-dify-instance.com (leave empty to use platform-deployed Dify Pod)
+      difyBaseUrlHint: External instance mode (user-managed Dify SaaS / self-hosted); leave empty = Pod mode (platform deploys Dify Pod in k3s). External URL must start with http(s)://.
+      difyApiKey: App API Key
+      difyApiKeyPlaceholder: app-xxxxxxxxxxxxxxxxxx
+      difyApiKeyHint: Dify app API key (from the Dify app's "Access API" page); stored encrypted at rest.
+      difyManagedHint: Managed mode — platform auto-deploys Dify Pod, no app config needed
+      difyInstanceStepHint: Pick a Dify platform app or manually fill external app info. Each instance binds one Dify app independently (dev/staging/prod can point to different apps)
+      difyApp: Dify App
+      difyAppPlaceholder: Select a Dify app
+      difyAppHint: Pick an app from your Dify platform. If empty, configure admin credentials in System → Engine Config first.
+      difyRefreshApps: Refresh
+      difySelectedApp: Selected app
+      difyVerifyBtn: Verify
+      difyVerifiedApp: Verified
+      rawJsonMode: Raw JSON edit mode
+      skillConfig: Skill Config (skill_config)
+      accessScope: Access Scope
+      selectGroup: Select Group
+      selectGroupPlaceholder: Select groups
+      selectUser: Select User
+      selectUserPlaceholder: Select users
+    billingHint: "Billing will be assigned to the first group: {name} (whoever uses it pays)"
+    msg:
+      loadModelFailed: Failed to load model groups; please configure them in Model Management first
+      selectModel: Please select a model group
+      skillJsonError: Invalid skill config JSON, please check
+      editOk: Agent updated successfully
+      createOk: Agent created successfully
+      difyAppsLoadFailed: Failed to load Dify apps list
+      difyAppSelectFailed: Failed to select Dify app
+      difyVerifyNeedBoth: Please fill in both base_url and App API Key first
+      difyVerifySuccess: "Verified, app name: {name}"
+      difyVerifyModeUnsupported: This app mode is not supported, please use chat/agent/workflow
+      difyVerifyFailed: Verification failed
+      difyAppIdRequired: Please select a Dify app
+    rule:
+      nameRequired: Template name is required
+      engineRequired: Please select an engine type
+      modelRequired: Please select a model group
+      groupRequired: Please select at least one user group
+      userRequired: Please select at least one user
+      difyAppTypeRequired: Please select a Dify app type
+      difyApiKeyRequired: Please enter the Dify App API Key
+  config:
+    engineDetailTitle: Configuration
+    metaTitle: Metadata
+    label:
+      engineType: Engine Type
+      model: Model
+      systemPrompt: System Prompt
+      avatarColor: Avatar Color
+      other: Other Config
+      accessScope: Access Scope
+      authUsers: Authorized Users
+      authGroups: Authorized Groups
+      conversationCount: Total Conversations
+      creator: Creator
+      createdAt: Created At
+      updatedAt: Updated At
+      publishedAt: Published At
+    notConfigured: Not configured
+    notSet: Not set
+    notPublished: Not published
+    rawJson: Raw Config JSON
+  channel:
+    create: + New Channel
+    empty: No channel configs
+    col:
+      channel: Channel
+      status: Status
+      scope: Scope
+      callback: Callback URL
+      createdAt: Created At
+      operation: Operation
+    type:
+      wecom: WeCom
+      wecom_bot_callback: WeCom
+      feishu: Feishu
+      dingtalk: DingTalk
+    typeSub:
+      wecom: Self-built App
+      wecom_bot_callback: AI Bot
+    typeDesc:
+      wecom: Enterprise in-house app with callback signature verification
+      wecom_bot_callback: URL callback with native streaming reply
+      feishu: Feishu bot with streaming card output
+      dingtalk: DingTalk bot via Stream/Webhook
+    connMode: Connection Mode
+    mode:
+      callback: URL Callback
+      ws: WebSocket
+    modeSoon: Not available
+    http:
+      title: Web Chat (HTTP)
+      desc: Enduser portal web chat channel, auto-created after publishing
+      autoCreate: Auto-created after the agent is published
+    field:
+      corp_id: Corp ID
+      secret: App Secret
+      token: Token
+      encoding_aes_key: EncodingAESKey
+      agent_id: App AgentId
+      app_secret: App Secret
+      verification_token: Verification Token
+      encrypt_key: Encrypt Key
+      client_id: Client ID
+      client_secret: Client Secret
+    placeholder:
+      wecomSecret: WeCom app secret
+      callbackToken: Callback URL verification token
+      aesKey: 43-char AES key
+      feishuAppSecret: Feishu app secret
+      eventToken: Event verification token
+      encryptKey: Message encryption key (optional)
+      dingtalkClientId: DingTalk app client ID
+      dingtalkClientSecret: DingTalk app secret
+    dialogTitle:
+      edit: Edit Channel Config
+      create: New Channel
+    formType: Channel Type
+    formProfile: Profile Mode
+    tip:
+      inherit: Inherited from agent
+      scopePrefix: "Access scope: "
+      credentials: "Tip: Credential fields are masked with asterisks. Leave blank to keep unchanged; entering new values overwrites existing config."
+    msg:
+      loadFailed: Failed to load channel config
+      copied: Callback URL copied
+      confirmDelete: "Delete the {type} channel config?"
+  apiKey:
+    create: Create API Key
+    createdTitle: API Key Created
+    copyWarning: Please copy and securely store this key now. For security, it will not be shown again after closing.
+    copy: Copy
+    copied: Copied
+    confirmSaved: I have saved it
+    confirmDelete: Are you sure to delete this API key? Requests using this key will fail immediately after deletion.
+    namePlaceholder: Enter a name, e.g. Production calls
+    empty: No API Key
+    limitReached: Maximum 10 API Keys per agent
+    col:
+      name: Name
+      key: API Key
+      createdAt: Created At
+      lastUsedAt: Last Used
+      operation: Operation
+    msg:
+      loadFailed: Failed to load API keys
+      createFailed: Failed to create API key
+      deleteSuccess: API key deleted
+      deleteFailed: Failed to delete API key
+      copyFailed: Copy failed
+  memory:
+    filter:
+      allType: All types
+      longTerm: Long-term memory
+      session: Session memory
+      manual: Manual mark
+      allSource: All sources
+      auto: Auto
+      manualSource: Manual
+    type:
+      long_term: Long-term
+      session: Session
+      manual: Manual
+    stat:
+      total: Total memories
+      longTerm: Long-term
+      session: Session
+    dialogTitle:
+      edit: Edit Memory
+      create: New Memory
+    field:
+      type: Memory Type
+      content: Content
+      contentPlaceholder: Enter info the agent should remember...
+    msg:
+      emptyContent: Please enter memory content
+      updated: Memory updated successfully
+      created: Memory created successfully
+      backendPending: Operation failed; memory backend not yet connected
+      deleted: Memory deleted
+      deleteFailed: Failed to delete; memory backend not yet connected
+      batchDeleted: "Deleted {count} memories"
+    col:
+      type: Type
+      source: Source
+      createdAt: Created At
+      updatedAt: Updated At
+      operation: Operation
+    confirmDelete: Delete this memory?
+    placeholder:
+      title: Memory backend connecting
+      desc: The agent memory API is not deployed yet; memory data cannot be viewed or managed. It will connect automatically once ready.
+  skill:
+    empty: No skills; click "+" below to install
+    searchPlaceholder: Search skill name
+    marketEmpty: No skills available
+    builtin: Built-in
+    preset: Preset
+    notSynced: Not synced
+    notDeployedTitle: Engine not deployed
+    notDeployedDesc: Only installed skills are shown. Built-in skills will be scanned after the engine is deployed. Toggling and installing take effect once the engine is running.
+    install:
+      local: Upload from local
+      market: Install from marketplace
+    dialogTitle:
+      preview: Install Skill Preview
+      market: Skill Marketplace
+      detail: Skill Details
+    drawer:
+      configTitle: Config Parameters
+      usage: Usage Count
+      usageUnit: times
+      engine: Compatible Engines
+      engineAll: All
+      credConfigured: Configured
+      credPlaceholder: Enter credential
+    msg:
+      toggled: "Skill \"{name}\" {state}"
+      toggledLocal: "Skill \"{name}\" {state} (local only; backend sync pending)"
+      configSaved: "Skill \"{name}\" config saved"
+      uninstalled: "Skill \"{name}\" uninstalled"
+      zipOnly: Only .zip skill packages are supported
+      parsing: Parsing skill package...
+      installOk: "Skill \"{name}\" installed successfully"
+    preview:
+      author: "Author: {author}"
+      params: Configurable Parameters
+      safe: Security scan passed; no risks found
+      confirmInstall: Confirm Install
+    newSkillName: New Skill
+    newSkillDesc: A skill uploaded from local
+    custom: Custom
+    installCount: "{count} installs"
+    installed: Installed
+    placeholder:
+      title: Skills backend connecting
+      desc: The agent skills API is not deployed yet; skills cannot be viewed or managed. It will connect automatically once ready.
+  instance:
+    col:
+      name: Pod Name
+      status: Status
+      node: Node
+      memory: Memory
+      restarts: Restarts
+      age: Age
+      operation: Operation
+    summary:
+      running: Running
+      stopped: Stopped
+      failed: Failed
+    runtime:
+      noPodTitle: External instance has no Pod
+      noPodDesc: Dify-integrated instances are not deployed via K8s Pod; check runtime status on the Dify platform
+    msg:
+      logPending: "Pod {name} log viewing is not yet implemented"
+      logFailed: Failed to load logs
+      logEmpty: No logs
+      loadFailed: Failed to load instances
+  monitor:
+    range:
+      h1: 1 hour
+      h6: 6 hours
+      h24: 24 hours
+      d7: 7 days
+    chart:
+      cpu: CPU Usage (m)
+      memory: Memory Usage (Mi)
+      requests: Request Count
+      token: Token Usage
+      tokenIn: Input Tokens
+      tokenOut: Output Tokens
+      request: Request
+    loadFailed: Failed to load monitoring data
+    loading: Loading monitor data...
+    placeholder:
+      title: Metrics connecting
+      desc: Prometheus / Metrics Server is not configured in this environment, so CPU, memory, request, and token metrics are unavailable. Configure K8s metrics collection to see real-time data here.
+    dify:
+      noDataTitle: Monitoring data not available for external instances
+      noDataDesc: Dify-integrated instances do not collect CPU / memory / request / token metrics; check the Dify platform for details
+  overview:
+    stat:
+      conversation: Total Conversations
+      token: Token Usage
+      activeUser: Active Sessions
+      deploy: Deploy Status
+    percent:
+      real: Real data
+      noData: No data
+      notConnected: Not connected
+      connected: Connected
+      notDeployed: Not deployed
+    chart:
+      trend: Last 7 Days Conversation Trend
+    dify:
+      title: Dify Integration Config
+      baseUrl: Base URL
+      appTypeLabel: App Type
+      appApiKey: API Key
+      mode: Mode
+      modeExternal: External
+      appType:
+        chat: Chat
+        agent: Agent
+        workflow: Workflow
+      noDataTitle: Monitoring data not available for external instances
+      noDataDesc: Token / session / trend data for Dify-integrated instances is available on the Dify platform
+    model:
+      title: Model Config (LiteLLM Gateway)
+      redeploy: Redeploy
+      tip: Update config on the agent edit page. Click "Redeploy" to apply changes (the engine restarts briefly, ~30-60s).
+      msg:
+        applied: Config applied
+        applyFailed: Failed to apply config
+      confirm:
+        content: Redeploying will briefly restart the agent engine (~30-60s); online users cannot use the agent during this time. Continue?
+        title: Confirm Redeploy
+
+# ── Knowledge ──
+knowledge:
+  placeholder:
+    title: Knowledge management coming soon
+    desc: The knowledge base (document retrieval / RAG) capability is not yet available. Stay tuned.
+
+# ── System management module ──
+system:
+  user:
+    title: User Management
+    create: Add User
+    dialogTitle: "{title} User"
+    verifyEmailTitle: Email Verification
+    verifyPhoneTitle: Phone Verification
+    filter:
+      allStatus: All status
+      searchPlaceholder: Search username
+    selected: "{count} selected"
+    cancelSelect: Cancel selection
+    batchDelete: Batch Delete
+    confirmBatchDelete: Confirm delete?
+    confirmDelete: "Delete user {name}?"
+    confirmDeleteWithProfiles: "This user has independent conversation spaces on {count} agent instance(s). Deletion will clean up the related data. This action cannot be undone. Continue?"
+    col:
+      username: Username
+      realName: Real Name
+      phone: Bound Phone
+      email: Bound Email
+      roles: Roles
+      status: Status
+      locked: Locked
+      createdAt: Created At
+      lastLogin: Last Login
+      operation: Operation
+    locked:
+      badge: "Locked {minutes}m left"
+      unlockLabel: Unlock Account
+    msg:
+      fetchFailed: Failed to load user list
+      deleted: "Deleted user {name}"
+      deleteFailed: Failed to delete user
+      batchDeleted: "Deleted users with IDs {ids}"
+      statusChanged: User status updated successfully
+      statusChangeFailed: Failed to update user status
+      created: User created successfully
+      updated: User updated successfully
+      operationFailed: Operation failed
+      emailAlreadyUsed: Email is already used by another user
+      usernameAlreadyUsed: Username is already taken
+      emailAlreadyVerified: Email is already verified by another user
+      phoneAlreadyVerified: Phone is already verified by another user
+      invalidCode: Invalid or expired verification code
+      userNoEmail: User has no email bound
+      userNoPhone: User has no phone bound
+      noActiveProvider: No active sender provider configured
+      providerSendFailed: Failed to send verification code
+      sendFailed: Failed to send verification code
+      verifyFailed: Verification failed
+      verifySuccess: Verified successfully
+      verifyEmail: Verify Email
+      verifyPhone: Verify Phone
+      alreadyVerified: User is already verified
+      codeSent: "Code sent to {target}, ask the user for the 6-digit code"
+      verifyCodePlaceholder: Enter 6-digit code
+      verified: Verified
+      unverified: Unverified
+      notBound: Not Bound
+      unlocked: "User {name} unlocked, can login now"
+      unlockFailed: Failed to unlock user
+      userNotLocked: User is not locked
+      userNotFound: User not found
+    confirm:
+      statusTitle: System Prompt
+      statusContent: "Confirm to {action} user {name}?"
+      ok: OK
+      unlockTitle: Unlock Confirm
+      unlockContent: "Unlock user {name}? They can login immediately after, and failure count will be reset."
+    pwd:
+      resetTitle: "Reset password for {name}"
+      resetLabel: Reset Password
+      newPwdPlaceholder: "Enter new password (at least 8 characters)"
+      newPwdRequired: Please enter a new password
+      newPwdWeak: New password must be at least 8 characters
+      resetOk: "Password reset successfully for {name}"
+      resetFailed: Failed to reset password
+      strength:
+        veryWeak: Very weak
+        weak: Weak
+        fair: Fair
+        strong: Strong
+        veryStrong: Very strong
+    role:
+      assignTitle: "Assign roles for {name}"
+      assignLabel: Assign Roles
+      assignOk: "Roles assigned successfully for {name}"
+      assignFailed: Failed to assign roles
+    form:
+      username: Username
+      usernamePlaceholder: Enter username
+      realName: Real Name
+      realNamePlaceholder: Enter real name
+      password: Password
+      passwordPlaceholder: Enter password
+      email: Email
+      emailPlaceholder: Enter email
+      phone: Phone
+      phonePlaceholder: Enter phone number
+      status: User Status
+      imDivider: IM Platform Binding
+      addBinding: + Add Binding
+      bindingDialogTitle: Add IM Binding
+      platformType: Platform Type
+      selectPlaceholder: Please select
+      imUserId: IM User ID
+      imUserIdPlaceholder: Enter the IM platform user ID
+      displayName: Display Name
+      displayNamePlaceholder: "Optional: user display name"
+      businessDivider: Business User Binding
+      businessUsername: Business Username
+      businessUsernamePlaceholder: Enter business system username
+      businessPhone: Business Phone
+      businessPhonePlaceholder: Enter business phone number
+      businessEmail: Business Email
+      businessEmailPlaceholder: Enter business email
+      saveBusiness: Save
+      removeBusiness: Unbind
+      col:
+        platform: Platform
+        imUserId: IM User ID
+        displayName: Display Name
+        operation: Operation
+      msg:
+        imUserIdRequired: Please enter the IM user ID
+        uidUnavailable: User ID unavailable, please reopen the edit dialog
+        bindOk: Bound successfully
+        bindFailed: Binding failed
+        unbindOk: Unbound successfully
+        unbindFailed: Failed to unbind
+        businessUsernameRequired: Please enter the business username
+        businessSaveOk: Business user binding saved
+        businessSaveFailed: Failed to save business user binding
+        businessRemoveOk: Business user binding removed
+        businessRemoveFailed: Failed to remove business user binding
+      rule:
+        usernameRequired: Username is required
+        passwordRequired: Password is required
+        passwordWeak: Password must be at least 8 characters
+        passwordStrength: Password too weak. Use a mix of upper/lowercase letters, digits and symbols (min 8 chars)
+        passwordStrengthFair: Password is moderately strong. Add more length or character types (upper/lowercase/digits/symbols)
+        emailRequired: Bound email is required
+        emailInvalid: Please enter a valid email format
+    roleForm:
+      username: Username
+      roleList: Role List
+  role:
+    title: Role Management
+    create: Add Role
+    dialogTitle: "{title} Role"
+    search: Search
+    reset: Reset
+    searchPlaceholder: Search role name
+    nameLabel: "Role Name: "
+    nameForm: Role Name
+    namePlaceholder: Enter role name
+    descForm: Role Description
+    descPlaceholder: Enter role description
+    permission: Permissions
+    permissionTitle: Permission Settings
+    permissionSearchPlaceholder: Search permission name
+    expandToggle: Expand/Collapse
+    selectAllToggle: Select All/None
+    linkage: Parent-Child Linkage
+    close: Close
+    savePermission: Save Permissions
+    confirmDelete: "Delete role {name}?"
+    col:
+      name: Role Name
+      description: Description
+      permissionCodes: Permission Codes
+      userCount: User Count
+      createdAt: Created At
+      operation: Operation
+    resource:
+      user: User Management
+      role: Role Management
+      agent_definition: Agent Template
+      agent_instance: Agent
+      resource_pool: Resource Pool
+      user_group: User Group
+      litellm: Model Gateway
+      hub: Capability Hub
+      monitoring: Monitoring
+      system: System
+      dashboard: Dashboard
+      menu: Menu Management
+      dept: Department Management
+      api: API Permissions
+      button: Button Permissions
+      agent: Agent Management
+    msg:
+      fetchFailed: Failed to load role list
+      deleted: "Deleted role {name}"
+      deleteFailed: Failed to delete role
+      created: Role created successfully
+      updated: Role updated successfully
+      operationFailed: Operation failed
+      permissionFetchFailed: Failed to load permission info
+      permissionSaved: "Permissions updated for role {name}"
+      permissionSaveFailed: Failed to save permissions
+    rule:
+      nameRequired: Role name is required
+  userGroup:
+    title: User Group Management
+    create: Add User Group
+    dialogTitle: "{title} User Group"
+    members: Members
+    confirmDelete: "Delete user group {name}?"
+    col:
+      name: Group Name
+      description: Description
+      memberCount: Members
+      createdAt: Created At
+      operation: Operation
+    form:
+      nameForm: Group Name
+      namePlaceholder: Enter group name
+      descForm: Description
+      descPlaceholder: Enter group description
+    member:
+      manageTitle: "Manage members of {name}"
+      selected: "{count} members selected"
+      searchPlaceholder: Search users...
+      joined: Joined
+      empty: No matching users
+      fetchFailed: Failed to load data
+      updated: "Members updated for group {name}"
+      updateFailed: Failed to update members
+    msg:
+      fetchFailed: Failed to load user group list
+      deleted: "Deleted user group {name}"
+      deleteFailed: Failed to delete user group
+      created: User group created successfully
+      updated: User group updated successfully
+      operationFailed: Operation failed
+    rule:
+      nameRequired: Group name is required
+
+  engineConfig:
+    title: Engine Config
+    subtitle: System-level configuration for Dify and other engines
+    difyTitle: Dify Engine
+    mode: Integration Mode
+    modeManaged: Managed
+    modeManagedDesc: Platform auto-deploys Dify Pod, no extra config
+    modeExternal: External
+    modeExternalDesc: Connect to self-hosted Dify or Dify Cloud
+    baseUrl: Dify Platform URL
+    baseUrlPlaceholder: https://your-dify.example.com
+    adminEmail: Admin Email
+    adminEmailPlaceholder: "admin{'@'}your-dify.com"
+    adminPassword: Admin Password
+    adminPasswordPlaceholder: Leave empty to keep current
+    adminPasswordPlaceholderConfigured: "•••••• (encrypted, leave empty to keep, type new to overwrite)"
+    adminPasswordConfigured: Configured
+    adminPasswordNotConfigured: Not configured
+    adminOptionalHint: With admin credentials, you can pick a Dify app from a dropdown when creating an agent. Without it, you must manually enter base_url + API Key.
+    langfuseIntegration: Langfuse Integration
+    langfuseHost: Langfuse Host
+    langfuseHostPlaceholder: http://langfuse.monitoring:3000
+    langfusePublicKey: Public Key
+    langfusePublicKeyPlaceholder: pk-lf-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    langfuseSecretKey: Secret Key
+    langfuseSecretKeyPlaceholder: sk-lf-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    langfuseSecretKeyPlaceholderConfigured: "•••••• (encrypted, leave empty to keep, type new to overwrite)"
+    langfuseSecretKeyConfigured: Configured
+    langfuseSecretKeyNotConfigured: Not configured
+    langfuseHint: After configured, the Monitoring > Usage page can show per-app token usage and cost. Requires Dify workspace integrated with the same Langfuse instance (trace.metadata contains app_id).
+    testConnection: Test Dify Connection
+    testing: Testing...
+    testSuccess: "Connection successful, found {count} apps"
+    testFailedNoAdmin: Admin credentials not configured, cannot test Console connection
+    testFailed: "Connection failed: {error}"
+    testLangfuse: Test Langfuse Connection
+    testingLangfuse: Testing...
+    testLangfuseSuccess: "Langfuse connection successful, found {count} traces"
+    testLangfuseFailed: "Langfuse connection failed: {error}"
+    testLangfuseNotConfigured: Langfuse credentials not configured, cannot test
+    save: Save
+    saved: Configuration saved
+    saveFailed: Save failed
+    difyAppsTitle: Dify Apps
+    difyAppsSubtitle: Apps available when creating an agent
+    refreshApps: Refresh
+    loadingApps: Loading apps...
+    noApps: No apps
+    appsLoadFailed: "Failed to load apps: {error}"
+    col:
+      appName: App Name
+      mode: Mode
+      description: Description
+      appId: App ID
+
+  securityConfig:
+    title: Security Config
+    subtitle: Configure SMS/Email providers for login / rebind / password recovery
+
+  appRelease:
+    title: App Management
+    subtitle: Manage end-user app releases; published apps are downloadable on the landing page
+    col:
+      version: Version
+      platform: Platform
+      displayName: Name
+      icon: Icon
+      description: Description
+      status: Status
+      createdAt: Created
+      publishedAt: Published
+      operation: Action
+    status:
+      draft: Draft
+      published: Published
+    platform:
+      android: Android
+      harmony: HarmonyOS
+    platformAll: All Platforms
+    upload: Upload Package
+    uploadDialogTitle: Upload Package
+    uploadTip: "Filename must end with -version.apk or -version.hap (e.g. zhixing-0.8.123.apk) for version parsing"
+    uploadSuccess: Uploaded
+    edit: Edit
+    editDialogTitle: Edit App Info
+    displayName: Name
+    displayNamePlaceholder: e.g. "Zhixing"
+    description: Description
+    descriptionPlaceholder: App description (optional)
+    iconUpload: Modify Icon
+    iconUploadTip: Supports PNG / JPG / WebP / GIF, ≤ 2MB
+    iconOk: Icon updated
+    publish: Publish
+    publishDialogTitle: Publish App
+    publishTip: Publishing may take tens of seconds; please wait
+    confirmPublish: Confirm Publish
+    publishing: Publishing…
+    publishSuccess: Published; now downloadable on the landing page
+    delete: Delete
+    confirmDelete: Delete this app release? Associated package files will also be cleaned up
+    copyDownloadUrl: Copy Download URL
+    emptyText: No app releases yet
+
+  smsConfig:
+    section:
+      provider: SMS Provider Configuration
+    create: New
+    active: Active Channel
+    activate: Set as Sender
+    activateSuccess: Set as current sender channel
+    deactivate: Cancel Sender
+    deactivateSuccess: Sender channel deactivated
+    mainField: Sign/Template
+    emptyText: No SMS provider configured, please create one
+    provider: Provider
+    providerAliyun: Aliyun
+    providerTencent: Tencent
+    providerHuawei: Huawei
+    providerInUse: This provider is already configured, please choose another
+    signName: Sign Name
+    signNamePlaceholder: e.g. UnionAgents
+    templateCode: Template Code
+    templateCodePlaceholder: e.g. SMS_123456789
+    accessKeyId: AccessKey ID
+    accessKeySecret: AccessKey Secret
+    accessKeyIdPlaceholderConfigured: "•••••• (encrypted, leave empty to keep, type new to overwrite)"
+    accessKeyIdPlaceholderEmpty: Enter AccessKey ID
+    accessKeySecretPlaceholderConfigured: "•••••• (encrypted, leave empty to keep, type new to overwrite)"
+    accessKeySecretPlaceholderEmpty: Enter AccessKey Secret
+    sdkAppId: SDK AppID
+    sdkAppIdPlaceholder: Required for Tencent
+    region: Region
+    regionPlaceholder: Aliyun e.g. cn-hangzhou; Huawei e.g. cn-north-4
+    dailyLimit: Daily Limit
+    dailyLimitHint: Max sends per phone per day
+    intervalSeconds: Min Interval
+    intervalSecondsHint: Seconds, avoid frequent sends to same phone
+    configured: Configured
+    notConfigured: Not configured
+    save: Save
+    saved: Saved
+    saveFailed: Save failed
+    test: Test Connection
+    testing: Testing...
+    testSuccess: Configuration validated
+    testFailed: "Validation failed: {error}"
+    createDialog: New SMS Provider
+    editDialog: Edit SMS Provider
+    deleteConfirm: Delete this SMS provider configuration?
+
+  emailConfig:
+    section:
+      provider: Email Provider Configuration
+    smtpHost: SMTP Host
+    smtpHostPlaceholder: e.g. smtp.qq.com
+    encryption: Encryption
+    smtpPort: SMTP Port
+    username: SMTP Username
+    usernamePlaceholder: e.g. 12345{'@'}qq.com (usually full email address)
+    password: SMTP Password / Auth Code
+    passwordPlaceholderConfigured: "•••••• (Encrypted; leave empty to keep; enter new value to override)"
+    passwordPlaceholderEmpty: Enter SMTP password or auth code
+    fromName: From Display Name
+    fromNamePlaceholder: e.g. UnionAgents Platform
+    dailyLimit: Daily Limit
+    dailyLimitHint: Max sends per day to the same email
+    intervalSeconds: Min Interval (seconds)
+    intervalSecondsHint: Avoid sending too frequently to the same email
+    configured: Configured
+    notConfigured: Not Configured
+    save: Save
+    saved: Saved
+    saveFailed: Save failed
+    test: Test Connection
+    testing: Testing...
+    testSuccess: Probe succeeded
+    testFailed: "Probe failed: {error}"
+    create: New
+    active: Active Channel
+    activate: Set as Sender
+    activateSuccess: Set as the current sender channel
+    mainField: Main Field
+    accessKeyId: AccessKey ID
+    accessKeySecret: AccessKey Secret
+    accessKeyIdPlaceholderConfigured: "•••••• (Encrypted; leave empty to keep)"
+    accessKeyIdPlaceholderEmpty: Enter AccessKey ID
+    accessKeySecretPlaceholderConfigured: "•••••• (Encrypted; leave empty to keep)"
+    accessKeySecretPlaceholderEmpty: Enter AccessKey Secret
+    fromEmail: From Email
+    fromEmailPlaceholder: e.g. alerts{'@'}mycompany.com
+    region: Region
+    regionPlaceholder: "aliyun: cn-hangzhou / tencent: ap-hongkong / huawei: cn-north-4"
+    providerSmtp: SMTP
+    providerAliyun: Aliyun
+    providerTencent: Tencent Cloud
+    providerHuawei: Huawei Cloud
+    providerInUse: This provider is already configured, please choose another
+    provider: Provider
+    createDialog: New Email Provider
+    editDialog: Edit Email Provider
+    deleteConfirm: Delete this email provider configuration?
+    emptyText: No email provider configured; please create one
+
+# ── Model Gateway (LiteLLM) module ──
+litellm:
+  loading: Loading...
+  default: Default
+  platformDefault: Platform Default
+  model:
+    create: New Model Group
+    edit: Edit
+    searchPlaceholder: Search model group
+    empty: No model groups; please create one
+    dialogTitle: New Model Group
+    dialogEditTitle: Edit Model Group
+    createBtn: Create
+    confirmBtn: Save
+    stats:
+      total: Model Groups
+      providers: Providers
+    col:
+      name: Model Group
+      upstream: Upstream Model
+      provider: Provider
+      apiBase: API Base
+      contextLength: Context Length
+      inputPrice: Input Price
+      outputPrice: Output Price
+      operation: Operation
+    field:
+      name: Model Group
+      nameHint: Name exposed to agents; agents select by this name
+      namePlaceholder: e.g. gpt-4o-group
+      upstream: Upstream Model
+      upstreamHint: Actual LiteLLM model identifier
+      upstreamPlaceholder: e.g. openai/gpt-4o, anthropic/claude-3-5-sonnet, zhipu/glm-4
+      apiKey: Upstream API Key
+      apiKeyPlaceholder: Upstream provider API key (leave empty to keep when editing)
+      apiKeyHint: Upstream provider credential; internal use only
+      apiBase: API Base
+      apiBasePlaceholder: Optional; custom upstream endpoint
+      customProvider: Provider
+      customProviderPlaceholder: Select or custom, e.g. openai, anthropic, zhipu
+      contextLength: Context Length
+      contextLengthHint: Max context tokens the model supports; filling this speeds up the first response
+      priceTarget: Target Model
+    msg:
+      loadFailed: Failed to load models
+      required: Model group, upstream model, and API key are all required
+      created: Model group created successfully
+      createFailed: Failed to create
+      updated: Model group updated
+      updateFailed: Failed to update
+      confirmDelete: "Delete model group \"{name}\"?"
+      deleteTitle: Confirm Delete
+      deleted: Deleted
+      deleteFailed: Failed to delete
+      priceUpdated: Price updated
+      priceUpdateFailed: Failed to update price
+    action:
+      editPrice: Edit Price
+    dialog:
+      inputPrice: Input Price
+      outputPrice: Output Price
+    tag:
+      priceNotSet: Not Set
+    tip:
+      priceHint: When price is not set, call cost will be recorded as 0. Updating the price takes effect immediately for new calls only; historical records are not backfilled.
+  key:
+    title: Key Monitoring
+    searchPlaceholder: Search agent/group
+    groupFilterPlaceholder: Filter by group
+    allModels: All
+    empty: No keys
+    stats:
+      total: Total Keys
+      normal: Active
+      blocked: Blocked
+    col:
+      agent: Agent
+      group: Group
+      models: Model Allowlist
+      budget: Budget(USD)
+      spend: Spent(¥)
+      status: Status
+      operation: Operation
+    status:
+      blocked: Blocked
+      normal: Active
+    action:
+      unblock: Unblock
+      block: Block
+      revoke: Revoke
+      edit: Budget/Limits
+    dialogEditTitle: Edit Key Budget and Limits
+    confirmBtn: Save
+    field:
+      maxBudget: Max Budget(USD)
+      budgetDuration: Budget Duration
+      budgetDurationPlaceholder: e.g. 30d
+      rpm: RPM Limit
+      tpm: TPM Limit
+      duration: Validity
+      durationPlaceholder: e.g. 30d; empty for permanent
+      invalidDuration: Invalid format, e.g. 30d, 1mo, 24hr
+      invalidNumber: Must be non-negative
+    msg:
+      loadGroupsFailed: Failed to load groups
+      loadAgentsFailed: Failed to load agents
+      loadFailed: Failed to load keys
+      unblocked: Unblocked
+      blocked: Blocked
+      operationFailed: Operation failed
+      confirmBlock: "Blocking will interrupt the agent's model calls until unblocked or redeployed. Confirm block?"
+      confirmUnblock: Unblock this key?
+      blockTitle: Confirm Block
+      confirmRevoke: "Revoking immediately disables the agent; redeploy is required to generate a new key. This cannot be undone. Confirm revoke?"
+      revokeTitle: Confirm Revoke
+      revoked: Revoked
+      revokeFailed: Failed to revoke
+      updated: Key updated
+      updateFailed: Failed to update
+
+
+# ── Resource Pool module ──
+engine:
+  loading: Loading...
+  create: New Resource Pool
+  dialogTitle: "{title} Resource Pool"
+  detailTitle: Resource Pool Detail
+  builtin: Built-in
+  autoRecycle: Auto Recycle
+  manualManage: Manual
+  empty: No resource pools
+  stats:
+    total: Resource Pools
+    builtin: Built-in Pools
+    custom: Custom Pools
+  filter:
+    engineType: Engine Type
+    searchPlaceholder: Search name
+  card:
+    memory: Memory
+    replicas: Replicas
+  detail:
+    tabs:
+      pods: Pod Management
+      monitor: Monitor
+      logs: Logs
+    label:
+      sessionPerPod: Sessions/Pod
+      idleSuspend: Idle Suspend
+      destroy: Destroy
+      image: Image
+      creator: Creator
+  msg:
+    loadFailed: Failed to load resource pool info
+    loadDataFailed: "Failed to load resource pool data: {detail}"
+    cloneOk: Cloned successfully
+    cloneFailed: "Clone failed: {detail}"
+    deleteOk: Deleted successfully
+    deleteFailed: "Delete failed: {detail}"
+    builtinNoDelete: Built-in resource pools cannot be deleted
+    created: Resource pool created successfully
+    updated: Resource pool updated successfully
+    operationFailed: Operation failed
+  form:
+    step:
+      basic: Basic Info
+      pod: Pod Resource Config
+      recycle: Recycle Policy
+    field:
+      name: Name
+      namePlaceholder: e.g. General Pool
+      description: Description
+      descriptionPlaceholder: Purpose of this resource pool
+      engineType: Engine Type
+      minCpu: Min CPU
+      maxCpu: Max CPU
+      minMemory: Min Memory
+      maxMemory: Max Memory
+      minReplicas: Min Replicas
+      maxReplicas: Max Replicas
+      maxProfiles: Max Sessions per Pod
+      maxProfilesHint: Max user sessions a single pod can hold; auto-scales beyond this
+      autoRecycle: Auto Recycle
+      autoRecycleOn: Auto-suspend when idle; release resources after timeout
+      autoRecycleOff: Manual management (no auto recycle)
+      idleSuspend: Suspend After Idle
+      idleSuspendHint: minutes (default 30)
+      idleDestroy: Release After Suspend
+      idleDestroyHint: hours (default 24)
+    rule:
+      nameRequired: Resource pool name is required
+  pod:
+    col:
+      agent: Agent
+      name: Pod Name
+      status: Status
+      node: Node
+      memory: Memory
+      restarts: Restarts
+      age: Age
+      operation: Operation
+    action:
+      log: Logs
+      restart: Restart
+    msg:
+      restarting: Pod restarting
+      restartFailed: "Failed to restart pod: {detail}"
+      fetchFailed: "Failed to load pod list: {detail}"
+  log:
+    selectPod: "Select Pod: "
+    selectPlaceholder: Select a pod
+    autoRefresh: Auto refresh
+    refresh: Refresh logs
+    empty: Please select a pod to view logs
+    source: "Source: "
+    sourceEngine: Engine (Nginx/Startup)
+    sourceGateway: Profile gateway
+    selectProfile: Select profile
+    tailLines: "Lines: "
+    msg:
+      fetchPodsFailed: Failed to load pod list
+      fetchLogsFailed: Failed to load logs
+  monitor:
+    timeRange: "Time range: "
+    range:
+      h1: 1 hour
+      h6: 6 hours
+      h24: 24 hours
+      d7: 7 days
+    chart:
+      cpu: CPU Usage Summary
+      memory: Memory Usage Summary
+
+# ── Account Settings module ──
+account:
+  back: Back
+  tabs:
+    profile: Profile
+    preferences: Preferences
+    securityLog: Security Log
+  profile:
+    title: Profile
+    roles: Roles
+    avatar: Avatar
+    updateAvatar: Update Avatar
+    presetAvatar: Choose Preset Avatar
+    presetAvatarTitle: Choose Preset Avatar
+    nickname: Real Name
+    nicknamePlaceholder: Enter real name
+    nicknameRequired: Real name is required
+    emailRequired: Bound email is required
+    emailInvalid: Please enter a valid email format
+    email: Bound Email
+    emailPlaceholder: Enter email
+    phone: Bound Phone
+    phonePlaceholder: Enter phone number
+    update: Update Info
+    editAvatarTitle: Edit Avatar
+    changePassword: Change Password
+    pwdDialog:
+      title: Change Password
+      old: Current Password
+      oldPlaceholder: Enter current password
+      new: New Password
+      newPlaceholder: At least 8 characters
+      confirm: Confirm New Password
+      confirmPlaceholder: Enter new password again
+      submit: Confirm
+      strength:
+        veryWeak: Very weak
+        weak: Weak
+        fair: Fair
+        strong: Strong
+        veryStrong: Very strong
+      msg:
+        mismatch: The two passwords do not match
+        weak: New password must be at least 8 characters
+        wrongOld: Current password is incorrect
+        ok: Password changed successfully
+    msg:
+      avatarOk: Avatar updated successfully
+      avatarFailed: Failed to update avatar
+      submitError: "Submit error: {error}"
+      updateOk: Info updated successfully
+  preferences:
+    title: Preferences
+    yes: Yes
+    no: No
+    msg:
+      setOk: "{title} updated successfully"
+    items:
+      accountPwd: Account Password
+      accountPwdDesc: Other users' messages will be notified via in-app messages
+      system: System Messages
+      systemDesc: System messages will be notified via in-app messages
+      todo: To-Do Tasks
+      todoDesc: To-do tasks will be notified via in-app messages
+  securityLog:
+    title: Security Log
+    hint: Showing account-security operations from the last 3 months. Older entries are archived.
+    col:
+      action: Action
+      ip: IP Address
+      ua: User Agent
+      time: Time
+
+# ── Dashboard (Welcome) module ──
+welcome:
+  stat:
+    agentTotal: Total Agents
+    weeklyNew: new this week
+    userTotal: Total Users
+    systemUser: system users
+    publishedAgent: Published Agents
+    publishRate: "{rate}% published"
+    poolStock: Resource Pools
+    engineTemplate: in total
+    groupAgent: Group Agents
+    groupMember: Group Members
+    todayConversation: Today's Chats
+    accessibleAgent: Accessible Agents
+    monthlyConversation: Chats This Month
+  health: System Health
+  healthHint: "(Real-time probing of each service's running status)"
+  healthUnknown: Unknown
+  healthDown: Down
+  healthUndeployed: Not Deployed
+  groupPrefix: "Group: {name}"
+  chart:
+    agentStatus: Agent Status
+    engineDist: Engine Distribution
+    instanceStatus: Instance Status
+    resource: Resource Quota
+    realtime: Realtime
+    allocated: Allocated
+    metricPending: Metrics connecting
+    recentActivity: Recent Activity
+    sampleData: Sample data
+    quickEntry: Quick Access
+    myAgent: My Agents
+    viewAll: View all
+    trend7d: Last 7 Days Chat Trend
+    topAgents: Top Agents
+    billing: Token & Billing
+  billing:
+    todayTokens: Today Tokens
+    monthlyTokens: Monthly Tokens
+    monthlyCost: Monthly Cost
+    unreachable: Billing service unreachable
+  resource:
+    cpu: CPU
+    memory: Memory
+    pods: running pods
+    noData: No running instances
+    used: "{used} / {limit} used"
+  activity:
+    legend:
+      publish: Publish
+      create: Create
+      offline: Offline
+      edit: Update
+  quickEntry:
+    createAgent: Create Agent
+    enginePool: Resource Pool Management
+    modelGateway: Model Gateway
+    userMgmt: User Management
+    billing: Billing
+    knowledge: Knowledge
+  action:
+    manageGroupAgent: Manage Group Agents
+
+# ── Error pages ──
+error:
+  notFound: Sorry, the page you visited does not exist
+  forbidden: Sorry, you do not have permission to access this page
+  serverError: Sorry, server error occurred
+  backHome: Back Home
+hub:
+  detailTitle: Capability Detail
+  action:
+    initPresets: Init Preset Capabilities
+    refresh: Refresh
+    detail: Detail
+    createVersion: Create Version
+    submitReview: Submit Review
+    approve: Approve
+    reject: Reject
+    publish: Publish
+  studio:
+    title: Skill Studio
+    developSkill: Develop Skill
+    backToHub: Back to Hub
+    createSkill: Create Skill
+    searchPlaceholder: Search skills…
+    empty: No skills yet — click "Create Skill" in the top-left to start
+    notFound: No skills matching "{name}"
+    createDialog:
+      title: Create Skill
+      name: Skill Name
+      namePlaceholder: e.g. Chart Drawing Skill
+      description: Skill Description
+      descriptionPlaceholder: Describe what this skill does
+      confirm: Create & Develop
+    card:
+      open: Open
+      delete: Delete
+    detail:
+      dev: Develop
+      debug: Debug
+      stopInstance: Stop Instance
+      restartInstance: Restart Instance
+      reloadSkill: Reload Skill
+      reloaded: Skill reloaded
+      configTitle: Skill Config
+      editConfig: Edit Config
+      editConfigTitle: Edit Skill Config
+      cancel: Cancel
+      save: Save
+      invalidJson: manifest.json is not valid JSON
+      unsaved: Unsaved changes
+      discard: Discard
+      discardHint: This file has unsaved changes. Switching will lose them. Continue?
+      noManifest: manifest.json not found — create it in the develop session first
+      filesTitle: Files
+      refreshFiles: Refresh
+      newFile: New File
+      newFileHint: Enter file path
+      create: Create
+      upload: Upload File
+      markerNew: Added
+      markerModified: Modified
+      noFileSelected: Select a file on the left to view its content
+      binaryHint: Binary files are not previewable
+      inputPlaceholder: Describe what you need…
+      send: Send
+      abort: Abort
+      connecting: Connecting…
+      streaming: Generating…
+      terminal: Terminal
+      terminalEmpty: No command output yet
+      validate: Validate
+      package: Package
+      publish: Publish
+      publishHint: Packages the skill, uploads to Hub, runs an automatic security scan, and creates a draft version. To publish a new version, bump the manifest version in the config editor first.
+      version: Version
+      validateOk: Validation passed
+      validateFailed: Validation failed
+      published: Published to Hub
+      riskLevel: Risk
+      riskLow: Low
+      riskMedium: Medium
+      riskHigh: High
+      riskBlocking: Blocking
+      findings: Findings
+      blockingHint: Blocking-level risk detected — resolve it in Hub before publishing.
+      done: Done
+      clarify:
+        submit: Submit
+        submitted: Submitted, processing
+        other: Other
+        otherPlaceholder: Type your answer
+        required: This question is required
+        yes: Yes
+        no: No
+        unanswered: Not answered
+      greeting:
+        dev:
+          title: Develop Assistant
+          desc: Tell me what skill you want to build — I'll help write the SKILL.md, design the manifest, and implement the tool logic.
+          hint: Try starting with
+          ex1: Help me build a bar-chart skill
+          ex2: Design a skill that converts Markdown to PDF
+          ex3: I want to create a skill that can search the web
+        debug:
+          title: Debug Assistant
+          desc: I've loaded the skill you're building. Talk to me like a real user to see how it performs.
+          hint: Try saying
+          ex1: Draw a bar chart of this week's sales
+          ex2: Convert this note to PDF
+          ex3: Show me what this skill can do
+      toolCall:
+        running: Running
+        done: Done
+        error: Failed
+        command: Command
+        output: Output
+        noOutput: No output
+        path: Path
+        diff: Changes
+        pattern: Pattern
+        content: Content
+        args: Arguments
+        result: Result
+    msg:
+      createSuccess: Skill created
+      deleteSuccess: Skill deleted
+      loadFailed: Load failed, please retry
+      saveFailed: Save failed, please retry
+      saveSuccess: Saved
+  filter:
+    type: Type
+    status: Status
+    searchPlaceholder: Search capabilities…
+  col:
+    name: Name
+    type: Type
+    description: Description
+    status: Status
+    risk: Risk
+    creator: Creator
+    industry: Industry
+    scenario: Scenario
+    source: Source
+    operation: Operation
+    versionNo: Version
+    createdAt: Created At
+    findings: findings
+    ruleId: Rule
+    message: Message
+    location: Location
+  section:
+    basic: Basic Info
+    versions: Versions
+    scan: Security Scan
+  status:
+    draft: Draft
+    pending_review: Pending Review
+    approved: Approved
+    published: Published
+    rejected: Rejected
+    disabled: Disabled
+    archived: Archived
+  risk:
+    low: Low
+    medium: Medium
+    high: High
+    blocking: Blocking
+  msg:
+    loadFailed: Failed to load capabilities
+    presetsOk: "Initialized {count} preset capabilities"
+    presetsFailed: Initialization failed
+    versionCreated: Version created
+    versionCreateFailed: Creation failed
+    submitted: Submitted for review
+    approved: Approved
+    rejected: Rejected
+    published: Published
+    noScanFindings: No scan findings
+  overview:
+    agent: Agent
+    skill: Skill
+    tool: Tool
+    mcp: MCP Service
+    total: Total
+  featured: Featured
+  all: All
+  import:
+    title: "Import {type}"
+    custom: Custom Import
+    thirdparty: Third-Party Import
+    doImport: Confirm Import
+    comingSoon: Coming Soon
+    comingSoonMsg: Third-party import is coming soon. Will support one-click import from Dify, Coze, OpenAI GPTs, etc.
+    platform: Source Platform
+    identifier: Platform Identifier
+    identifierPlaceholder: Enter App ID / repository URL
+    syncMode: Sync Mode
+    syncOnce: One-time import
+    syncSubscribe: Subscribe & auto-sync
+    name: Name
+    namePlaceholder: Capability name
+    descriptionPlaceholder: Capability description
+    manifest: Manifest
+    manifestPlaceholder: Enter JSON config
+    industryPlaceholder: e.g. General, DevOps, Finance
+    scenarioPlaceholder: e.g. Data Analysis, Compliance
+    tagsPlaceholder: Select or type tags
+    typeAuto: Auto determined by category
+    successMsg: "Imported: {name}"
+    nameRequired: Name is required
+    failed: Import failed, please retry
+  subscribe:
+    title: Subscribe to Agent Template
+    short: Subscribe
+    targetAgent: Target Template
+    targetAgentPlaceholder: Select an agent template to subscribe to
+    tplPublished: Published
+    tplDraft: Draft
+    installNote: After subscribing, the capability is installed into the template's skill list and fan-out to its instances. Publish a new template version, then hot-upgrade running instances to take effect.
+    confirm: Confirm Subscribe
+    cancelSub: Subscribed
+    currentSub: Subscribed Templates
+    selectAgent: Please select a target template
+    successMsg: "Subscribed \"{name}\" to template \"{agent}\""
+    cancelMsg: "Unsubscribed \"{name}\" from \"{agent}\""
+    loadTemplatesFailed: Failed to load agent templates
+    noVersion: This capability has no version yet, cannot subscribe
+    failed: Subscribe failed, please retry
+    publishTitle: Publish Template New Version
+    publishHint: Subscription saved to template. Publish a new template version now? You can hot-upgrade running instances on the instances page afterwards.
+    publishNow: Publish Now
+    published: Template new version published
+    publishFailed: Template publish failed
+    publishChangeLog: "Subscribe capability: {name}"
+    upgradeHint: The template has running instances. Go to the agent instances page to hot-upgrade them to take effect.
+  sourceType:
+    preset: Preset
+    manual: Manual
+    custom: Custom
+  creator:
+    platform: Platform
+    admin: Admin
+    dev_team: Dev Team
+    data_team: Data Team
+    ops_team: Ops Team
+    research: Research
+    procurement: Procurement
+    legal_team: Legal Team
+    nlp_team: NLP Team
+    hr_team: HR
+    sec_team: Security Team
+    marketing: Marketing
+    current_user: Current User
+operationLog:
+  targetType:
+    user: User
+    agent_instance: Agent
+    agent_definition: Agent Template
+    user_group: User Group
+    role: Role
+    resource_pool: Resource Pool
+    engine_config: Engine Config
+    agent_channel: Channel
+    agent_skill: Agent Skill
+    litellm_model: Model Gateway Model
+    litellm_key: Model Gateway Key
+    litellm_team: Model Gateway Team
+  actionDomain:
+    auth: Auth
+    agent_instance: Agent
+    agent_definition: Agent Template
+    user: User
+    user_group: User Group
+    role: Role
+    resource_pool: Resource Pool
+    engine_config: Engine Config
+    agent_channel: Channel
+    agent_skill: Agent Skill
+    litellm_model: Model Gateway Model
+    litellm_key: Model Gateway Key
+    litellm_team: Model Gateway Team
+  actionVerb:
+    login: Login
+    logout: Logout
+    create: Create
+    update: Update
+    delete: Delete
+    publish: Publish
+    unpublish: Unpublish
+    start: Start
+    stop: Stop
+    suspend: Suspend
+    resume: Resume
+    restart: Restart
+    clone: Clone
+    toggle: Toggle
+    assign: Assign
+    revoke: Revoke
+    deploy: Deploy
+    destroy: Destroy
+    offline: Offline
+    reprovision_key: Reset Key
+    switch_version: Switch Version
+    upgrade: Upgrade
+    install: Install
+    uninstall: Uninstall
+    reorder: Reorder
+    credentials_save: Save Credentials
+    block: Block
+    unblock: Unblock
+    sync: Sync
+    upsert: Save
+    change_password: Change Password
+    self_update: Update Profile
+    update_avatar: Update Avatar
+  status:
+    success: Success
+    failure: Failure
+  targetPrefix:
+    user: User
+    agent_instance: Agent
+    agent_definition: Agent Template
+    user_group: Group
+    role: Role
+    resource_pool: Pool
+    engine_config: Engine
+    agent_channel: Channel
+    agent_skill: Skill
+    litellm_model: Model Gateway Model
+    litellm_key: Model Gateway Key
+    litellm_team: Model Gateway Team
+  targetDeleted: Deleted
+
+# ── Community (technical articles) ──
+community:
+  createArticle: New Article
+  editArticle: Edit Article
+  auditTitle: Article Audit
+  listTitle: Community
+  listSearchPlaceholder: Search article titles
+  listEmpty: No articles
+  btnCreate: New Article
+  btnSubmit: Submit for Review
+  btnEdit: Edit
+  btnDelete: Delete
+  btnAudit: Audit
+  btnApprove: Approve
+  btnReject: Reject
+  btnSaveDraft: Save Draft
+  titleLabel: Title
+  titlePlaceholder: Enter article title
+  slugLabel: URL Slug
+  slugPlaceholder: Auto-generated if empty (english/digits recommended)
+  excerptLabel: Excerpt
+  excerptPlaceholder: One-sentence summary (optional)
+  contentLabel: Content
+  viewCount: Views
+  byAuthor: Author
+  publishedAt: Published
+  draftBadge: Draft
+  pendingBadge: Pending
+  publishedBadge: Published
+  rejectedBadge: Rejected
+  rejectReasonLabel: Reject Reason
+  rejectReasonPlaceholder: Please provide a rejection reason
+  msg:
+    createSuccess: Article created
+    updateSuccess: Article saved
+    submitSuccess: Submitted for review
+    submitConfirm: The article will enter the review queue and only goes live after approval. Submit now?
+    approveSuccess: Approved and published
+    rejectSuccess: Rejected
+    deleteSuccess: Deleted
+    deleteConfirm: Delete this article? This cannot be undone
+    needLogin: Login to publish articles
+    rejectReasonRequired: Rejection reason is required
+    loadFailed: Failed to load

@@ -1,0 +1,228 @@
+version: '1.0'
+name: offline-release
+displayName: 离线发布包
+triggers:
+  trigger: auto
+  push:
+    tags:
+      prefix:
+        - v
+stages:
+  # ── 阶段1：并行构建6个镜像并推送 Docker Hub ──
+  - name: build-images
+    displayName: 构建并推送镜像
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: build@docker
+        name: gateway
+        displayName: 网关服务
+        type: account
+        repository: docker.io
+        username: ${DOCKER_USERNAME}
+        password: ${DOCKER_PASSWORD}
+        tag: unionagents/gateway:${GITEE_BRANCH}
+        dockerfile: ./services/gateway/Dockerfile
+        context: ''
+        artifacts: []
+        isCache: false
+        processorType:
+          - amd64
+        parameter: {}
+        notify: []
+        strategy:
+          retry: '0'
+
+      - step: build@docker
+        name: manager
+        displayName: 管理服务
+        type: account
+        repository: docker.io
+        username: ${DOCKER_USERNAME}
+        password: ${DOCKER_PASSWORD}
+        tag: unionagents/manager:${GITEE_BRANCH}
+        dockerfile: ./services/manager/Dockerfile
+        context: ''
+        artifacts: []
+        isCache: false
+        processorType:
+          - amd64
+        parameter: {}
+        notify: []
+        strategy:
+          retry: '0'
+
+      - step: build@docker
+        name: hub
+        displayName: Hub 服务
+        type: account
+        repository: docker.io
+        username: ${DOCKER_USERNAME}
+        password: ${DOCKER_PASSWORD}
+        tag: unionagents/hub:${GITEE_BRANCH}
+        dockerfile: ./services/hub/Dockerfile
+        context: ./services/hub
+        artifacts: []
+        isCache: false
+        processorType:
+          - amd64
+        parameter: {}
+        notify: []
+        strategy:
+          retry: '0'
+
+      - step: build@docker
+        name: engine-hermes
+        displayName: Hermes 引擎
+        type: account
+        repository: docker.io
+        username: ${DOCKER_USERNAME}
+        password: ${DOCKER_PASSWORD}
+        tag: unionagents/engine-hermes:${GITEE_BRANCH}
+        dockerfile: ./engines/hermes/Dockerfile
+        context: ''
+        artifacts: []
+        isCache: false
+        processorType:
+          - amd64
+        parameter: {}
+        notify: []
+        strategy:
+          retry: '0'
+
+      - step: build@docker
+        name: console-admin
+        displayName: 管理台前端
+        type: account
+        repository: docker.io
+        username: ${DOCKER_USERNAME}
+        password: ${DOCKER_PASSWORD}
+        tag: unionagents/console-admin:${GITEE_BRANCH}
+        dockerfile: ./apps/admin/Dockerfile
+        context: .
+        artifacts: []
+        isCache: true
+        processorType:
+          - amd64
+        parameter: {}
+        notify: []
+        strategy:
+          retry: '0'
+
+      - step: build@docker
+        name: enduser-portal
+        displayName: 用户门户前端
+        type: account
+        repository: docker.io
+        username: ${DOCKER_USERNAME}
+        password: ${DOCKER_PASSWORD}
+        tag: unionagents/enduser-portal:${GITEE_BRANCH}
+        dockerfile: ./apps/enduser/Dockerfile
+        context: .
+        artifacts: []
+        isCache: true
+        processorType:
+          - amd64
+        parameter: {}
+        notify: []
+        strategy:
+          retry: '0'
+
+  # ── 阶段2：打包离线部署包（含 manifests + 安装脚本）──
+  - name: package
+    displayName: 打包离线部署包
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: shell@sh
+        name: bundle
+        displayName: 打包 manifests + 安装脚本
+        commands:
+          - |
+            set -ex
+            VERSION="${GITEE_TAG:-${GITEE_BRANCH:-v1.0.0}}"
+            mkdir -p dist/offline/manifests/{infra,services,apps,engines}
+
+            # 复制 manifests
+            cp deploy/k8s/namespace.yaml dist/offline/manifests/00-namespace.yaml
+            cp deploy/k8s/infra/secret.yaml dist/offline/manifests/infra/
+            cp deploy/k8s/infra/postgres.yaml dist/offline/manifests/infra/
+            cp deploy/k8s/infra/minio.yaml dist/offline/manifests/infra/
+            cp deploy/k8s/infra/manager-rbac.yaml dist/offline/manifests/infra/
+            cp deploy/k8s/services/manager.yaml dist/offline/manifests/services/
+            cp deploy/k8s/services/gateway.yaml dist/offline/manifests/services/
+            cp deploy/k8s/services/gateway-callback.yaml dist/offline/manifests/services/
+            cp deploy/k8s/services/litellm.yaml dist/offline/manifests/services/
+            cp deploy/k8s/services/hub.yaml dist/offline/manifests/services/
+            cp deploy/k8s/apps/admin.yaml dist/offline/manifests/apps/
+            cp deploy/k8s/apps/enduser-portal.yaml dist/offline/manifests/apps/
+            cp deploy/k8s/engines/hermes-template.yaml dist/offline/manifests/engines/60-hermes-engine.yaml
+
+            # 替换镜像标签为版本号
+            find dist/offline/manifests -name '*.yaml' -exec \
+              sed -i "s|:latest|:${VERSION}|g" {} \;
+            # LiteLLM 引用 ghcr.io 预构建镜像，替换为本地镜像
+            find dist/offline/manifests -name '*.yaml' -exec \
+              sed -i "s|ghcr.io/berriai/litellm-database:main-stable|unionagents/litellm:${VERSION}|g" {} \;
+
+            # 复制安装脚本
+            cp scripts/install-offline.sh dist/offline/install-offline.sh
+            chmod +x dist/offline/install-offline.sh
+            echo "${VERSION}" > dist/offline/VERSION
+
+            # 生成说明文档
+            cat > dist/offline/README.txt <<README
+            UnionAgents ${VERSION} 离线部署包
+            ====================================
+
+            包含：
+              1. K8s manifests（部署清单）
+              2. 一键安装脚本 install-offline.sh
+              3. 镜像清单（镜像需从 Docker Hub 拉取）
+
+            部署步骤：
+              1. 在可联网的机器上运行 \`bash scripts/package-offline.sh ${VERSION}\` 打包完整离线包
+              2. 或手动 docker pull 以下镜像后 docker save:
+                 - unionagents/manager:${VERSION}
+                 - unionagents/gateway:${VERSION}
+                 - unionagents/hub:${VERSION}
+                 - unionagents/engine-hermes:${VERSION}
+                 - unionagents/console-admin:${VERSION}
+                 - unionagents/enduser-portal:${VERSION}
+                 - ghcr.io/berriai/litellm-database:main-stable
+                 - postgres:16-alpine
+                 - minio/minio:latest
+              3. 将镜像 tar.gz 放入 images/ 目录
+              4. 将整个目录传到 ECS
+              5. 运行 \`bash install-offline.sh\`
+            README
+
+          - |
+            set -ex
+            VERSION="${GITEE_TAG:-${GITEE_BRANCH:-v1.0.0}}"
+            cd dist
+            tar -czf "unionagents-offline-${VERSION}.tar.gz" offline/
+            ls -lh "unionagents-offline-${VERSION}.tar.gz"
+        artifacts:
+          - name: release-bundle
+            path: ./dist/
+
+      - step: deploy@release
+        name: publish-release
+        displayName: 发布 Release
+        version: v1.0.0
+        artifactRepository: default
+        artifactName: "unionagents-offline-${GITEE_BRANCH}.tar.gz"
+        target: unionagents-offline-${GITEE_BRANCH}
+        tag: ${GITEE_TAG}
+        isPreRelease: false
+        changeLog: |
+          ## UnionAgents ${GITEE_BRANCH} 离线发布包
+
+          镜像已构建并推送到 Docker Hub。
+          下载此包后，配合本地 \`bash scripts/package-offline.sh ${GITEE_BRANCH}\` 生成完整离线包。
+        notify: []
+        strategy:
+          retry: '0'

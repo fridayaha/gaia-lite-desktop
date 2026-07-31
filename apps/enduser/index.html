@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>知行 · UnionAgents</title>
+
+    <!-- Theme setup -->
+    <script>
+      (function(){
+        try {
+          var themes = { light: 1, dark: 1, system: 1 };
+          var t = (localStorage.getItem('ua-theme') || 'dark').toLowerCase();
+          var theme = themes[t] ? t : 'dark';
+          localStorage.setItem('ua-theme', theme);
+          if (theme === 'system') theme = window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
+          if (theme === 'dark') document.documentElement.classList.add('dark');
+          else document.documentElement.classList.remove('dark');
+        } catch(e) { document.documentElement.classList.add('dark'); }
+      })();
+    </script>
+    <script>
+      (function(){
+        try {
+          var fs = localStorage.getItem('ua-font-size');
+          if (fs && fs !== 'default') document.documentElement.dataset.fontSize = fs;
+        } catch(e) {}
+      })();
+    </script>
+    <script>(function(){try{document.documentElement.dataset.workspacePanel=localStorage.getItem('ua-workspace-panel')==='open'?'open':'closed';}catch(e){document.documentElement.dataset.workspacePanel='closed';}})()</script>
+
+    <meta name="theme-color" content="#FAF7F0" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#141425" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" id="theme-color" content="#0D0D1A">
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="UnionAgents">
+    <link rel="apple-touch-icon" sizes="512x512" href="/apple-touch-icon.png">
+
+    <!-- PWA Service Worker registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js').catch(function(err) {
+            console.warn('[pwa] Service worker registration failed:', err);
+          });
+        });
+      }
+    </script>
+
+    <!-- Link to our app styles -->
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chat-ingress
+  annotations:
+    kubernetes.io/ingress.class: __INGRESS_CLASS__
+    # SSE 流式请求需要关闭 buffering、超时拉长
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  tls:
+  - hosts:
+    - chat.__DOMAIN__
+    secretName: unionagentservice-tls
+  rules:
+  - host: chat.__DOMAIN__
+    http:
+      paths:
+      # Controller API（Agent 部署、状态、profile 管理 — controller 已并入 manager，由 manager:8002 提供）
+      - pathType: Prefix
+        path: "/api/controller"
+        backend:
+          service:
+            name: manager
+            port:
+              number: 8002
+      # Gateway（聊天消息、会话管理 — 由 Gateway 内部剥离 /api/gateway 前缀）
+      - pathType: Prefix
+        path: "/api/gateway"
+        backend:
+          service:
+            name: gateway
+            port:
+              number: 8010
+      # Hub 能力中心（hub 原生服务 /api/hub/* 命名空间）
+      - pathType: Prefix
+        path: "/api/hub"
+        backend:
+          service:
+            name: hub
+            port:
+              number: 8003
+      # Manager API（认证）
+      - pathType: Prefix
+        path: "/api"
+        backend:
+          service:
+            name: manager
+            port:
+              number: 8002
+      # 前端 SPA
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: enduser-portal
+            port:
+              number: 80

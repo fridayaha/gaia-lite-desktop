@@ -1,0 +1,55 @@
+# ============================================================
+# UnionAgents 知行 — 产品主页（Landing）前端部署清单
+# 使用方式:
+#   ${VERSION} / ${REGISTRY} 由 Gitee Go deploy@k8s 的 params 自动替换（REGISTRY 在 Gitee Go 配置为变量）
+# 同步约束：本文件是 Gitee Go CI 路径，与 deploy/ci/deployment.yaml 的 console-landing block 必须保持一致
+# ============================================================
+
+---
+# ── 产品主页前端 ──
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: console-landing
+  namespace: unionagents
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: console-landing }
+  template:
+    metadata:
+      labels: { app: console-landing }
+      annotations:
+        unionagents/rollUpdate: "${GITEE_COMMIT}"
+    spec:
+      imagePullSecrets:
+      - name: registry-secret
+      containers:
+      - name: landing
+        image: "${REGISTRY}/unionagents/console-landing:${VERSION}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          requests: { cpu: "50m", memory: "64Mi" }
+          limits: { cpu: "200m", memory: "256Mi" }
+        livenessProbe:
+          httpGet: { path: /, port: 80 }
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet: { path: /, port: 80 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: console-landing
+  namespace: unionagents
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector: { app: console-landing }

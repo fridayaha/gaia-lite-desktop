@@ -1,0 +1,94 @@
+# Hermes Agent 主配置文件
+# 文档参考: https://hermes-agent.nousresearch.com/docs/user-guide/configuration
+
+# ==================== 终端后端配置 ====================
+terminal:
+  # 执行环境: local / docker / ssh / singularity / modal / daytona
+  backend: local
+  # 命令超时时间 (秒)
+  timeout: 180
+
+# ==================== 记忆系统配置 ====================
+memory:
+  # 启用长期记忆
+  memory_enabled: true
+  # 记忆文件路径 (相对于 ~/.hermes/)
+  memory_file: MEMORY.md
+  # 用户偏好文件路径
+  user_file: USER.md
+
+# ==================== 会话配置 ====================
+session:
+  # 数据库路径 (默认 SQLite)
+  db_path: state.db
+  # 会话历史保留天数 (0 = 永久保留)
+  retention_days: 0
+
+# ==================== Agent 行为配置 ====================
+agent:
+  # 单次对话最大轮次
+  max_turns: 50
+  # 默认模型 (需与 API Key 匹配)
+  default_model: gpt-4o
+  # 默认提供商
+  default_provider: openai
+
+# ==================== 工具配置 ====================
+tools:
+  # 文件读取最大字符数
+  file_read_max_chars: 100000
+  # 启用浏览器工具
+  browser_enabled: false
+  # Web 后端: firecrawl / requests
+  web_backend: firecrawl
+
+# ==================== 代码执行配置 ====================
+code_execution:
+  # 执行模式: project / sandbox
+  mode: project
+  # 允许的语言列表
+  allowed_languages:
+    - python
+    - javascript
+    - typescript
+    - bash
+
+# ==================== 安全配置 ====================
+security:
+  # 自动脱敏敏感信息 (API Key、密码等)
+  redact_secrets: true
+  # 危险操作需要确认
+  confirm_dangerous_ops: true
+
+# ==================== 隐私配置 ====================
+privacy:
+  # 自动脱敏个人身份信息 (PII)
+  redact_pii: false
+
+# ==================== 审批配置 ====================
+approvals:
+  # 审批模式: manual / auto
+  mode: manual
+  # 需要审批的操作类型
+  required_for:
+    - file_write
+    - command_execution
+    - network_request
+
+# ==================== 检查点配置 ====================
+checkpoints:
+  # 启用检查点
+  enabled: false
+  # 检查点间隔 (分钟)
+  interval_minutes: 30
+
+# ==================== 显示配置 ====================
+display:
+  # 工具执行进度显示: all / minimal / none
+  tool_progress: all
+  # 显示 token 使用统计
+  show_token_usage: true
+
+# ==================== 外部技能目录 ====================
+# 除默认 ~/.hermes/skills/ 外的额外技能扫描路径
+external_skill_dirs: []

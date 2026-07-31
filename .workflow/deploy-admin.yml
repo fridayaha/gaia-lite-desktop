@@ -1,0 +1,29 @@
+version: '1.0'
+name: deploy-admin
+displayName: 部署管理台前端
+triggers:
+  trigger: manual
+variables:
+  VERSION: "0.5.3"
+stages:
+  - name: deploy
+    displayName: 部署管理台
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: deploy@k8s
+        name: deploy_admin
+        displayName: K8S部署管理台前端
+        version: v1.31.0
+        certificate: ${GITCODE_K8S_CERT_ID}
+        namespace: unionagents
+        yaml: ./deploy/ci/deploy-admin.yaml
+        isReplace: false
+        skiptls: false
+        params:
+          VERSION: 0.5.3
+          REGISTRY: ${REGISTRY}
+        notify: []
+        strategy:
+          retry: '0'

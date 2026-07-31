@@ -1,0 +1,32 @@
+version: '1.0'
+name: build-gateway
+displayName: 构建_Gateway_服务
+triggers:
+  trigger: manual
+variables:
+  VERSION: "0.6.2"
+stages:
+  - name: build
+    displayName: 构建_Gateway_镜像
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: build@docker
+        name: gateway
+        displayName: Gateway_API
+        type: account
+        repository: ${REGISTRY}
+        username: ${REGISTRY_USERNAME}
+        password: ${REGISTRY_PASSWORD}
+        tag: unionagents/gateway:${VERSION}
+        dockerfile: ./services/gateway/Dockerfile
+        context: .
+        artifacts: []
+        isCache: true
+        processorType:
+          - amd64
+        parameter: {}
+        notify: []
+        strategy:
+          retry: '0'

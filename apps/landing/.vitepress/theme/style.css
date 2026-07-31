@@ -1,0 +1,52 @@
+/* Landing CTA 按钮：复刻 VitePress hero action 风格 */
+.landing-cta {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 32px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+
+.cta-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 24px;
+  min-width: 140px;
+  height: 44px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 20px;
+  border: 1px solid var(--vp-button-alt-border);
+  color: var(--vp-button-alt-text);
+  background: var(--vp-button-alt-bg);
+  transition: border-color 0.25s, color 0.25s, background-color 0.25s;
+  text-decoration: none;
+}
+
+.cta-btn:hover {
+  border-color: var(--vp-button-alt-hover-border);
+  color: var(--vp-button-alt-hover-text);
+  background: var(--vp-button-alt-hover-bg);
+}
+
+.cta-btn.primary {
+  border-color: var(--vp-button-brand-border);
+  color: var(--vp-button-brand-text);
+  background: var(--vp-button-brand-bg);
+}
+
+.cta-btn.primary:hover {
+  border-color: var(--vp-button-brand-hover-border);
+  color: var(--vp-button-brand-hover-text);
+  background: var(--vp-button-brand-hover-bg);
+}
+
+/* 版本号 footer */
+.version-footer {
+  text-align: center;
+  margin-top: 48px;
+  color: var(--vp-c-text-3);
+  font-size: 13px;
+}

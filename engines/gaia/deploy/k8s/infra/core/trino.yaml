@@ -1,0 +1,110 @@
+# Trino 478（联邦查询引擎）
+# 用官方 trinodb/trino:478 镜像（从 docker.io 拉，不进部署包）。
+# Gravitino connector 插件通过 initContainer 从极小的 gaia-trino-plugins 镜像拷贝到 emptyDir。
+# catalog 配置走 ConfigMap，连接地址用 k8s Service 名。
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gaia-trino
+  namespace: gaia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gaia-trino
+  template:
+    metadata:
+      labels:
+        app: gaia-trino
+    spec:
+      initContainers:
+        # 1. 拷贝 Gravitino connector 插件到 emptyDir（主容器挂载到 /usr/lib/trino/plugin/gravitino）
+        - name: copy-plugins
+          image: unionagents/gaia-trino-plugins:${VERSION}
+          imagePullPolicy: ${IMAGE_PULL_POLICY_SERVICES}
+          command: ["sh", "-c", "cp -r /gravitino-connector/* /plugins/"]
+          volumeMounts:
+            - name: plugins
+              mountPath: /plugins
+        # 2. 等 Gravitino 健康 + metalake "ontology" 已创建（由 gaia-gravitino-init Job 创建）
+        #    metalake 不存在则 gravitino connector 加载失败，Trino catalog 全空
+        - name: wait-gravitino
+          image: nginx:alpine
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              echo "[trino] 等待 Gravitino 健康..."
+              until wget -q -O- http://gaia-gravitino:8090/api/health 2>/dev/null | grep -q '"status":"up"'; do sleep 3; done
+              echo "[trino] 等待 metalake ontology 创建..."
+              until wget -q -O- http://gaia-gravitino:8090/api/metalakes 2>/dev/null | grep -q '"name":"ontology"'; do
+                echo "[trino] metalake ontology 尚未创建，等待 gaia-gravitino-init Job..."
+                sleep 5
+              done
+              echo "[trino] metalake ontology 就绪"
+      containers:
+        - name: trino
+          image: trinodb/trino:478
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms512m -Xmx768m -Daws.region=us-east-1"
+            - name: CATALOG_MANAGEMENT
+              value: dynamic
+            - name: AWS_REGION
+              value: us-east-1
+          volumeMounts:
+            - mountPath: /usr/lib/trino/plugin/gravitino
+              name: plugins
+            - mountPath: /etc/trino/catalog/gravitino.properties
+              subPath: gravitino.properties
+              name: catalog
+            - mountPath: /etc/trino/catalog/iceberg.properties
+              subPath: iceberg.properties
+              name: catalog
+            - mountPath: /etc/trino/catalog/pgnative.properties
+              subPath: pgnative.properties
+              name: catalog
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "768Mi"
+            limits:
+              cpu: "1500m"
+              memory: "1536Mi"
+          readinessProbe:
+            httpGet:
+              path: /v1/info
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /v1/info
+              port: 8080
+            initialDelaySeconds: 40
+            periodSeconds: 30
+      volumes:
+        - name: plugins
+          emptyDir: {}
+        - name: catalog
+          configMap:
+            name: gaia-trino-catalog
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gaia-trino
+  namespace: gaia
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: gaia-trino

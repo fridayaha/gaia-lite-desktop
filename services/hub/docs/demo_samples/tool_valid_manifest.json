@@ -1,0 +1,44 @@
+{
+  "name": "Document Parser Tool",
+  "type": "tool",
+  "version": "1.0.0",
+  "manifest_version": "0.1",
+  "description": "解析 PDF/Word 文档，提取结构化文本和表格数据",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "file_url": {
+        "type": "string",
+        "description": "文档的 URL 或本地路径"
+      },
+      "format": {
+        "type": "string",
+        "enum": ["pdf", "docx"],
+        "default": "pdf"
+      }
+    },
+    "required": ["file_url"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "pages": {"type": "array", "items": {"type": "object"}},
+      "tables": {"type": "array", "items": {"type": "object"}},
+      "metadata": {"type": "object"}
+    }
+  },
+  "invocation": {
+    "method": "http",
+    "endpoint": "https://internal-api.example.com/parse",
+    "timeout_ms": 30000,
+    "retry": 2
+  },
+  "permission_json": {
+    "allowed_actions": ["http_request", "file_read"],
+    "scope": ["document_store"]
+  },
+  "runtime_compatibility": {
+    "platform": "linux",
+    "min_runtime_version": "1.0.0"
+  }
+}

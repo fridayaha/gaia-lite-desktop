@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-config
+  namespace: monitoring
+data:
+  alertmanager.yml: |
+    global:
+      resolve_timeout: 5m
+
+    route:
+      group_by: ['alertname']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 4h
+      receiver: 'wechat-work'
+
+    receivers:
+      - name: 'wechat-work'
+        webhook_configs:
+          # 占位 URL — 替换为企业微信 webhook，例如：
+          #   https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxx
+          # 未替换时 Alertmanager 仍启动，告警 POST 到 127.0.0.1:9999 会 connection refused（不影响 UI 可见）
+          # 替换方法：kubectl -n monitoring edit configmap alertmanager-config
+          - url: 'http://127.0.0.1:9999/wechat-work-webhook'
+            send_resolved: true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager
+  namespace: monitoring
+  labels:
+    app: alertmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: alertmanager }
+  template:
+    metadata:
+      labels: { app: alertmanager }
+    spec:
+      containers:
+        - name: alertmanager
+          image: prom/alertmanager:v0.27.0
+          args:
+            - --config.file=/etc/alertmanager/alertmanager.yml
+            - --storage.path=/alertmanager
+          ports:
+            - containerPort: 9093
+              name: http
+          volumeMounts:
+            - name: config
+              mountPath: /etc/alertmanager
+              readOnly: true
+            - name: data
+              mountPath: /alertmanager
+          resources:
+            requests: { cpu: "30m", memory: "32Mi" }
+            limits: { cpu: "100m", memory: "128Mi" }
+      volumes:
+        - name: config
+          configMap:
+            name: alertmanager-config
+        - name: data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alertmanager
+  namespace: monitoring
+  labels:
+    app: alertmanager
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9093
+      targetPort: 9093
+      name: http
+  selector: { app: alertmanager }

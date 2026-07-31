@@ -1,0 +1,59 @@
+flowchart TB
+    subgraph Ingress[Ingress · 双域名]
+        AdminIng["admin.__DOMAIN__"]
+        ChatIng["chat.__DOMAIN__"]
+    end
+    subgraph NS["namespace: unionagents"]
+        subgraph 前端[前端静态站]
+            AdminWeb["console-admin :80"]
+            PortalWeb["enduser-portal :80"]
+        end
+        subgraph 后端[微服务]
+            Manager["manager :8002<br/>unionagents/manager"]
+            Gateway["gateway :8010<br/>unionagents/gateway"]
+            Controller["controller :8001<br/>unionagents/controller"]
+            LiteLLM["litellm :4000<br/>litellm-database"]
+        end
+        subgraph 引擎[引擎 · 动态 Deployment]
+            Eng1["engine-hermes-{id8}[-scope]<br/>:8642 · Hermes"]
+            EngN["engine-hermes-...<br/>多实例"]
+        end
+        subgraph 基础设施[基础设施]
+            PG["postgres :5432<br/>StatefulSet + PVC 10Gi"]
+            MinIO["minio :9000/:9001<br/>StatefulSet + PVC 20Gi"]
+        end
+        Secret["Secret: unionagents-secret<br/>pg/litellm/minio/jwt/api-server-key"]
+        CM["ConfigMap: litellm-config<br/>上游模型供应商"]
+    end
+    AdminIng -->|/api/controller| Controller
+    AdminIng -->|/api/gateway| Gateway
+    AdminIng -->|/api| Manager
+    AdminIng -->|/| AdminWeb
+    ChatIng -->|/api/gateway| Gateway
+    ChatIng -->|/api| Manager
+    ChatIng -->|/| PortalWeb
+    Manager --> Controller
+    Manager --> LiteLLM
+    Gateway --> Controller
+    Controller -->|apply Deployment Service PVC| Eng1
+    Controller --> EngN
+    Gateway -->|DNS 命名直连| Eng1
+    Gateway -->|DNS 命名直连| EngN
+    Eng1 --> LiteLLM
+    EngN --> LiteLLM
+    Manager --> PG
+    Controller --> PG
+    Gateway --> PG
+    LiteLLM --> PG
+    Controller --> MinIO
+    Eng1 --> MinIO
+    Manager --> MinIO
+    Secret -. env 注入 .-> Manager
+    Secret -. env 注入 .-> Controller
+    Secret -. env 注入 .-> Gateway
+    Secret -. env 注入 .-> LiteLLM
+    Secret -. env 注入 .-> PG
+    Secret -. env 注入 .-> MinIO
+    CM -. 模型配置 .-> LiteLLM
+    EngPVC["PVC: engine-data-{id8}<br/>/opt/data · RWO"]
+    Eng1 -. 挂载 .-> EngPVC

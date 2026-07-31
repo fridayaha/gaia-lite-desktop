@@ -1,0 +1,38 @@
+# strategic merge patch：在 base gateway.yaml 上
+# ① gateway 容器切到 local provider（UA_ASR_PROVIDER=local + 加 UA_ASR_URL）
+# ② 追加 asr-sidecar 容器（faster-whisper，与 gateway 同 pod 共享 localhost:9100）
+# base 的 UA_ASR_VOLC_* env 保留但 local provider 不读，无害。
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+spec:
+  template:
+    spec:
+      containers:
+      - name: gateway
+        env:
+        - name: UA_ASR_PROVIDER
+          value: "local"
+        - name: UA_ASR_URL
+          value: "http://localhost:9100"
+      - name: asr-sidecar
+        image: unionagents/asr-sidecar:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9100
+          name: asr
+        env:
+        - name: WHISPER_MODEL
+          value: "small"
+        resources:
+          requests: { cpu: "500m", memory: "512Mi" }
+          limits: { cpu: "4", memory: "2Gi" }
+        livenessProbe:
+          httpGet: { path: /health, port: 9100 }
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet: { path: /health, port: 9100 }
+          initialDelaySeconds: 10
+          periodSeconds: 10

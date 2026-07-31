@@ -1,0 +1,35 @@
+# Hermes profile config.yaml 模板（由 manager 的 _build_profile_config_yaml 渲染）
+# 动态占位符（string.Template）：model_default（模型名）、context_length_line（context_length 行，空则省略）、
+#   skills_block（skills 段）、plugins_block（plugins 段，manager 侧配了 Langfuse 凭据时才渲染，
+#   用于激活 observability/langfuse 内层 trace 插件——该插件 opt-in，config.yaml 无此段则不加载）。
+# 静态段（provider/security/approvals/memory）写死，全局改直接编辑本文件。
+#
+# 权限策略（默认全部放通，依据 Hermes 官方 security 文档）：
+#   approvals.mode: off —— 关闭所有危险命令审批，等同 --yolo，全部命令直接执行。
+#   approvals.cron_mode: approve —— cron 任务也自动批准（默认 deny）。
+#   security.tirith_enabled: false —— 关闭 tirith 预执行安全扫描。
+#   platform_toolsets.api_server —— api_server/gateway 模式下启用 hermes-api-server + terminal
+#       工具集（对齐 upstream c8707c2，修复 #51967 非桌面环境终端工具集丢失）。
+#   注：硬底线 blocklist（rm -rf /、fork bomb、mkfs、dd of=/dev/sd* 等灾难命令）
+#       始终开启、无法关闭，这是 Hermes 的安全地板线（与 mode: off 无关）。
+# 约束：union_agent 统一走 LiteLLM 的 OpenAI 兼容端点，故 provider 恒为 openai-api。
+model:
+  provider: openai-api
+  default: ${model_default}
+${context_length_line}security:
+  tirith_enabled: false
+approvals:
+  mode: off
+  cron_mode: approve
+platform_toolsets:
+  api_server:
+    - hermes-api-server
+    - terminal
+${browser_toolset_line}${skills_block}
+${browser_block}${plugins_block}memory:
+  user_profile_enabled: true
+# per-profile UID 隔离：kanban dispatcher 的 db/lock 写在共享 root 目录（/opt/data/kanban/），
+# 非 root 的 profile uid 写不了会刷 PermissionError；kanban 是多 profile 协作看板，
+# 单租户隔离场景不需要，关闭（对齐 main 分支 orchestrator.py 的 per-profile uid 处理）。
+kanban:
+  dispatch_in_gateway: false

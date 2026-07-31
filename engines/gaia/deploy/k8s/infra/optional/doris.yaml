@@ -1,0 +1,255 @@
+# Apache Doris FE + BE（在线读主源 / 索引加速）
+# 相比 docker-compose 的优化：
+# - 去掉 docker 固定 IP（172.18.0.10/0.20），改用 k8s Service DNS + StatefulSet 稳定 hostname
+# - FE 用 BUILD_TYPE=k8s 模式（doris 4.0 镜像 entrypoint 支持，跳过 IP 校验，用 FQDN）
+# - BE 用镜像自带 register_be 自动注册（设 MASTER_FE_IP + CURRENT_BE_IP=稳定 hostname）
+# - enable_fqdn_mode=true：BE 上报 hostname 而非 IP，与 ADD BACKEND 的 FQDN 一致
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gaia-doris-fe-data
+  namespace: gaia
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: ${STORAGE_CLASS}
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gaia-doris-be-data
+  namespace: gaia
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: ${STORAGE_CLASS}
+  resources:
+    requests:
+      storage: 30Gi
+---
+# ── Doris FE ──
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: gaia-doris-fe
+  namespace: gaia
+spec:
+  serviceName: gaia-doris-fe
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gaia-doris-fe
+  template:
+    metadata:
+      labels:
+        app: gaia-doris-fe
+    spec:
+      hostname: gaia-doris-fe-0
+      subdomain: gaia-doris-fe
+      initContainers:
+        # 等 PG 就绪（Gravitino 不依赖 Doris，无需等）
+        - name: wait-postgres
+          image: postgres:16-alpine
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          command:
+            - sh
+            - -c
+            - "until pg_isready -h gaia-postgres -U ontology; do sleep 2; done"
+      containers:
+        - name: doris-fe
+          image: apache/doris:fe-4.0.5
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          ports:
+            - containerPort: 9030
+              name: query
+            - containerPort: 8030
+              name: http
+            - containerPort: 9010
+              name: edit-log
+          env:
+            # K8S 模式：doris 4.0 entrypoint 检测到 BUILD_TYPE=k8s 跳过 IP 校验，
+            # 配合 enable_fqdn_mode=true 用 StatefulSet 稳定 hostname（Pod 重建 IP 变化不影响）
+            - name: BUILD_TYPE
+              value: "k8s"
+            # FQDN 模式下用 StatefulSet 稳定 hostname，而非 Pod IP
+            - name: FE_CURRENT_IP
+              value: "gaia-doris-fe-0.gaia-doris-fe"
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms256m -Xmx512m"
+          volumeMounts:
+            - mountPath: /opt/apache-doris/fe/conf/fe.conf
+              subPath: fe.conf
+              name: config
+            # 只挂载数据目录（doris-meta），不能挂整个 fe 目录（会覆盖镜像 bin/lib）
+            - mountPath: /opt/apache-doris/fe/doris-meta
+              name: data
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+          readinessProbe:
+            httpGet:
+              path: /api/bootstrap
+              port: 8030
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /api/bootstrap
+              port: 8030
+            initialDelaySeconds: 60
+            periodSeconds: 30
+      volumes:
+        - name: config
+          configMap:
+            name: gaia-doris-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: gaia-doris-fe-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gaia-doris-fe
+  namespace: gaia
+spec:
+  ports:
+    - port: 9030
+      name: query
+      targetPort: 9030
+    - port: 8030
+      name: http
+      targetPort: 8030
+    - port: 9010
+      name: edit-log
+      targetPort: 9010
+  selector:
+    app: gaia-doris-fe
+---
+# ── Doris BE ──
+apiVersion: v1
+kind: Service
+metadata:
+  name: gaia-doris-be
+  namespace: gaia
+spec:
+  clusterIP: None
+  ports:
+    - port: 9050
+      name: heartbeat
+      targetPort: 9050
+    - port: 9060
+      name: be
+      targetPort: 9060
+    - port: 8040
+      name: webserver
+      targetPort: 8040
+  selector:
+    app: gaia-doris-be
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: gaia-doris-be
+  namespace: gaia
+spec:
+  serviceName: gaia-doris-be
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gaia-doris-be
+  template:
+    metadata:
+      labels:
+        app: gaia-doris-be
+    spec:
+      # 设置 Pod hostname，配合 Doris FQDN 模式（enable_fqdn_mode=true）
+      # 使 BE 用稳定 hostname 注册（gaia-doris-be-0.gaia-doris-be），Pod 重建 IP 变化不影响
+      hostname: gaia-doris-be-0
+      subdomain: gaia-doris-be
+      initContainers:
+        # 等 FE 就绪后，幂等注册 BE（FQDN 模式用稳定 hostname 而非 Pod IP）
+        # 用 fe 镜像（自带 mysql 客户端），对 FE 执行 ALTER SYSTEM ADD BACKEND
+        - name: register-be
+          image: apache/doris:fe-4.0.5
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          command:
+            - bash
+            - -c
+            - |
+              set -e
+              BE_FQDN="gaia-doris-be-0.gaia-doris-be"
+              BE_HEARTBEAT_PORT="9050"
+              echo "[register-be] 等待 FE 就绪..."
+              until mysql -h gaia-doris-fe-0.gaia-doris-fe -P 9030 -uroot -e "SHOW FRONTENDS" >/dev/null 2>&1; do
+                sleep 3
+              done
+              echo "[register-be] FE 就绪，检查 BE 是否已注册..."
+              if mysql -h gaia-doris-fe-0.gaia-doris-fe -P 9030 -uroot -N -e "SHOW BACKENDS" 2>/dev/null | grep -qw "${BE_FQDN}"; then
+                echo "[register-be] BE ${BE_FQDN} 已注册，跳过"
+              else
+                echo "[register-be] 注册 BE ${BE_FQDN}:${BE_HEARTBEAT_PORT}..."
+                mysql -h gaia-doris-fe-0.gaia-doris-fe -P 9030 -uroot -e "ALTER SYSTEM ADD BACKEND '${BE_FQDN}:${BE_HEARTBEAT_PORT}'"
+                echo "[register-be] 注册成功"
+              fi
+      containers:
+        - name: doris-be
+          image: apache/doris:be-4.0.5
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          ports:
+            - containerPort: 9050
+              name: heartbeat
+            - containerPort: 9060
+              name: be
+            - containerPort: 8040
+              name: webserver
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms256m -Xmx512m"
+          # FQDN 模式下直接启动 BE 进程（注册已由 register-be initContainer 完成）
+          # 不走 entry_point.sh（它要求 IP 格式，与 FQDN 模式冲突）
+          command:
+            - bash
+            - -c
+            - |
+              set -e
+              export SKIP_CHECK_ULIMIT=true
+              exec /opt/apache-doris/be/bin/start_be.sh --console
+          volumeMounts:
+            - mountPath: /opt/apache-doris/be/conf/be.conf
+              subPath: be.conf
+              name: config
+            # 只挂载存储目录（storage），不能挂整个 be 目录（会覆盖镜像 bin/lib）
+            - mountPath: /opt/apache-doris/be/storage
+              name: data
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "2"
+              memory: "3Gi"
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 8040
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 8040
+            initialDelaySeconds: 60
+            periodSeconds: 30
+      volumes:
+        - name: config
+          configMap:
+            name: gaia-doris-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: gaia-doris-be-data

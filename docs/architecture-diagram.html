@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UnionAgents (知行) — 系统架构图</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #f0f4fc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    padding: 40px;
+  }
+  .diagram {
+    width: 1100px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 36px 32px 28px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: #fff;
+  }
+  .logo-text {
+    color: #1e293b;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .logo-text span { color: #64748b; font-weight: 400; }
+  .version {
+    color: #94a3b8;
+    font-size: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 3px 10px;
+  }
+
+  .layer { margin-bottom: 16px; }
+  .layer-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #94a3b8;
+    margin-bottom: 8px;
+    padding-left: 2px;
+  }
+
+  .layer-content {
+    display: flex;
+    gap: 12px;
+  }
+
+  .card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px;
+    transition: border-color 0.15s;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-title .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .card-desc {
+    font-size: 11px;
+    color: #64748b;
+    line-height: 1.5;
+  }
+
+  .services-group { display: flex; gap: 12px; flex: 1; }
+  .services-group .card { flex: 1; }
+
+  .engines-group { display: flex; gap: 10px; flex: 1; flex-wrap: wrap; }
+  .engine-card {
+    flex: 1;
+    min-width: 170px;
+    text-align: center;
+    padding: 12px 10px;
+  }
+  .engine-card .card-title { justify-content: center; }
+  .engine-card .engine-port {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 3px;
+  }
+  .engine-card.planning {
+    border-style: dashed;
+    border-color: #d1d5db;
+    background: #f8fafc;
+    opacity: 0.7;
+  }
+  .engine-card.planning .card-title { color: #64748b; }
+
+  .engines-note {
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+
+  .data-group { display: flex; gap: 12px; flex: 1; }
+  .data-group .card { flex: 1; text-align: center; }
+
+  .connector {
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .connector-line {
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, #cbd5e1, #e2e8f0);
+    position: relative;
+  }
+  .connector-line::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #cbd5e1;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 14px;
+    gap: 20px;
+    font-size: 11px;
+    color: #94a3b8;
+  }
+  .footer .sep { width: 1px; height: 10px; background: #e2e8f0; }
+</style>
+</head>
+<body>
+<div class="diagram">
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">知</div>
+      <div class="logo-text">UnionAgents <span>知行</span></div>
+    </div>
+    <div class="version">v1.0.0</div>
+  </div>
+
+  <!-- L1: Browser -->
+  <div class="layer">
+    <div class="layer-label">用户层</div>
+    <div class="layer-content">
+      <div class="card" style="flex:1;">
+        <div class="card-title"><span class="dot" style="background:#3b82f6;"></span> Admin Console <span style="font-size:10px;color:#94a3b8;margin-left:auto;">admin.域名</span></div>
+        <div class="card-desc">管理后台 · 智能体/用户/角色管理 · 仪表盘<br>Vue 3 + Element Plus</div>
+      </div>
+      <div class="card" style="flex:1;">
+        <div class="card-title"><span class="dot" style="background:#6366f1;"></span> End User Portal <span style="font-size:10px;color:#94a3b8;margin-left:auto;">chat.域名</span></div>
+        <div class="card-desc">终端门户 · 登录/智能体列表/部署/聊天<br>Vue 3 + Tailwind CSS</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="connector-line"></div></div>
+
+  <!-- L2: Services -->
+  <div class="layer">
+    <div class="layer-label">服务层</div>
+    <div class="layer-content services-group">
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#3b82f6;"></span> Manager <span style="font-size:10px;color:#94a3b8;margin-left:auto;">:8002</span></div>
+        <div class="card-desc">CRUD API · 用户/角色/权限/智能体 · JWT 认证 · RBAC</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#8b5cf6;"></span> Controller <span style="font-size:10px;color:#94a3b8;margin-left:auto;">:8001</span></div>
+        <div class="card-desc">引擎生命周期 · K8s Pod 管理 · 对象存储存档 · 空闲回收 · Portal 配置</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#10b981;"></span> Gateway <span style="font-size:10px;color:#94a3b8;margin-left:auto;">:8010</span></div>
+        <div class="card-desc">透传反向代理 · DNS 路由 → 引擎 · SSE 流式 · 引擎类型标记 · Origin 过滤</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="connector-line"></div></div>
+
+  <!-- L3: Engines -->
+  <div class="layer">
+    <div class="layer-label">引擎层 · 云容器平台 (K8s)</div>
+    <div class="layer-content engines-group">
+      <div class="card engine-card">
+        <div class="card-title"><span class="dot" style="background:#3b82f6;"></span> Hermes</div>
+        <div class="card-desc">AI 对话引擎</div>
+        <div class="engine-port">:8642 · 现有</div>
+      </div>
+      <div class="card engine-card planning">
+        <div class="card-title"><span class="dot" style="background:#8b5cf6;"></span> OpenClaw</div>
+        <div class="card-desc">计算机操控</div>
+        <div class="engine-port">:8642 · 规划中</div>
+      </div>
+      <div class="card engine-card planning">
+        <div class="card-title"><span class="dot" style="background:#f59e0b;"></span> Pi</div>
+        <div class="card-desc">—</div>
+        <div class="engine-port">:8642 · 规划中</div>
+      </div>
+      <div class="card engine-card planning">
+        <div class="card-title"><span class="dot" style="background:#10b981;"></span> OpenCode</div>
+        <div class="card-desc">代码执行引擎</div>
+        <div class="engine-port">:8642 · 规划中</div>
+      </div>
+      <div class="card engine-card planning">
+        <div class="card-title"><span class="dot" style="background:#ec4899;"></span> Claude Code</div>
+        <div class="card-desc">CLI 引擎</div>
+        <div class="engine-port">:8642 · 规划中</div>
+      </div>
+      <div class="engines-note">每个智能体独立 Pod · engine-{type}-{id}:8642</div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="connector-line"></div></div>
+
+  <!-- L4: Data -->
+  <div class="layer">
+    <div class="layer-label">数据层</div>
+    <div class="layer-content data-group">
+      <div class="card"><div class="card-title" style="justify-content:center;"><span class="dot" style="background:#ec4899;"></span> 云数据库 PostgreSQL 16</div><div class="card-desc">持久化存储 · 用户/角色/智能体/部署状态</div></div>
+      <div class="card"><div class="card-title" style="justify-content:center;"><span class="dot" style="background:#10b981;"></span> 对象存储 (S3 兼容)</div><div class="card-desc">引擎数据备份 · 永久归档 · 按需恢复</div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>企业级多智能体平台</span><span class="sep"></span><span>UnionAgents 知行</span><span class="sep"></span><span>v1.0.0</span>
+  </div>
+</div>
+</body>
+</html>

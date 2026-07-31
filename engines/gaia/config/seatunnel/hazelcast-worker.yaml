@@ -1,0 +1,40 @@
+# Hazelcast config for the SeaTunnel Zeta worker node (2.3.13).
+# Based on apache/seatunnel:2.3.13 /opt/seatunnel/config/hazelcast-worker.yaml.
+#
+# Deviations from upstream defaults (intentional, required by Gaia):
+# - rest-api.enabled: true  (upstream default: false). Kept consistent with the
+#   master so the cluster REST surface is uniform.
+# - port: 5802  (upstream worker template wrongly reuses 5801). Gaia runs the
+#   worker on 5802 to avoid colliding with the master on 5801.
+# - member-list points at seatunnel-master:5801 (compose service name) so the
+#   worker can discover the master across containers.
+# - Heartbeat phi-accrual settings kept from the 2.3.13 default.
+hazelcast:
+  cluster-name: seatunnel
+  network:
+    rest-api:
+      enabled: true
+      endpoint-groups:
+        CLUSTER_WRITE:
+          enabled: true
+        DATA:
+          enabled: true
+    join:
+      tcp-ip:
+        enabled: true
+        member-list:
+          - seatunnel-master:5801
+          - localhost:5802
+    port:
+      auto-increment: false
+      port: 5802
+  properties:
+    hazelcast.invocation.max.retry.count: 20
+    hazelcast.tcp.join.port.try.count: 30
+    hazelcast.logging.type: log4j2
+    hazelcast.heartbeat.failuredetector.type: phi-accrual
+    hazelcast.heartbeat.interval.seconds: 2
+    hazelcast.max.no.heartbeat.seconds: 180
+    hazelcast.heartbeat.phiaccrual.failuredetector.threshold: 10
+    hazelcast.heartbeat.phiaccrual.failuredetector.sample.size: 200
+    hazelcast.heartbeat.phiaccrual.failuredetector.min.std.dev.millis: 100

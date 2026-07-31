@@ -1,0 +1,30 @@
+version: '1.0'
+name: build-litellm
+displayName: 构建_LiteLLM_模型网关
+triggers:
+  trigger: manual
+variables:
+  VERSION: "0.6.2"
+  SOURCE_IMAGE: ghcr.io/berriai/litellm-database:main-stable
+stages:
+  - name: build
+    displayName: 拉取 LiteLLM 官方镜像并转推项目镜像仓库
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: shell
+        name: litellm
+        displayName: LiteLLM_Proxy
+        commands:
+          # LiteLLM 是第三方镜像，版本不跟踪 app 版本。
+          # 从 ghcr 拉取官方 litellm-database 镜像，打 tag 后推到项目镜像仓库。
+          # 升级 LiteLLM 版本时改 SOURCE_IMAGE 变量。
+          - docker pull ${SOURCE_IMAGE}
+          - docker tag ${SOURCE_IMAGE} ${REGISTRY}/unionagents/litellm:${VERSION}
+          - docker login ${REGISTRY} -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD}
+          - docker push ${REGISTRY}/unionagents/litellm:${VERSION}
+        artifacts: []
+        notify: []
+        strategy:
+          retry: '0'

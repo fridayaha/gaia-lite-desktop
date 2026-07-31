@@ -1,0 +1,27 @@
+# SeaTunnel entrypoint shim（ConfigMap）+ Doris BE 启动包装脚本
+# 必须保留 seatunnel shim：处理 SeaTunnel 2.3.13 镜像自带的 opengauss-jdbc 与 postgresql 驱动同名冲突
+# Doris BE 包装脚本：绕过 entry_point.sh 的 IP 校验，直接设变量调 init_be.sh（FQDN 模式用 hostname）
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gaia-seatunnel-entrypoint
+  namespace: gaia
+data:
+  seatunnel-entrypoint.sh: |
+    #!/bin/sh
+    set -e
+    PARKED_DIR="/opt/seatunnel/lib.parked"
+    mkdir -p "$PARKED_DIR"
+    for jar in /opt/seatunnel/lib/opengauss-jdbc-*.jar; do
+        [ -e "$jar" ] || continue
+        parked="$PARKED_DIR/$(basename "$jar")"
+        if [ ! -e "$parked" ]; then
+            echo "[seatunnel-entrypoint] parking conflicting driver: $(basename "$jar")"
+            mv "$jar" "$parked"
+        elif [ -e "$jar" ]; then
+            echo "[seatunnel-entrypoint] removing re-appeared conflicting driver: $(basename "$jar")"
+            rm -f "$jar"
+        fi
+    done
+    exec "$@"

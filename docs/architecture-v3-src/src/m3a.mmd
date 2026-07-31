@@ -1,0 +1,54 @@
+erDiagram
+    AgentDefinition ||--o{ AgentVersion : "发布快照 1:N"
+    AgentDefinition ||--o{ AgentInstance : "实例化 1:N"
+    AgentVersion    ||--o{ AgentInstance : "绑定可回滚 1:N"
+    ResourcePool    ||--o{ AgentInstance : "供给规格 1:N"
+    ResourcePool    ||--o{ AgentDeployment : "1:N"
+    ResourcePool    ||--o{ AgentProfile : "1:N"
+    AgentInstance ||--o{ AgentInstanceChannel : "渠道 1:N"
+    AgentInstance ||--o{ AgentDeployment : "部署 1:N"
+    AgentInstance ||--o{ AgentProfile : "Profile 1:N"
+    AgentDeployment ||--o{ AgentProfile : "1:N"
+    AgentInstance }o--o{ User : "user_access N:N"
+    AgentInstance }o--o{ UserGroup : "group_access N:N"
+    User }o--o{ UserGroup : "成员 N:N"
+    AgentDefinition {
+        uuid id PK
+        string name
+        enum engine_type
+        uuid current_version_id FK
+        json persona_config
+        json model_config
+        json skill_config
+    }
+    AgentInstance {
+        uuid id PK
+        uuid definition_id FK
+        uuid version_id FK
+        uuid resource_pool_id FK
+        enum access_scope
+        enum status
+        json litellm_config
+    }
+    ResourcePool {
+        uuid id PK
+        string max_cpu
+        int max_replicas
+        int max_sessions_per_pod
+        int idle_suspend_minutes
+    }
+    AgentInstanceChannel {
+        uuid id PK
+        uuid instance_id FK
+        string channel_type
+        json config
+    }
+    AgentProfile {
+        uuid id PK
+        uuid instance_id FK
+        uuid deployment_id FK
+        uuid user_id FK
+        uuid group_id FK
+        string profile_name
+        string hermes_home
+    }

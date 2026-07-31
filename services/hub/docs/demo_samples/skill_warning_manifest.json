@@ -1,0 +1,13 @@
+{
+  "name": "Simple Translator Skill",
+  "type": "skill",
+  "version": "0.1.0",
+  "manifest_version": "0.1",
+  "description": "简单翻译能力（演示用：缺少 permission_json 和 input_schema）",
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "translated_text": {"type": "string"}
+    }
+  }
+}

@@ -1,0 +1,5051 @@
+{
+  "api_name": "Marketing",
+  "display_name": "汽车门店营销",
+  "description": "汽车门店营销链路本体（线索→跟进→试驾→外呼→成交），含 AI 试驾报告与用户画像产物。",
+  "object_types": [
+    {
+      "api_name": "Dealership",
+      "display_name": "门店",
+      "description": "汽车销售门店，营销链路的组织根节点。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "门店ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "store_code",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "门店名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "org_name",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "门店类型",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "store_type",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "建店状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "store_status",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "门店描述",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "description",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "门店大类",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "store_categories",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "门店级别",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "store_level",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "销售大区",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "regional_sales",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "售后大区",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "after_sales_region",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "省份",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "province",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "城市",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "city",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "区",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "area",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "建店地址",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "address",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "建店面积",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "store_area",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "营业开始时间",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "opening_time",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "营业截止时间",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "business_deadline",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "经度",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "longitude",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "纬度",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "dimension",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "是否境外",
+          "description": "",
+          "data_type": "BOOLEAN",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "is_oversea",
+            "dataset_api_name": "dealership"
+          }
+        },
+        {
+          "display_name": "国家",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_store",
+            "backing_column": "country",
+            "dataset_api_name": "dealership"
+          }
+        }
+      ],
+      "links": []
+    },
+    {
+      "api_name": "SalesConsultant",
+      "display_name": "销售顾问",
+      "description": "门店销售人员，承接线索分配与跟进。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "销售顾问ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_staff",
+            "backing_column": "user_id",
+            "dataset_api_name": "sales_consultant"
+          }
+        },
+        {
+          "display_name": "销售顾问名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_staff",
+            "backing_column": "user_name",
+            "dataset_api_name": "sales_consultant"
+          }
+        },
+        {
+          "display_name": "电话",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_staff",
+            "backing_column": "phone",
+            "dataset_api_name": "sales_consultant"
+          }
+        },
+        {
+          "display_name": "工号",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_staff",
+            "backing_column": "job_number",
+            "dataset_api_name": "sales_consultant"
+          }
+        },
+        {
+          "display_name": "是否门店管理员",
+          "description": "",
+          "data_type": "BOOLEAN",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_staff",
+            "backing_column": "is_store_admin",
+            "dataset_api_name": "sales_consultant"
+          }
+        },
+        {
+          "display_name": "性别",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_staff",
+            "backing_column": "gender",
+            "dataset_api_name": "sales_consultant"
+          }
+        },
+        {
+          "display_name": "邮箱",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_staff",
+            "backing_column": "email",
+            "dataset_api_name": "sales_consultant"
+          }
+        },
+        {
+          "display_name": "入职时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_staff",
+            "backing_column": "entry_time",
+            "dataset_api_name": "sales_consultant"
+          }
+        },
+        {
+          "display_name": "在职离职状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_staff",
+            "backing_column": "leave_status",
+            "dataset_api_name": "sales_consultant"
+          }
+        },
+        {
+          "display_name": "离职时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_staff",
+            "backing_column": "termination_time",
+            "dataset_api_name": "sales_consultant"
+          }
+        },
+        {
+          "display_name": "门店编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_staff",
+            "backing_column": "store_code",
+            "dataset_api_name": "sales_consultant"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_staff",
+            "backing_column": "status",
+            "dataset_api_name": "sales_consultant"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_staff",
+            "backing_column": "create_time",
+            "dataset_api_name": "sales_consultant"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_master_data_staff",
+            "backing_column": "update_time",
+            "dataset_api_name": "sales_consultant"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "所属门店",
+          "api_name": "belongsToDealership",
+          "target_object_type_id": "Dealership",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "LeadSource",
+      "display_name": "线索来源渠道",
+      "description": "线索获取渠道（一级/二级/三级/四级）。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "线索来源ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_source",
+            "backing_column": "source_id",
+            "dataset_api_name": "lead_source"
+          }
+        },
+        {
+          "display_name": "来源名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_source",
+            "backing_column": "show_name",
+            "dataset_api_name": "lead_source"
+          }
+        },
+        {
+          "display_name": "级数",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_source",
+            "backing_column": "source_level",
+            "dataset_api_name": "lead_source"
+          }
+        },
+        {
+          "display_name": "父来源码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_source",
+            "backing_column": "parent_source_id",
+            "dataset_api_name": "lead_source"
+          }
+        },
+        {
+          "display_name": "一级分类",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_source",
+            "backing_column": "first_classification",
+            "dataset_api_name": "lead_source"
+          }
+        },
+        {
+          "display_name": "二级分类",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_source",
+            "backing_column": "secondary_classification",
+            "dataset_api_name": "lead_source"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_source",
+            "backing_column": "status",
+            "dataset_api_name": "lead_source"
+          }
+        }
+      ],
+      "links": []
+    },
+    {
+      "api_name": "User",
+      "display_name": "用户",
+      "description": "客户档案，营销链路的客户主体。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "用户ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_user_rt",
+            "backing_column": "user_id",
+            "dataset_api_name": "user"
+          }
+        },
+        {
+          "display_name": "客户名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_user_rt",
+            "backing_column": "user_name",
+            "dataset_api_name": "user"
+          }
+        },
+        {
+          "display_name": "联系电话",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_user_rt",
+            "backing_column": "mobile",
+            "dataset_api_name": "user"
+          }
+        },
+        {
+          "display_name": "注册时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_user_rt",
+            "backing_column": "reg_time",
+            "dataset_api_name": "user"
+          }
+        },
+        {
+          "display_name": "手机品牌",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_user_rt",
+            "backing_column": "phone_brand",
+            "dataset_api_name": "user"
+          }
+        },
+        {
+          "display_name": "手机型号",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_user_rt",
+            "backing_column": "phone_device_model",
+            "dataset_api_name": "user"
+          }
+        }
+      ],
+      "links": []
+    },
+    {
+      "api_name": "Lead",
+      "display_name": "线索",
+      "description": "客户购车意向线索，营销链路核心实体。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "线索ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "id",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "线索评级",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "leads_level",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "留资时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "filing_time",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "四级来源",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "four_source",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "数据来源",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "data_source",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "线索渠道",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "channel",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "意向品牌",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "brand",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "意向车型",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "vehicle_model_name",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "意向车系",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "vehicle_series_name",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "客户省",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "province",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "客户市",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "city",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "客户地址",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "address",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "经销商名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "dealer_name",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "经销商代码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "dealer_code",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "线索状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "leads_status",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "线索接收时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "receive_time",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "首次下发时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "first_send_time",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "首次分配时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "first_assign_time",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "首次跟进时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "first_follow_time",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "下次跟进时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "next_follow_time",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "建档时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "filing_create_time",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "认领状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "claim_status",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "用户昵称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "nick",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "原始门店编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "init_shop_code",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "线索阶段",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "stage",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "最新跟进时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "last_follow_time",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "最新跟进内容",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "last_follow_content",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "是否异地线索",
+          "description": "",
+          "data_type": "BOOLEAN",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "is_allopatry",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "是否试驾",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "test_drive",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "试驾状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "test_drive_status",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "线索标识",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "lead_mark",
+            "dataset_api_name": "lead"
+          }
+        },
+        {
+          "display_name": "用户ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_leads_info_rt",
+            "backing_column": "user_id",
+            "dataset_api_name": "lead"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "线索来源",
+          "api_name": "hasLeadSource",
+          "target_object_type_id": "LeadSource",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "所属用户",
+          "api_name": "belongsToUser",
+          "target_object_type_id": "User",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "关注车型",
+          "api_name": "focusesOnVehicleModel",
+          "target_object_type_id": "VehicleModel",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "关注车系",
+          "api_name": "focusesOnVehicleSeries",
+          "target_object_type_id": "VehicleSeries",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "LeadAllocateRecord",
+      "display_name": "线索分配记录",
+      "description": "线索下发/分配/转移/回收操作记录（operation_type 1-4）。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "线索分配ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_operation_record",
+            "backing_column": "oid",
+            "dataset_api_name": "lead_allocate_record"
+          }
+        },
+        {
+          "display_name": "操作时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_operation_record",
+            "backing_column": "operation_time",
+            "dataset_api_name": "lead_allocate_record"
+          }
+        },
+        {
+          "display_name": "操作类型",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_operation_record",
+            "backing_column": "type",
+            "dataset_api_name": "lead_allocate_record"
+          }
+        },
+        {
+          "display_name": "首次标识",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_operation_record",
+            "backing_column": "first_flag",
+            "dataset_api_name": "lead_allocate_record"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_operation_record",
+            "backing_column": "create_time",
+            "dataset_api_name": "lead_allocate_record"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_operation_record",
+            "backing_column": "update_time",
+            "dataset_api_name": "lead_allocate_record"
+          }
+        },
+        {
+          "display_name": "线索ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_operation_record",
+            "backing_column": "leads_id",
+            "dataset_api_name": "lead_allocate_record"
+          }
+        },
+        {
+          "display_name": "销售顾问ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_operation_record",
+            "backing_column": "sales_consultant_id",
+            "dataset_api_name": "lead_allocate_record"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "分配线索",
+          "api_name": "allocatesLead",
+          "target_object_type_id": "Lead",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "分配销售顾问",
+          "api_name": "allocatedToSalesConsultant",
+          "target_object_type_id": "SalesConsultant",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "LeadDistributeRecord",
+      "display_name": "线索下发记录",
+      "description": "线索下发到门店的记录。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "线索下发ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_operation_record",
+            "backing_column": "oid",
+            "dataset_api_name": "lead_distribute_record"
+          }
+        },
+        {
+          "display_name": "操作时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_operation_record",
+            "backing_column": "operation_time",
+            "dataset_api_name": "lead_distribute_record"
+          }
+        },
+        {
+          "display_name": "操作类型",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_operation_record",
+            "backing_column": "type",
+            "dataset_api_name": "lead_distribute_record"
+          }
+        },
+        {
+          "display_name": "首次标识",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_operation_record",
+            "backing_column": "first_flag",
+            "dataset_api_name": "lead_distribute_record"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_operation_record",
+            "backing_column": "create_time",
+            "dataset_api_name": "lead_distribute_record"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "下发线索",
+          "api_name": "distributesLead",
+          "target_object_type_id": "Lead",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "下发门店",
+          "api_name": "distributedToDealership",
+          "target_object_type_id": "Dealership",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "LeadFollowRecord",
+      "display_name": "线索跟进记录",
+      "description": "销售对线索的跟进记录。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "跟进ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_follow_record",
+            "backing_column": "oid",
+            "dataset_api_name": "lead_follow_record"
+          }
+        },
+        {
+          "display_name": "跟进目的",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_follow_record",
+            "backing_column": "follow_purpose",
+            "dataset_api_name": "lead_follow_record"
+          }
+        },
+        {
+          "display_name": "沟通方式",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_follow_record",
+            "backing_column": "communication_methods",
+            "dataset_api_name": "lead_follow_record"
+          }
+        },
+        {
+          "display_name": "跟进结果",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_follow_record",
+            "backing_column": "follow_result",
+            "dataset_api_name": "lead_follow_record"
+          }
+        },
+        {
+          "display_name": "跟进内容",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_follow_record",
+            "backing_column": "follow_content",
+            "dataset_api_name": "lead_follow_record"
+          }
+        },
+        {
+          "display_name": "意向级别",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_follow_record",
+            "backing_column": "intended_level",
+            "dataset_api_name": "lead_follow_record"
+          }
+        },
+        {
+          "display_name": "意向车型编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_follow_record",
+            "backing_column": "vehicle_model_code",
+            "dataset_api_name": "lead_follow_record"
+          }
+        },
+        {
+          "display_name": "意向车型",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_follow_record",
+            "backing_column": "vehicle_model_name",
+            "dataset_api_name": "lead_follow_record"
+          }
+        },
+        {
+          "display_name": "订单号",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_follow_record",
+            "backing_column": "business_no",
+            "dataset_api_name": "lead_follow_record"
+          }
+        },
+        {
+          "display_name": "下次跟进时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_follow_record",
+            "backing_column": "next_follow_time",
+            "dataset_api_name": "lead_follow_record"
+          }
+        },
+        {
+          "display_name": "跟进门店编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_follow_record",
+            "backing_column": "follow_shop_id",
+            "dataset_api_name": "lead_follow_record"
+          }
+        },
+        {
+          "display_name": "到店时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_follow_record",
+            "backing_column": "arrive_time",
+            "dataset_api_name": "lead_follow_record"
+          }
+        },
+        {
+          "display_name": "战败类型",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_follow_record",
+            "backing_column": "defeat_type",
+            "dataset_api_name": "lead_follow_record"
+          }
+        },
+        {
+          "display_name": "是否转商机",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_follow_record",
+            "backing_column": "change_business_opportunity",
+            "dataset_api_name": "lead_follow_record"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_source_data_leads_follow_record",
+            "backing_column": "create_time",
+            "dataset_api_name": "lead_follow_record"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "跟进线索",
+          "api_name": "followsUpLead",
+          "target_object_type_id": "Lead",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "跟进销售顾问",
+          "api_name": "followedBySalesConsultant",
+          "target_object_type_id": "SalesConsultant",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "跟进门店",
+          "api_name": "followedAtDealership",
+          "target_object_type_id": "Dealership",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "ManualOutboundCall",
+      "display_name": "人工外呼",
+      "description": "销售人工外呼记录。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "人工外呼ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_sale_call_record_rt",
+            "backing_column": "id",
+            "dataset_api_name": "manual_outbound_call"
+          }
+        },
+        {
+          "display_name": "呼叫状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_sale_call_record_rt",
+            "backing_column": "call_status",
+            "dataset_api_name": "manual_outbound_call"
+          }
+        },
+        {
+          "display_name": "呼叫时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_sale_call_record_rt",
+            "backing_column": "call_time",
+            "dataset_api_name": "manual_outbound_call"
+          }
+        },
+        {
+          "display_name": "呼叫时长",
+          "description": "",
+          "data_type": "INTEGER",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_sale_call_record_rt",
+            "backing_column": "call_duration",
+            "dataset_api_name": "manual_outbound_call"
+          }
+        },
+        {
+          "display_name": "线索ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_sale_call_record_rt",
+            "backing_column": "lead_id",
+            "dataset_api_name": "manual_outbound_call"
+          }
+        },
+        {
+          "display_name": "用户ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_sale_call_record_rt",
+            "backing_column": "user_id",
+            "dataset_api_name": "manual_outbound_call"
+          }
+        },
+        {
+          "display_name": "录音ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_sale_call_record_rt",
+            "backing_column": "original_record_url",
+            "dataset_api_name": "manual_outbound_call"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "外呼线索",
+          "api_name": "outboundCallForLead",
+          "target_object_type_id": "Lead",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "外呼用户",
+          "api_name": "outboundCallToUser",
+          "target_object_type_id": "User",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "外呼录音",
+          "api_name": "hasOutboundCallRecording",
+          "target_object_type_id": "Recording",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "AiOutboundCall",
+      "display_name": "AI外呼",
+      "description": "AI 机器人外呼记录。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "AI外呼ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_ai_call_out_result_rt",
+            "backing_column": "id",
+            "dataset_api_name": "ai_outbound_call"
+          }
+        },
+        {
+          "display_name": "AI外呼标签",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_ai_call_out_result_rt",
+            "backing_column": "ai_tag_name",
+            "dataset_api_name": "ai_outbound_call"
+          }
+        },
+        {
+          "display_name": "AI外呼任务",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_ai_call_out_result_rt",
+            "backing_column": "task_name",
+            "dataset_api_name": "ai_outbound_call"
+          }
+        },
+        {
+          "display_name": "呼叫时长",
+          "description": "",
+          "data_type": "INTEGER",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_ai_call_out_result_rt",
+            "backing_column": "call_duration_sec",
+            "dataset_api_name": "ai_outbound_call"
+          }
+        },
+        {
+          "display_name": "呼叫状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_ai_call_out_result_rt",
+            "backing_column": "call_status",
+            "dataset_api_name": "ai_outbound_call"
+          }
+        },
+        {
+          "display_name": "呼叫时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_ai_call_out_result_rt",
+            "backing_column": "call_times",
+            "dataset_api_name": "ai_outbound_call"
+          }
+        },
+        {
+          "display_name": "开始时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_ai_call_out_result_rt",
+            "backing_column": "call_start_time",
+            "dataset_api_name": "ai_outbound_call"
+          }
+        },
+        {
+          "display_name": "结束时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_ai_call_out_result_rt",
+            "backing_column": "call_end_time",
+            "dataset_api_name": "ai_outbound_call"
+          }
+        },
+        {
+          "display_name": "是否评审",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_ai_call_out_result_rt",
+            "backing_column": "is_review",
+            "dataset_api_name": "ai_outbound_call"
+          }
+        },
+        {
+          "display_name": "客户姓名",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_ai_call_out_result_rt",
+            "backing_column": "customer_name",
+            "dataset_api_name": "ai_outbound_call"
+          }
+        },
+        {
+          "display_name": "电话",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_ai_call_out_result_rt",
+            "backing_column": "cellphone",
+            "dataset_api_name": "ai_outbound_call"
+          }
+        },
+        {
+          "display_name": "线索ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_leads_server_ai_call_out_result_rt",
+            "backing_column": "leads_info_id",
+            "dataset_api_name": "ai_outbound_call"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "AI外呼线索",
+          "api_name": "aiOutboundCallForLead",
+          "target_object_type_id": "Lead",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "AI外呼录音",
+          "api_name": "hasAiOutboundCallRecording",
+          "target_object_type_id": "Recording",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "Recording",
+      "display_name": "录音",
+      "description": "录音记录（合成实体，由试驾/外呼录音 url 归并生成）。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "录音ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "recording",
+            "backing_column": "recording_id",
+            "dataset_api_name": "recording"
+          }
+        },
+        {
+          "display_name": "录音URL",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "recording",
+            "backing_column": "recording_url",
+            "dataset_api_name": "recording"
+          }
+        },
+        {
+          "display_name": "录音文本",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "recording",
+            "backing_column": "recording_text",
+            "dataset_api_name": "recording"
+          }
+        }
+      ],
+      "links": []
+    },
+    {
+      "api_name": "TestDrive",
+      "display_name": "试驾",
+      "description": "客户试驾记录，含排程、状态机、录音关联。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "试驾ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "id",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "结束时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "end_time",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "开始时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "begin_time",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "用户名",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "name",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "试驾人手机",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "phone",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "试驾类型",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "test_drive_type",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "试驾门店编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "store_code",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "排程时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "schedule_time",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "试驾日期",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "test_drive_date",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "上门时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "door_time",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "上门地址",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "door_address",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "试驾时长",
+          "description": "",
+          "data_type": "INTEGER",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "duration",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "试驾公里数",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "kilometre",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "试驾单状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "order_status",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "试驾类别",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "test_drive_class",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "试驾来源",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "test_drive_source",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "预约车系",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "intended_car_series",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "update_time",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "销售顾问ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "sale_id",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "用户ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "user_id",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "线索ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "leads_id",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "试驾车辆ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "test_drive_car_id",
+            "dataset_api_name": "test_drive"
+          }
+        },
+        {
+          "display_name": "录音ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_test_drive_rt",
+            "backing_column": "original_record_url",
+            "dataset_api_name": "test_drive"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "试驾销售顾问",
+          "api_name": "testDriveSalesConsultant",
+          "target_object_type_id": "SalesConsultant",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "试驾录音",
+          "api_name": "hasTestDriveRecording",
+          "target_object_type_id": "Recording",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "试驾用户",
+          "api_name": "testDriveUser",
+          "target_object_type_id": "User",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "试驾线索",
+          "api_name": "testDriveLead",
+          "target_object_type_id": "Lead",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "试驾路线",
+          "api_name": "usesTestDriveRoute",
+          "target_object_type_id": "TestDriveRoute",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "试驾车辆",
+          "api_name": "usesTestDriveCar",
+          "target_object_type_id": "TestDriveCar",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "试驾门店",
+          "api_name": "testDriveAtDealership",
+          "target_object_type_id": "Dealership",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "TestDriveCar",
+      "display_name": "试驾车",
+      "description": "门店试驾车辆。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "主键ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_car_model",
+            "backing_column": "id",
+            "dataset_api_name": "test_drive_car"
+          }
+        },
+        {
+          "display_name": "VIN码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_car_model",
+            "backing_column": "car_model_vin",
+            "dataset_api_name": "test_drive_car"
+          }
+        },
+        {
+          "display_name": "门店编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_car_model",
+            "backing_column": "store_code",
+            "dataset_api_name": "test_drive_car"
+          }
+        },
+        {
+          "display_name": "试驾车型名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_car_model",
+            "backing_column": "car_model_name",
+            "dataset_api_name": "test_drive_car"
+          }
+        },
+        {
+          "display_name": "车牌号",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_car_model",
+            "backing_column": "number_plate",
+            "dataset_api_name": "test_drive_car"
+          }
+        },
+        {
+          "display_name": "车系名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_car_model",
+            "backing_column": "car_series_name",
+            "dataset_api_name": "test_drive_car"
+          }
+        },
+        {
+          "display_name": "车型名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_car_model",
+            "backing_column": "model_name",
+            "dataset_api_name": "test_drive_car"
+          }
+        },
+        {
+          "display_name": "启用状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_car_model",
+            "backing_column": "car_status",
+            "dataset_api_name": "test_drive_car"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_car_model",
+            "backing_column": "status",
+            "dataset_api_name": "test_drive_car"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "所属门店",
+          "api_name": "carBelongsToDealership",
+          "target_object_type_id": "Dealership",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "车辆车型",
+          "api_name": "carVehicleModel",
+          "target_object_type_id": "VehicleModel",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "车辆车系",
+          "api_name": "carVehicleSeries",
+          "target_object_type_id": "VehicleSeries",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "TestDriveRoute",
+      "display_name": "试驾路线",
+      "description": "门店试驾路线。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "试驾路线ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_route",
+            "backing_column": "id",
+            "dataset_api_name": "test_drive_route"
+          }
+        },
+        {
+          "display_name": "路线名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_route",
+            "backing_column": "route_name",
+            "dataset_api_name": "test_drive_route"
+          }
+        },
+        {
+          "display_name": "门店编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_route",
+            "backing_column": "store_code",
+            "dataset_api_name": "test_drive_route"
+          }
+        },
+        {
+          "display_name": "是否启用",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_route",
+            "backing_column": "is_enable",
+            "dataset_api_name": "test_drive_route"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_test_drive_route",
+            "backing_column": "status",
+            "dataset_api_name": "test_drive_route"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "路线门店",
+          "api_name": "routeDealership",
+          "target_object_type_id": "Dealership",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "TdAnalysisDetails",
+      "display_name": "试驾报告-分析维度明细",
+      "description": "AI 试驾报告分析维度明细表。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "分析明细ID",
+          "api_name": "tdAnalysisDetailsId",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "分析项类型",
+          "api_name": "itemType",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "维度键",
+          "api_name": "dimKey",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "得分",
+          "api_name": "score",
+          "description": "",
+          "data_type": "INTEGER",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "情绪值",
+          "api_name": "sentimentScore",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "AI生成摘要",
+          "api_name": "summary",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "AI分析置信度",
+          "api_name": "confidenceScore",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "是否经过人工校核",
+          "api_name": "isVerified",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "关联试驾",
+          "api_name": "tdAnalysisAssociatedTestDrive",
+          "target_object_type_id": "TestDrive",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "CompetitiveAnalysis",
+      "display_name": "试驾报告-竞品对比分析",
+      "description": "AI 试驾报告竞品对比分析表。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "竞品对比分析ID",
+          "api_name": "competitiveAnalysisId",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "对比维度",
+          "api_name": "comparisonPoint",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "对比维度得分描述",
+          "api_name": "comparisonDimension",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "客户偏好",
+          "api_name": "customerPreference",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "客户评价提炼",
+          "api_name": "comment",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "关联试驾",
+          "api_name": "competitiveAssociatedTestDrive",
+          "target_object_type_id": "TestDrive",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "关联竞品",
+          "api_name": "associatedCompetitor",
+          "target_object_type_id": "Competitor",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "StrategyExecutionAudit",
+      "display_name": "试驾报告-销售策略执行审计",
+      "description": "AI 试驾报告销售策略执行审计表。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "审计ID",
+          "api_name": "strategyExecutionAuditId",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "检查项标识",
+          "api_name": "auditItemKey",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "检查项名称",
+          "api_name": "itemName",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "策略分类",
+          "api_name": "category",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "执行状态",
+          "api_name": "status",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "权重分值",
+          "api_name": "scoreImpact",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "执行表现摘要",
+          "api_name": "summary",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "关联试驾",
+          "api_name": "strategyAuditAssociatedTestDrive",
+          "target_object_type_id": "TestDrive",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "ScriptExecutionAnalysis",
+      "display_name": "试驾报告-话术执行分析",
+      "description": "AI 试驾报告话术执行深度分析表。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "话术执行分析ID",
+          "api_name": "scriptExecutionAnalysisId",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "话术模块名称",
+          "api_name": "scriptModule",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "话术分类",
+          "api_name": "scriptCategory",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "执行质量得分",
+          "api_name": "executionQuality",
+          "description": "",
+          "data_type": "INTEGER",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "客户是否积极反馈",
+          "api_name": "customerResonance",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "话术优化建议",
+          "api_name": "optimizationAdvice",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "关联试驾",
+          "api_name": "scriptAnalysisAssociatedTestDrive",
+          "target_object_type_id": "TestDrive",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "FocusResistancePoints",
+      "display_name": "试驾报告-关注点抗性点",
+      "description": "AI 试驾报告关注点/抗性点明细表。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "关注点抗性点ID",
+          "api_name": "focusResistancePointsId",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "功能点名称",
+          "api_name": "featureName",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "点类型",
+          "api_name": "pointType",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "情感分值",
+          "api_name": "sentimentScore",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "影响权重",
+          "api_name": "weight",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "是否已化解",
+          "api_name": "isResolved",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "关联试驾",
+          "api_name": "focusResistanceAssociatedTestDrive",
+          "target_object_type_id": "TestDrive",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "UserProfileBasicNote",
+      "display_name": "用户画像-基础属性",
+      "description": "AI 用户画像基础属性表。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "属性名",
+          "api_name": "attributeKey",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "分类",
+          "api_name": "category",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "属性值",
+          "api_name": "attributeValue",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "置信度",
+          "api_name": "confidence",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "推理细节",
+          "api_name": "reasoningDetail",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "画像用户",
+          "api_name": "basicNoteProfileUser",
+          "target_object_type_id": "User",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "UserProfileOverview",
+      "display_name": "用户画像-overview",
+      "description": "AI 用户画像概览表。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "属性名",
+          "api_name": "attributeKey",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "属性值",
+          "api_name": "attributeValue",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "置信度",
+          "api_name": "confidence",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "推理细节",
+          "api_name": "reasoningDetail",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "画像用户",
+          "api_name": "overviewProfileUser",
+          "target_object_type_id": "User",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "CustomerProfileEmotion",
+      "display_name": "用户画像-情绪",
+      "description": "AI 用户画像情绪表（按角色分级可见，安全 S5）。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "属性名",
+          "api_name": "attributeKey",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "属性值",
+          "api_name": "attributeValue",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "置信度",
+          "api_name": "confidence",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "推理细节",
+          "api_name": "reasoningDetail",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "画像用户",
+          "api_name": "emotionProfileUser",
+          "target_object_type_id": "User",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "CustomerProfileInferredTag",
+      "display_name": "用户画像-推断标签",
+      "description": "AI 用户画像推断标签表。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "标签",
+          "api_name": "title",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "描述",
+          "api_name": "description",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "置信度",
+          "api_name": "confidence",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "推理细节",
+          "api_name": "reasoningDetail",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "画像用户",
+          "api_name": "inferredTagProfileUser",
+          "target_object_type_id": "User",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "CustomerProfileUsageScenario",
+      "display_name": "用户画像-用车场景",
+      "description": "AI 用户画像用车场景表。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "用车场景",
+          "api_name": "title",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "描述",
+          "api_name": "description",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "置信度",
+          "api_name": "confidence",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "推理细节",
+          "api_name": "reasoningDetail",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "画像用户",
+          "api_name": "usageScenarioProfileUser",
+          "target_object_type_id": "User",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "CustomerProfilePurchaseMotivation",
+      "display_name": "用户画像-购车动机",
+      "description": "AI 用户画像购车动机表。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "购车动机",
+          "api_name": "motivationName",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "描述",
+          "api_name": "description",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "排序",
+          "api_name": "rankOrder",
+          "description": "",
+          "data_type": "INTEGER",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "置信度",
+          "api_name": "confidence",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "推理细节",
+          "api_name": "reasoningDetail",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "画像用户",
+          "api_name": "purchaseMotivationProfileUser",
+          "target_object_type_id": "User",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "CustomerProfileProductPreference",
+      "display_name": "用户画像-产品偏好",
+      "description": "AI 用户画像产品偏好表。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "偏好",
+          "api_name": "preferenceName",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "描述",
+          "api_name": "description",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "置信度",
+          "api_name": "confidence",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "推理细节",
+          "api_name": "reasoningDetail",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "画像用户",
+          "api_name": "productPreferenceProfileUser",
+          "target_object_type_id": "User",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "CustomerProfileResistance",
+      "display_name": "用户画像-抗性分析",
+      "description": "AI 用户画像抗性分析表（按角色分级可见，安全 S5）。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "抗性名称",
+          "api_name": "resistanceName",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "严重程度",
+          "api_name": "severity",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "描述",
+          "api_name": "description",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "置信度",
+          "api_name": "confidence",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "推理细节",
+          "api_name": "reasoningDetail",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "画像用户",
+          "api_name": "resistanceProfileUser",
+          "target_object_type_id": "User",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "VehicleSeries",
+      "display_name": "车系",
+      "description": "车系主数据。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "车系名称",
+          "api_name": "seriesName",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "品牌",
+          "api_name": "brand",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "细分市场",
+          "api_name": "segment",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "能源类型",
+          "api_name": "energyType",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "生命周期阶段",
+          "api_name": "lifecycleStage",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "api_name": "VehicleModel",
+      "display_name": "车型版本",
+      "description": "车型版本主数据。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "车型名称",
+          "api_name": "modelName",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "指导价格",
+          "api_name": "guidedPrice",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "车辆可获得性",
+          "api_name": "vehicleAvailability",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "交付周期",
+          "api_name": "deliveryCycleDays",
+          "description": "",
+          "data_type": "INTEGER",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "利润水平",
+          "api_name": "marginLevel",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "系统总功率",
+          "api_name": "totalSystemPowerKw",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "系统总扭矩",
+          "api_name": "totalSystemTorqueNm",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "纯电续航",
+          "api_name": "cltcElectricRangeKm",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "零百加速",
+          "api_name": "zeroTo100kmhAcceleration",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "所属车系",
+          "api_name": "belongsToVehicleSeries",
+          "target_object_type_id": "VehicleSeries",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "包含配置项",
+          "api_name": "includesConfigFeature",
+          "target_object_type_id": "ConfigFeature",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "ConfigFeature",
+      "display_name": "配置项",
+      "description": "车辆配置项主数据。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "配置名称",
+          "api_name": "configName",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "分类",
+          "api_name": "category",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "是否标配",
+          "api_name": "isStandard",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "感知价值",
+          "api_name": "perceivedValue",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "描述",
+          "api_name": "description",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "支撑产品能力",
+          "api_name": "supportsProductCapability",
+          "target_object_type_id": "ProductCapability",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "ProductCapability",
+      "display_name": "产品能力",
+      "description": "产品能力主数据。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "能力名称",
+          "api_name": "capabilityName",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "能力类型",
+          "api_name": "capabilityType",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "行业水平",
+          "api_name": "industryLevel",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "可感知性",
+          "api_name": "perceptibility",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "衡量指标",
+          "api_name": "measuredByCapabilityMetric",
+          "target_object_type_id": "CapabilityMetric",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "呈现为核心卖点",
+          "api_name": "expressedAsUsp",
+          "target_object_type_id": "Usp",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "CapabilityMetric",
+      "display_name": "能力指标",
+      "description": "产品能力衡量指标。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "指标名称",
+          "api_name": "metricName",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "指标值",
+          "api_name": "metricValue",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "单位",
+          "api_name": "unit",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "基准值",
+          "api_name": "benchmark",
+          "description": "",
+          "data_type": "DECIMAL",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "api_name": "Usp",
+      "display_name": "核心卖点",
+      "description": "核心卖点主数据。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "卖点名称",
+          "api_name": "uspName",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "卖点分类",
+          "api_name": "uspCategory",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "差异化优势",
+          "api_name": "differentiation",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "可信度",
+          "api_name": "credibility",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "传播成本",
+          "api_name": "costOfCommunication",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "关联标签",
+          "api_name": "taggedByUspTag",
+          "target_object_type_id": "UspTag",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "对应话术",
+          "api_name": "verbalizedAsPitch",
+          "target_object_type_id": "Pitch",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "UspTag",
+      "display_name": "卖点标签",
+      "description": "卖点标签。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "标签名称",
+          "api_name": "tagName",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "标签类型",
+          "api_name": "tagType",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "api_name": "Pitch",
+      "display_name": "话术",
+      "description": "销售话术。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "话术名称",
+          "api_name": "pitchName",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "话术文本",
+          "api_name": "pitchText",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "话语音调",
+          "api_name": "pitchTone",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "复杂度",
+          "api_name": "complexity",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "风险等级",
+          "api_name": "riskLevel",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "适用场景",
+          "api_name": "usedForScenario",
+          "target_object_type_id": "Scenario",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "Scenario",
+      "display_name": "使用场景",
+      "description": "车辆使用场景。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "场景名称",
+          "api_name": "scenarioName",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": true,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "使用频率",
+          "api_name": "frequency",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "情感特质",
+          "api_name": "emotionalTrait",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": []
+    },
+    {
+      "api_name": "Reception",
+      "display_name": "接待",
+      "description": "客户到店接待记录。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "接待ID",
+          "api_name": "receptionId",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "开始时间",
+          "api_name": "startTime",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        },
+        {
+          "display_name": "结束时间",
+          "api_name": "endTime",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": null
+        }
+      ],
+      "links": [
+        {
+          "display_name": "接待用户",
+          "api_name": "receptionUser",
+          "target_object_type_id": "User",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "接待销售顾问",
+          "api_name": "receptionSalesConsultant",
+          "target_object_type_id": "SalesConsultant",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "ChatRecord",
+      "display_name": "微信聊天记录",
+      "description": "客户微信聊天记录。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "聊天ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_inspection_weixin_log",
+            "backing_column": "id",
+            "dataset_api_name": "chat_record"
+          }
+        },
+        {
+          "display_name": "记录类型",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_inspection_weixin_log",
+            "backing_column": "record_type",
+            "dataset_api_name": "chat_record"
+          }
+        },
+        {
+          "display_name": "聊天内容",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_inspection_weixin_log",
+            "backing_column": "dialoguecontent",
+            "dataset_api_name": "chat_record"
+          }
+        },
+        {
+          "display_name": "聊天创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_inspection_weixin_log",
+            "backing_column": "createtime",
+            "dataset_api_name": "chat_record"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_inspection_weixin_log",
+            "backing_column": "status",
+            "dataset_api_name": "chat_record"
+          }
+        },
+        {
+          "display_name": "记录时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "marketing_mysql",
+            "backing_schema": "marketing_benchmark",
+            "backing_table": "t_ods_inspection_weixin_log",
+            "backing_column": "log_time",
+            "dataset_api_name": "chat_record"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "聊天用户",
+          "api_name": "chatRecordUser",
+          "target_object_type_id": "User",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "Competitor",
+      "display_name": "竞品",
+      "description": "竞品车型（被竞品对比分析引用）。",
+      "storage_type": "MANAGED",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "竞品ID",
+          "api_name": "competitorId",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": true,
+          "backing_mapping": null
+        }
+      ],
+      "links": []
+    }
+  ],
+  "action_types": [
+    {
+      "api_name": "allocateLead",
+      "display_name": "分配线索",
+      "description": "将线索分配给销售顾问（operation_type=2）。",
+      "affected_object_type_api_name": "LeadAllocateRecord",
+      "parameters": [
+        {
+          "api_name": "leadId",
+          "display_name": "线索ID",
+          "data_type": "STRING",
+          "required": true,
+          "description": "",
+          "object_type_ref": "Lead"
+        },
+        {
+          "api_name": "salesConsultantId",
+          "display_name": "销售顾问ID",
+          "data_type": "STRING",
+          "required": true,
+          "description": "",
+          "object_type_ref": "SalesConsultant"
+        }
+      ],
+      "rules": [],
+      "submission_criteria": [],
+      "effects": [],
+      "ontology_rules": [
+        {
+          "type": "CreateObject",
+          "target_object_type": "LeadAllocateRecord",
+          "properties": {
+            "oid": {
+              "source": "SYSTEM_GENERATED",
+              "value": "uuid"
+            },
+            "operationType": {
+              "source": "STATIC_VALUE",
+              "value": "2"
+            },
+            "operationTime": {
+              "source": "SYSTEM_CONTEXT",
+              "value": "CURRENT_TIMESTAMP"
+            },
+            "leadId": {
+              "source": "PARAMETER",
+              "value": "leadId"
+            },
+            "salesConsultantId": {
+              "source": "PARAMETER",
+              "value": "salesConsultantId"
+            }
+          }
+        }
+      ],
+      "risk_level": "low",
+      "operation_kind": "create",
+      "batch_enabled": false
+    },
+    {
+      "api_name": "transferLead",
+      "display_name": "转移线索",
+      "description": "将线索从一销售转移给另一销售（operation_type=3）。",
+      "affected_object_type_api_name": "LeadAllocateRecord",
+      "parameters": [
+        {
+          "api_name": "leadId",
+          "display_name": "线索ID",
+          "data_type": "STRING",
+          "required": true,
+          "description": "",
+          "object_type_ref": "Lead"
+        },
+        {
+          "api_name": "fromSalesConsultantId",
+          "display_name": "原销售顾问ID",
+          "data_type": "STRING",
+          "required": true,
+          "description": "",
+          "object_type_ref": "SalesConsultant"
+        },
+        {
+          "api_name": "toSalesConsultantId",
+          "display_name": "新销售顾问ID",
+          "data_type": "STRING",
+          "required": true,
+          "description": "",
+          "object_type_ref": "SalesConsultant"
+        }
+      ],
+      "rules": [],
+      "submission_criteria": [],
+      "effects": [],
+      "ontology_rules": [
+        {
+          "type": "CreateObject",
+          "target_object_type": "LeadAllocateRecord",
+          "properties": {
+            "oid": {
+              "source": "SYSTEM_GENERATED",
+              "value": "uuid"
+            },
+            "operationType": {
+              "source": "STATIC_VALUE",
+              "value": "3"
+            },
+            "operationTime": {
+              "source": "SYSTEM_CONTEXT",
+              "value": "CURRENT_TIMESTAMP"
+            },
+            "leadId": {
+              "source": "PARAMETER",
+              "value": "leadId"
+            },
+            "salesConsultantId": {
+              "source": "PARAMETER",
+              "value": "toSalesConsultantId"
+            }
+          }
+        }
+      ],
+      "risk_level": "low",
+      "operation_kind": "create",
+      "batch_enabled": false
+    },
+    {
+      "api_name": "reclaimLead",
+      "display_name": "回收线索",
+      "description": "回收线索（operation_type=4）。",
+      "affected_object_type_api_name": "LeadAllocateRecord",
+      "parameters": [
+        {
+          "api_name": "leadId",
+          "display_name": "线索ID",
+          "data_type": "STRING",
+          "required": true,
+          "description": "",
+          "object_type_ref": "Lead"
+        }
+      ],
+      "rules": [],
+      "submission_criteria": [],
+      "effects": [],
+      "ontology_rules": [
+        {
+          "type": "CreateObject",
+          "target_object_type": "LeadAllocateRecord",
+          "properties": {
+            "oid": {
+              "source": "SYSTEM_GENERATED",
+              "value": "uuid"
+            },
+            "operationType": {
+              "source": "STATIC_VALUE",
+              "value": "4"
+            },
+            "operationTime": {
+              "source": "SYSTEM_CONTEXT",
+              "value": "CURRENT_TIMESTAMP"
+            },
+            "leadId": {
+              "source": "PARAMETER",
+              "value": "leadId"
+            }
+          }
+        }
+      ],
+      "risk_level": "low",
+      "operation_kind": "create",
+      "batch_enabled": false
+    },
+    {
+      "api_name": "recordFollow",
+      "display_name": "记录线索跟进",
+      "description": "销售记录一次线索跟进。",
+      "affected_object_type_api_name": "LeadFollowRecord",
+      "parameters": [
+        {
+          "api_name": "leadId",
+          "display_name": "线索ID",
+          "data_type": "STRING",
+          "required": true,
+          "description": "",
+          "object_type_ref": "Lead"
+        },
+        {
+          "api_name": "followerId",
+          "display_name": "跟进人ID",
+          "data_type": "STRING",
+          "required": true,
+          "description": "",
+          "object_type_ref": "SalesConsultant"
+        },
+        {
+          "api_name": "followPurpose",
+          "display_name": "跟进目的",
+          "data_type": "STRING",
+          "required": false,
+          "description": ""
+        },
+        {
+          "api_name": "followResult",
+          "display_name": "跟进结果",
+          "data_type": "STRING",
+          "required": false,
+          "description": ""
+        },
+        {
+          "api_name": "followContent",
+          "display_name": "跟进内容",
+          "data_type": "STRING",
+          "required": false,
+          "description": ""
+        },
+        {
+          "api_name": "nextFollowTime",
+          "display_name": "下次跟进时间",
+          "data_type": "TIMESTAMP",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "rules": [],
+      "submission_criteria": [],
+      "effects": [],
+      "ontology_rules": [
+        {
+          "type": "CreateObject",
+          "target_object_type": "LeadFollowRecord",
+          "properties": {
+            "oid": {
+              "source": "SYSTEM_GENERATED",
+              "value": "uuid"
+            },
+            "leadId": {
+              "source": "PARAMETER",
+              "value": "leadId"
+            },
+            "followerId": {
+              "source": "PARAMETER",
+              "value": "followerId"
+            },
+            "followPurpose": {
+              "source": "PARAMETER",
+              "value": "followPurpose"
+            },
+            "followResult": {
+              "source": "PARAMETER",
+              "value": "followResult"
+            },
+            "followContent": {
+              "source": "PARAMETER",
+              "value": "followContent"
+            },
+            "nextFollowTime": {
+              "source": "PARAMETER",
+              "value": "nextFollowTime"
+            },
+            "createTime": {
+              "source": "SYSTEM_CONTEXT",
+              "value": "CURRENT_TIMESTAMP"
+            }
+          }
+        }
+      ],
+      "risk_level": "low",
+      "operation_kind": "create",
+      "batch_enabled": false
+    },
+    {
+      "api_name": "progressTestDrive",
+      "display_name": "推进试驾状态",
+      "description": "推进试驾单状态（待排程→待签署→待开始→进行中→已结束）。",
+      "affected_object_type_api_name": "TestDrive",
+      "parameters": [
+        {
+          "api_name": "testDriveId",
+          "display_name": "试驾ID",
+          "data_type": "STRING",
+          "required": true,
+          "description": "",
+          "object_type_ref": "TestDrive"
+        },
+        {
+          "api_name": "newStatus",
+          "display_name": "新状态",
+          "data_type": "STRING",
+          "required": true,
+          "description": "0-待排程 1-待签署 2-待开始 3-进行中 4-已结束"
+        }
+      ],
+      "rules": [
+        {
+          "type": "constraint",
+          "target": "newStatus",
+          "expression": "value in ['0','1','2','3','4']",
+          "description": "状态值必须合法"
+        }
+      ],
+      "submission_criteria": [],
+      "effects": [
+        {
+          "type": "write_back",
+          "config": {
+            "target_object_type": "TestDrive",
+            "op": "upsert"
+          }
+        }
+      ],
+      "ontology_rules": [
+        {
+          "type": "ModifyObject",
+          "target_parameter": "testDriveId",
+          "properties": {
+            "orderStatus": {
+              "source": "PARAMETER",
+              "value": "newStatus"
+            }
+          }
+        }
+      ],
+      "risk_level": "low",
+      "operation_kind": "update",
+      "batch_enabled": false
+    },
+    {
+      "api_name": "logManualCall",
+      "display_name": "记录人工外呼",
+      "description": "记录一次人工外呼。",
+      "affected_object_type_api_name": "ManualOutboundCall",
+      "parameters": [
+        {
+          "api_name": "leadId",
+          "display_name": "线索ID",
+          "data_type": "STRING",
+          "required": true,
+          "description": "",
+          "object_type_ref": "Lead"
+        },
+        {
+          "api_name": "userId",
+          "display_name": "用户ID",
+          "data_type": "STRING",
+          "required": true,
+          "description": "",
+          "object_type_ref": "User"
+        },
+        {
+          "api_name": "callStatus",
+          "display_name": "呼叫状态",
+          "data_type": "STRING",
+          "required": true,
+          "description": ""
+        },
+        {
+          "api_name": "callDuration",
+          "display_name": "呼叫时长",
+          "data_type": "INTEGER",
+          "required": false,
+          "description": ""
+        },
+        {
+          "api_name": "recordingUrl",
+          "display_name": "录音URL",
+          "data_type": "STRING",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "rules": [],
+      "submission_criteria": [],
+      "effects": [],
+      "ontology_rules": [
+        {
+          "type": "CreateObject",
+          "target_object_type": "ManualOutboundCall",
+          "properties": {
+            "id": {
+              "source": "SYSTEM_GENERATED",
+              "value": "uuid"
+            },
+            "leadId": {
+              "source": "PARAMETER",
+              "value": "leadId"
+            },
+            "userId": {
+              "source": "PARAMETER",
+              "value": "userId"
+            },
+            "callStatus": {
+              "source": "PARAMETER",
+              "value": "callStatus"
+            },
+            "callDuration": {
+              "source": "PARAMETER",
+              "value": "callDuration"
+            },
+            "callTime": {
+              "source": "SYSTEM_CONTEXT",
+              "value": "CURRENT_TIMESTAMP"
+            }
+          }
+        }
+      ],
+      "risk_level": "low",
+      "operation_kind": "create",
+      "batch_enabled": false
+    },
+    {
+      "api_name": "analyzeTestDrive",
+      "display_name": "生成试驾报告",
+      "description": "试驾完成后触发 AI 推导，生成试驾报告 5 张表（分析维度/竞品对比/策略审计/话术执行/关注点抗性点）。",
+      "affected_object_type_api_name": "TdAnalysisDetails",
+      "parameters": [
+        {
+          "api_name": "testDriveId",
+          "display_name": "试驾ID",
+          "data_type": "STRING",
+          "required": true,
+          "description": "",
+          "object_type_ref": "TestDrive"
+        }
+      ],
+      "rules": [],
+      "submission_criteria": [],
+      "effects": [],
+      "ontology_rules": [],
+      "risk_level": "low",
+      "operation_kind": "create",
+      "batch_enabled": false
+    },
+    {
+      "api_name": "generateUserProfile",
+      "display_name": "生成用户画像",
+      "description": "为指定用户触发 AI 推导，生成 8 张用户画像表（基础属性/概览/情绪/标签/用车场景/购车动机/产品偏好/抗性）。",
+      "affected_object_type_api_name": "UserProfileBasicNote",
+      "parameters": [
+        {
+          "api_name": "userId",
+          "display_name": "用户ID",
+          "data_type": "STRING",
+          "required": true,
+          "description": "",
+          "object_type_ref": "User"
+        }
+      ],
+      "rules": [],
+      "submission_criteria": [],
+      "effects": [],
+      "ontology_rules": [],
+      "risk_level": "low",
+      "operation_kind": "create",
+      "batch_enabled": false
+    },
+    {
+      "api_name": "reassignTestDriveCar",
+      "display_name": "更换试驾车",
+      "description": "为试驾更换试驾车（含 ObjectReference 参数比较的规则）。",
+      "affected_object_type_api_name": "TestDrive",
+      "parameters": [
+        {
+          "api_name": "testDriveId",
+          "display_name": "试驾ID",
+          "data_type": "STRING",
+          "required": true,
+          "description": "",
+          "object_type_ref": "TestDrive"
+        },
+        {
+          "api_name": "newTestDriveCarId",
+          "display_name": "新试驾车ID",
+          "data_type": "STRING",
+          "required": true,
+          "description": "",
+          "object_type_ref": "TestDriveCar"
+        }
+      ],
+      "rules": [
+        {
+          "type": "constraint",
+          "target": "newTestDriveCarId",
+          "expression": "value != '' and len(value) > 0",
+          "description": "试驾车ID非空"
+        }
+      ],
+      "submission_criteria": [],
+      "effects": [],
+      "ontology_rules": [
+        {
+          "type": "ModifyObject",
+          "target_parameter": "testDriveId",
+          "properties": {
+            "testDriveCarId": {
+              "source": "PARAMETER",
+              "value": "newTestDriveCarId"
+            }
+          }
+        }
+      ],
+      "risk_level": "low",
+      "operation_kind": "update",
+      "batch_enabled": false
+    }
+  ]
+}

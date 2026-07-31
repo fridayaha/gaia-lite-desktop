@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: hub_user
+      POSTGRES_PASSWORD: hub_password
+      POSTGRES_DB: hub_poc
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hub_user -d hub_poc"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+volumes:
+  pgdata:

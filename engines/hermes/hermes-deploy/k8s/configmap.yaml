@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hermes-config
+  namespace: hermes
+data:
+  HERMES_PROVIDER: "alibaba"
+  HERMES_MODEL: "qwen3.7-max"
+  HERMES_BASE_URL: ""
+  HERMES_API_MODE: "chat_completions"
+  HERMES_LOG_FORMAT: "json"
+  HERMES_DASHBOARD: "1"
+  HERMES_DASHBOARD_INSECURE: "1"
+  HERMES_PRELOAD_SKILLS: ""
+  # API Server 绑定地址（必须 0.0.0.0，否则 K8s probe 和 NodePort 无法访问）
+  API_SERVER_HOST: "0.0.0.0"

@@ -1,0 +1,104 @@
+# LiteLLM Proxy — 全系统统一模型网关
+# 引擎不再直连外部供应商，全部经 LiteLLM /v1/* OpenAI 兼容端点
+# 控制平面强依赖 PostgreSQL（复用现有 PG 实例，独立 database `litellm`）
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: litellm-config
+data:
+  config.yaml: |
+    model_list: []
+    general_settings:
+      store_model_in_db: true
+    litellm_settings:
+      drop_params: true
+      request_timeout: 600
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: litellm
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: litellm }
+  template:
+    metadata:
+      labels: { app: litellm }
+    spec:
+      initContainers:
+      # 幂等创建 litellm database（复用现有 PG 实例）
+      - name: create-db
+        image: postgres:16-alpine
+        env:
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: pg-password
+        command: ["sh", "-c"]
+        args:
+        - |
+          until pg_isready -h postgres -U unionagents; do echo "waiting for postgres"; sleep 2; done
+          psql -h postgres -U unionagents -tc "SELECT 1 FROM pg_database WHERE datname='litellm'" | grep -q 1 \
+            || psql -h postgres -U unionagents -c "CREATE DATABASE litellm"
+          echo "litellm database ready"
+      containers:
+      - name: litellm
+        # 带数据库版本；固定 tag，不用 main-stable 滚动 tag
+        image: ghcr.io/berriai/litellm-database:main-stable
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 4000
+        args: ["--config", "/app/config.yaml", "--port", "4000"]
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: litellm-database-url
+        - name: LITELLM_MASTER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: litellm-master-key
+        - name: LITELLM_SALT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: litellm-salt-key
+        # 关闭自带 UI，纯 REST 集成
+        - name: DISABLE_ADMIN_UI
+          value: "True"
+        - name: STORE_MODEL_IN_DB
+          value: "True"
+        - name: UI_USERNAME
+          value: "disabled"
+        volumeMounts:
+        - name: config
+          mountPath: /app/config.yaml
+          subPath: config.yaml
+        readinessProbe:
+          httpGet:
+            path: /health/liveliness
+            port: 4000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        resources:
+          requests: { cpu: "100m", memory: "512Mi" }
+          limits: { cpu: "1", memory: "1Gi" }
+      volumes:
+      - name: config
+        configMap:
+          name: litellm-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: litellm
+spec:
+  ports:
+  - port: 4000
+    targetPort: 4000
+  selector: { app: litellm }

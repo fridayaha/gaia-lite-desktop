@@ -1,0 +1,44 @@
+{
+  "name": "Bidding Compliance Agent",
+  "type": "agent",
+  "version": "1.0.0",
+  "manifest_version": "0.1",
+  "description": "招投标合规检查 Agent，组合文档解析、条款比对和风险提示能力",
+  "scenario": "招标文件合规审查",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "document_url": {
+        "type": "string",
+        "description": "招标文件 URL 或路径"
+      },
+      "compliance_standard": {
+        "type": "string",
+        "description": "合规标准名称",
+        "default": "gb-50500"
+      }
+    },
+    "required": ["document_url"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "compliance_report": {"type": "object", "description": "合规检查报告"},
+      "risk_items": {"type": "array", "items": {"type": "object"}},
+      "overall_score": {"type": "number", "description": "综合合规评分"}
+    }
+  },
+  "dependencies": [
+    {"name": "doc-parser", "type": "tool"},
+    {"name": "clause-matcher", "type": "skill"},
+    {"name": "postgres-connector", "type": "mcp"}
+  ],
+  "permission_json": {
+    "allowed_actions": ["http_request", "file_read"],
+    "scope": ["internal_api", "document_store"]
+  },
+  "runtime_compatibility": {
+    "platform": "linux",
+    "min_runtime_version": "1.0.0"
+  }
+}

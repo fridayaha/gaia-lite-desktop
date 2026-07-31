@@ -1,0 +1,25 @@
+{
+  "name": "store-insight",
+  "version": "1.0.0",
+  "author": "UnionAgents",
+  "industries": ["automotive"],
+  "description": "门店销售数据自然语言查询与可视化。店长/管理者用自然语言提问，自动解析意图生成SQL，查询PostgreSQL门店销售数据库，输出数据表格 + 图表(PNG)。支持销售排行、试驾转化率、环比同比、目标完成率、客流-销售关联分析、员工排名、综合日报等动态查询。数据库含 employees / daily_sales / store_daily_summary / monthly_targets 四张表，约1年模拟数据。",
+  "icon": "ri:store-3-line",
+  "engine": ["HERMES"],
+  "config_params": [
+    {
+      "name": "db_url",
+      "label": "PostgreSQL 连接串（不含密码）",
+      "type": "string",
+      "secret": false,
+      "description": "如 postgresql://user@host:5432/store_insight"
+    },
+    {
+      "name": "db_password",
+      "label": "数据库密码",
+      "type": "string",
+      "secret": true,
+      "description": "PostgreSQL 密码，sidecar 解密后拼入连接串"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: node-exporter
+  namespace: monitoring
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-exporter
+  namespace: monitoring
+  labels:
+    app: node-exporter
+spec:
+  selector:
+    matchLabels: { app: node-exporter }
+  template:
+    metadata:
+      labels: { app: node-exporter }
+    spec:
+      serviceAccountName: node-exporter
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      tolerations:
+        - operator: Exists
+      containers:
+        - name: node-exporter
+          image: prom/node-exporter:v1.9.1
+          args:
+            - --path.rootfs=/host
+            - --path.sysfs=/host/sys
+            - --path.procfs=/host/proc
+          ports:
+            - containerPort: 9100
+              name: metrics
+          volumeMounts:
+            - name: root
+              mountPath: /host
+              readOnly: true
+            - name: sys
+              mountPath: /host/sys
+              readOnly: true
+            - name: proc
+              mountPath: /host/proc
+              readOnly: true
+          resources:
+            requests: { cpu: "50m", memory: "64Mi" }
+            limits: { cpu: "200m", memory: "128Mi" }
+      volumes:
+        - name: root
+          hostPath: { path: / }
+        - name: sys
+          hostPath: { path: /sys }
+        - name: proc
+          hostPath: { path: /proc }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-exporter
+  namespace: monitoring
+  labels:
+    app: node-exporter
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: 9100
+      targetPort: 9100
+      name: metrics
+  selector: { app: node-exporter }

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: console-landing
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: console-landing }
+  template:
+    metadata:
+      labels: { app: console-landing }
+    spec:
+      containers:
+      - name: landing
+        image: unionagents/console-landing:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          requests: { cpu: "50m", memory: "64Mi" }
+          limits: { cpu: "200m", memory: "256Mi" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: console-landing
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30082
+  selector: { app: console-landing }

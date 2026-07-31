@@ -1,0 +1,71 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+
+# Node
+node_modules/
+dist/
+
+# IDE
+.idea/
+*.swp
+*.swo
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env.local
+.env.production.local
+
+# Pytest
+.pytest_cache/
+htmlcov/
+
+# Vite
+apps/admin/node_modules/
+apps/admin/dist/
+admin-sidebar.png
+
+# VitePress 构建缓存
+**/.vitepress/cache/
+**/.vitepress/deps_temp_*
+
+# pnpm store（pnpm 内容寻址缓存，不入库）
+.pnpm-store/
+
+# Skill 打包产物（构建产物，不入库）
+samples/skills/*.zip
+
+# Claude Code
+.claude/
+.agents/
+skills-lock.json
+
+# Build artifacts
+admin-dist.tar.gz
+tmp/
+
+# Android (apps/android/)
+apps/android/.gradle/
+apps/android/local.properties
+apps/android/app/build/
+apps/android/build/
+apps/android/captures/
+apps/android/.cxx/
+apps/android/*.keystore
+apps/android/*.jks
+apps/android/keystore.properties
+
+# HarmonyOS (hvigor 缓存，误在仓库根触发构建时生成)
+/.hvigor/
+
+# 技术案例总结（内部资料，不入库）
+tech-cases/

@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermes-gateway
+  namespace: hermes
+  labels:
+    app: hermes-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hermes-gateway
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: hermes-gateway
+    spec:
+      securityContext:
+        runAsNonRoot: false
+        fsGroup: 1000
+      initContainers:
+      - name: init-config
+        image: hermes-profile:latest
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          echo "Initializing Hermes configuration..."
+          # PVC 挂载后可能覆盖 Dockerfile 中设置的权限，需要在此重新设置
+          # /opt/data 和 /opt/data/profiles 需要对 Profile 用户可穿越 (o+x)
+          chmod 755 /opt/data 2>/dev/null || true
+          chmod 755 /opt/data/profiles 2>/dev/null || true
+          # 始终从 ConfigMap 覆盖配置文件，确保 ConfigMap 更新后重新部署时生效
+          # 注意：config.yaml 由 Hermes 启动时自动重新生成，不应通过 init container 复制
+          for file in SOUL.md gateway.json; do
+            echo "Copying $file..."
+            cp /configs/$file /opt/data/$file
+            chown 1000:1000 /opt/data/$file
+          done
+        volumeMounts:
+        - name: hermes-data
+          mountPath: /opt/data
+        - name: hermes-configs
+          mountPath: /configs
+      containers:
+      - name: hermes-gateway
+        image: hermes-profile:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: HERMES_UID
+          value: "1000"
+        - name: HERMES_GID
+          value: "1000"
+        - name: HERMES_GATEWAY_BOOTSTRAP_STATE
+          value: "running"
+        - name: GATEWAY_ALLOW_ALL_USERS
+          value: "true"
+        envFrom:
+        - configMapRef:
+            name: hermes-config
+        - secretRef:
+            name: hermes-api-keys
+        volumeMounts:
+        - name: hermes-data
+          mountPath: /opt/data
+        ports:
+        - name: gateway
+          containerPort: 8642
+          protocol: TCP
+        - name: dashboard
+          containerPort: 9119
+          protocol: TCP
+        - name: profile-1
+          containerPort: 8643
+          protocol: TCP
+        - name: profile-2
+          containerPort: 8644
+          protocol: TCP
+        - name: profile-3
+          containerPort: 8645
+          protocol: TCP
+        - name: profile-4
+          containerPort: 8646
+          protocol: TCP
+        - name: profile-5
+          containerPort: 8647
+          protocol: TCP
+        - name: profile-6
+          containerPort: 8648
+          protocol: TCP
+        - name: profile-7
+          containerPort: 8649
+          protocol: TCP
+        - name: profile-8
+          containerPort: 8650
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "3"
+            memory: 2560Mi
+          requests:
+            cpu: "1"
+            memory: 1024Mi
+        livenessProbe:
+          tcpSocket:
+            port: gateway
+          initialDelaySeconds: 180
+          periodSeconds: 15
+          timeoutSeconds: 5
+          failureThreshold: 5
+        readinessProbe:
+          tcpSocket:
+            port: gateway
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+        securityContext:
+          allowPrivilegeEscalation: false
+      volumes:
+      - name: hermes-data
+        persistentVolumeClaim:
+          claimName: hermes-data
+      - name: hermes-configs
+        configMap:
+          name: hermes-file-configs

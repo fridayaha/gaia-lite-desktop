@@ -1,0 +1,101 @@
+# Gaia RustFS（S3 兼容对象存储，Iceberg 数据湖 warehouse 落地）
+# 独立实例，与 UnionAgents 平台 minio（unionagents ns）隔离。
+# Iceberg warehouse = s3://ontology-warehouse，由 Gravitino/Trino/SeaTunnel 共用。
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gaia-rustfs-data
+  namespace: gaia
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: ${STORAGE_CLASS}
+  resources:
+    requests:
+      storage: 30Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: gaia-rustfs
+  namespace: gaia
+spec:
+  serviceName: gaia-rustfs
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gaia-rustfs
+  template:
+    metadata:
+      labels:
+        app: gaia-rustfs
+    spec:
+      containers:
+        - name: rustfs
+          image: rustfs/rustfs:latest
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          args:
+            - server
+            - /data
+            - --console-address
+            - ":9002"
+          ports:
+            - containerPort: 9000
+              name: api
+            - containerPort: 9002
+              name: console
+          env:
+            - name: RUSTFS_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: s3-access-key-id
+            - name: RUSTFS_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gaia-secret
+                  key: s3-secret-access-key
+            - name: RUSTFS_CONSOLE_ENABLE
+              value: "false"
+          volumeMounts:
+            - mountPath: /data
+              name: data
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 9000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 9000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: gaia-rustfs-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gaia-rustfs
+  namespace: gaia
+spec:
+  ports:
+    - port: 9000
+      name: api
+      targetPort: 9000
+    - port: 9002
+      name: console
+      targetPort: 9002
+  selector:
+    app: gaia-rustfs

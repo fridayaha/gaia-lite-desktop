@@ -1,0 +1,51 @@
+version: '1.0'
+name: build-engine
+displayName: 构建_Hermes_引擎
+triggers:
+  trigger: manual
+variables:
+  VERSION: "0.6.2"
+stages:
+  - name: build
+    displayName: 构建_Hermes_引擎镜像
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: build@docker
+        name: engine
+        displayName: Hermes_引擎_V1
+        type: account
+        repository: ${REGISTRY}
+        username: ${REGISTRY_USERNAME}
+        password: ${REGISTRY_PASSWORD}
+        tag: unionagents/engine-hermes:${VERSION}
+        dockerfile: ./engines/hermes/Dockerfile
+        context: .
+        artifacts: []
+        isCache: true
+        processorType:
+          - amd64
+        parameter: {}
+        notify: []
+        strategy:
+          retry: '0'
+
+      - step: build@docker
+        name: engine-v2
+        displayName: Hermes_引擎_V2（多Profile+nginx）
+        type: account
+        repository: ${REGISTRY}
+        username: ${REGISTRY_USERNAME}
+        password: ${REGISTRY_PASSWORD}
+        tag: unionagents/engine-hermes-v2:${VERSION}
+        dockerfile: ./engines/hermes/Dockerfile
+        context: .
+        artifacts: []
+        isCache: true
+        processorType:
+          - amd64
+        parameter: {}
+        notify: []
+        strategy:
+          retry: '0'

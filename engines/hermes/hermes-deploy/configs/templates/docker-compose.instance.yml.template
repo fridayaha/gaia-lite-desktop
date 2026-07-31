@@ -1,0 +1,71 @@
+services:
+  hermes-gateway-{{INSTANCE_ID}}:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes-gateway-{{INSTANCE_ID}}
+    restart: unless-stopped
+    command: ["gateway", "run"]
+    # Docker Compose 从此实例目录的 .env 读取 ${...} 变量
+    environment:
+      - HERMES_UID=1000
+      - HERMES_GID=1000
+      - HERMES_PROVIDER=${HERMES_PROVIDER:-openai}
+      - HERMES_MODEL=${HERMES_MODEL:-gpt-4o}
+      - HERMES_BASE_URL=${HERMES_BASE_URL:-}
+      - HERMES_API_MODE=${HERMES_API_MODE:-chat_completions}
+      - HERMES_CUSTOM_API_KEY=${HERMES_CUSTOM_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY:-}
+      - DASHSCOPE_BASE_URL=${DASHSCOPE_BASE_URL:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      - GLM_API_KEY=${GLM_API_KEY:-}
+      - KIMI_API_KEY=${KIMI_API_KEY:-}
+      - MINIMAX_API_KEY=${MINIMAX_API_KEY:-}
+      - MINIMAX_CN_API_KEY=${MINIMAX_CN_API_KEY:-}
+      - NOVITA_API_KEY=${NOVITA_API_KEY:-}
+      - ARCEEAI_API_KEY=${ARCEEAI_API_KEY:-}
+      - XAI_API_KEY=${XAI_API_KEY:-}
+      - HF_TOKEN=${HF_TOKEN:-}
+      - XIAOMI_API_KEY=${XIAOMI_API_KEY:-}
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY:-}
+      - TOKENHUB_API_KEY=${TOKENHUB_API_KEY:-}
+      - STEP_FUN_API_KEY=${STEP_FUN_API_KEY:-}
+      - HERMES_PRELOAD_SKILLS=${HERMES_PRELOAD_SKILLS:-}
+      - HERMES_LOG_FORMAT=json
+      - HERMES_DASHBOARD=1
+      - HERMES_DASHBOARD_INSECURE=1
+    volumes:
+      - ./hermes-data:/opt/data
+    ports:
+      - "{{GATEWAY_PORT}}:8642"
+      - "{{DASHBOARD_PORT}}:9119"
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f 'hermes' || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    networks:
+      - hermes-{{INSTANCE_ID}}-net
+    deploy:
+      resources:
+        limits:
+          cpus: "{{CPU_LIMIT}}"
+          memory: {{MEMORY_LIMIT_MB}}M
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  hermes-{{INSTANCE_ID}}-net:
+    name: hermes-{{INSTANCE_ID}}-net
+    driver: bridge

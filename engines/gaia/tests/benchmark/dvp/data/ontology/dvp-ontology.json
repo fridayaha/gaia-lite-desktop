@@ -1,0 +1,4075 @@
+{
+  "api_name": "DVP",
+  "display_name": "整车研发试验验证",
+  "description": "整车研发试验验证领域本体（项目→车辆→结构→零部件→变更→试验→目标），全 VIRTUAL 虚拟表经 Trino 联邦查询 MySQL，无写路径/无 AI 产物。",
+  "object_types": [
+    {
+      "api_name": "ProjectBase",
+      "display_name": "项目基准",
+      "description": "研发项目本身，试验验证活动的组织单元，顶层父容器。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "projectCode",
+      "title_property": "projectName",
+      "properties": [
+        {
+          "display_name": "项目令号",
+          "description": "项目业务编码，企业通用",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "project_code",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "项目名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "project_name",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "品牌",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "brand",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "项目类型",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "project_type",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "开发层级",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "dev_tier",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "生命周期状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "lifecycle_state",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "项目状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "project_status",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "项目经理",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "manager_name",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "承研单位",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "research_unit",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "项目启动时间",
+          "description": "",
+          "data_type": "DATE",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "project_start_time",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "计划完成时间",
+          "description": "",
+          "data_type": "DATE",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "plan_end_time",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "审批日期",
+          "description": "",
+          "data_type": "DATE",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "approval_date",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "create_time",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "update_time",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "创建人",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "create_by",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "更新人",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "update_by",
+            "dataset_api_name": "project_base"
+          }
+        },
+        {
+          "display_name": "逻辑删除标记",
+          "description": "",
+          "data_type": "BOOLEAN",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_base",
+            "backing_column": "delete_mark",
+            "dataset_api_name": "project_base"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "包含车辆项目",
+          "api_name": "containsVehicle",
+          "description": "项目基准包含多个车辆项目",
+          "target_object_type_id": "ProjectVehicle",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "同步到LMS",
+          "api_name": "syncsToLms",
+          "description": "项目同步到 LMS 实验室集成项目",
+          "target_object_type_id": "LmsProject",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "ProjectVehicle",
+      "display_name": "车辆项目",
+      "description": "项目基准下的基础执行单元，定义车辆技术特征，关联物理车身与试验体系。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "vehicleCode",
+      "title_property": "vehicleName",
+      "properties": [
+        {
+          "display_name": "车辆项目编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_vehicle",
+            "backing_column": "vehicle_code",
+            "dataset_api_name": "project_vehicle"
+          }
+        },
+        {
+          "display_name": "所属项目令号",
+          "description": "FK → projectBase.project_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_vehicle",
+            "backing_column": "project_code",
+            "dataset_api_name": "project_vehicle"
+          }
+        },
+        {
+          "display_name": "车型名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_vehicle",
+            "backing_column": "vehicle_name",
+            "dataset_api_name": "project_vehicle"
+          }
+        },
+        {
+          "display_name": "动力类型",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_vehicle",
+            "backing_column": "power_type",
+            "dataset_api_name": "project_vehicle"
+          }
+        },
+        {
+          "display_name": "驱动方式",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_vehicle",
+            "backing_column": "drive_type",
+            "dataset_api_name": "project_vehicle"
+          }
+        },
+        {
+          "display_name": "开发等级",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_vehicle",
+            "backing_column": "dev_tier",
+            "dataset_api_name": "project_vehicle"
+          }
+        },
+        {
+          "display_name": "目标市场",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_vehicle",
+            "backing_column": "target_market",
+            "dataset_api_name": "project_vehicle"
+          }
+        },
+        {
+          "display_name": "车辆类别",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_vehicle",
+            "backing_column": "vehicle_category",
+            "dataset_api_name": "project_vehicle"
+          }
+        },
+        {
+          "display_name": "开发方式",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_vehicle",
+            "backing_column": "development_method",
+            "dataset_api_name": "project_vehicle"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_vehicle",
+            "backing_column": "status",
+            "dataset_api_name": "project_vehicle"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_vehicle",
+            "backing_column": "create_time",
+            "dataset_api_name": "project_vehicle"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_vehicle",
+            "backing_column": "update_time",
+            "dataset_api_name": "project_vehicle"
+          }
+        },
+        {
+          "display_name": "创建人",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_vehicle",
+            "backing_column": "create_by",
+            "dataset_api_name": "project_vehicle"
+          }
+        },
+        {
+          "display_name": "更新人",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_vehicle",
+            "backing_column": "update_by",
+            "dataset_api_name": "project_vehicle"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "包含车身",
+          "api_name": "containsBody",
+          "description": "车辆项目包含车身",
+          "target_object_type_id": "VehicleBody",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "同步到LMS",
+          "api_name": "vehicleSyncsToLms",
+          "description": "车辆项目同步到 LMS",
+          "target_object_type_id": "LmsProject",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "LmsProject",
+      "display_name": "LMS集成项目",
+      "description": "对接外部 LMS/实验室管理系统的集成对象，承载全项目信息用于数据互通。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "lmsProjectId",
+      "title_property": "lmsProjectName",
+      "properties": [
+        {
+          "display_name": "LMS项目ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_project",
+            "backing_column": "lms_project_id",
+            "dataset_api_name": "lms_project"
+          }
+        },
+        {
+          "display_name": "所属项目令号",
+          "description": "FK → projectBase.project_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_project",
+            "backing_column": "project_code",
+            "dataset_api_name": "lms_project"
+          }
+        },
+        {
+          "display_name": "BOM标识",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_project",
+            "backing_column": "bom_id",
+            "dataset_api_name": "lms_project"
+          }
+        },
+        {
+          "display_name": "样车管理系统标识",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_project",
+            "backing_column": "sample_car_sys_id",
+            "dataset_api_name": "lms_project"
+          }
+        },
+        {
+          "display_name": "LMS项目名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_project",
+            "backing_column": "lms_project_name",
+            "dataset_api_name": "lms_project"
+          }
+        },
+        {
+          "display_name": "同步状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_project",
+            "backing_column": "sync_status",
+            "dataset_api_name": "lms_project"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_project",
+            "backing_column": "create_time",
+            "dataset_api_name": "lms_project"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_project",
+            "backing_column": "update_time",
+            "dataset_api_name": "lms_project"
+          }
+        }
+      ],
+      "links": []
+    },
+    {
+      "api_name": "ProjectTarget",
+      "display_name": "项目目标",
+      "description": "项目顶层业务总体要求，承载核心战略意图，驱动下层技术指标与试验项。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "targetCode",
+      "title_property": "targetTitle",
+      "properties": [
+        {
+          "display_name": "目标编号",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_target",
+            "backing_column": "target_code",
+            "dataset_api_name": "project_target"
+          }
+        },
+        {
+          "display_name": "所属项目令号",
+          "description": "FK → projectBase.project_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_target",
+            "backing_column": "project_code",
+            "dataset_api_name": "project_target"
+          }
+        },
+        {
+          "display_name": "目标标题",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_target",
+            "backing_column": "target_title",
+            "dataset_api_name": "project_target"
+          }
+        },
+        {
+          "display_name": "目标类别",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_target",
+            "backing_column": "target_category",
+            "dataset_api_name": "project_target"
+          }
+        },
+        {
+          "display_name": "目标描述",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_target",
+            "backing_column": "target_description",
+            "dataset_api_name": "project_target"
+          }
+        },
+        {
+          "display_name": "责任部门",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_target",
+            "backing_column": "target_response_dept",
+            "dataset_api_name": "project_target"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_target",
+            "backing_column": "status",
+            "dataset_api_name": "project_target"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_target",
+            "backing_column": "create_time",
+            "dataset_api_name": "project_target"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_target",
+            "backing_column": "update_time",
+            "dataset_api_name": "project_target"
+          }
+        },
+        {
+          "display_name": "创建人",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_project_target",
+            "backing_column": "create_by",
+            "dataset_api_name": "project_target"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "所属项目",
+          "api_name": "targetBelongsToProject",
+          "description": "项目目标属于项目基准",
+          "target_object_type_id": "ProjectBase",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "LmsTargetDimension",
+      "display_name": "LMS目标维度",
+      "description": "具象、可量化的考核条目，是项目目标的实例化拆分单元。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "dimensionId",
+      "title_property": "dimensionTitle",
+      "properties": [
+        {
+          "display_name": "目标维度ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_dimension",
+            "backing_column": "dimension_id",
+            "dataset_api_name": "lms_target_dimension"
+          }
+        },
+        {
+          "display_name": "所属目标编号",
+          "description": "FK → projectTarget.target_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_dimension",
+            "backing_column": "target_code",
+            "dataset_api_name": "lms_target_dimension"
+          }
+        },
+        {
+          "display_name": "目标维度标题",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_dimension",
+            "backing_column": "dimension_title",
+            "dataset_api_name": "lms_target_dimension"
+          }
+        },
+        {
+          "display_name": "目标类别",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_dimension",
+            "backing_column": "dimension_category",
+            "dataset_api_name": "lms_target_dimension"
+          }
+        },
+        {
+          "display_name": "目标阈值",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_dimension",
+            "backing_column": "target_threshold",
+            "dataset_api_name": "lms_target_dimension"
+          }
+        },
+        {
+          "display_name": "责任单位",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_dimension",
+            "backing_column": "response_unit",
+            "dataset_api_name": "lms_target_dimension"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_dimension",
+            "backing_column": "status",
+            "dataset_api_name": "lms_target_dimension"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_dimension",
+            "backing_column": "create_time",
+            "dataset_api_name": "lms_target_dimension"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_dimension",
+            "backing_column": "update_time",
+            "dataset_api_name": "lms_target_dimension"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "汇总到目标",
+          "api_name": "aggregatesTo",
+          "description": "目标维度汇总到项目目标",
+          "target_object_type_id": "ProjectTarget",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "包含迭代",
+          "api_name": "hasIteration",
+          "description": "目标维度包含多次版本迭代",
+          "target_object_type_id": "LmsTargetIteration",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "LmsTargetIteration",
+      "display_name": "目标迭代",
+      "description": "目标维度的版本迭代实体，记录不同阶段目标指标的变更、调整记录。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "iterationId",
+      "title_property": "iterationVersion",
+      "properties": [
+        {
+          "display_name": "迭代ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_iteration",
+            "backing_column": "iteration_id",
+            "dataset_api_name": "lms_target_iteration"
+          }
+        },
+        {
+          "display_name": "所属目标维度ID",
+          "description": "FK → lmsTargetDimension.dimension_id",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_iteration",
+            "backing_column": "dimension_id",
+            "dataset_api_name": "lms_target_iteration"
+          }
+        },
+        {
+          "display_name": "迭代版本号",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_iteration",
+            "backing_column": "iteration_version",
+            "dataset_api_name": "lms_target_iteration"
+          }
+        },
+        {
+          "display_name": "迭代日期",
+          "description": "",
+          "data_type": "DATE",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_iteration",
+            "backing_column": "iteration_date",
+            "dataset_api_name": "lms_target_iteration"
+          }
+        },
+        {
+          "display_name": "迭代阈值",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_iteration",
+            "backing_column": "iteration_threshold",
+            "dataset_api_name": "lms_target_iteration"
+          }
+        },
+        {
+          "display_name": "变更说明",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_iteration",
+            "backing_column": "change_note",
+            "dataset_api_name": "lms_target_iteration"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_iteration",
+            "backing_column": "status",
+            "dataset_api_name": "lms_target_iteration"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_iteration",
+            "backing_column": "create_time",
+            "dataset_api_name": "lms_target_iteration"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_target_iteration",
+            "backing_column": "update_time",
+            "dataset_api_name": "lms_target_iteration"
+          }
+        }
+      ],
+      "links": []
+    },
+    {
+      "api_name": "VehicleBody",
+      "display_name": "车身",
+      "description": "整车基础载体，承载全部结构与零部件。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "bodyCode",
+      "title_property": "bodyName",
+      "properties": [
+        {
+          "display_name": "车身编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_vehicle_body",
+            "backing_column": "body_code",
+            "dataset_api_name": "vehicle_body"
+          }
+        },
+        {
+          "display_name": "所属车辆项目编码",
+          "description": "FK → projectVehicle.vehicle_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_vehicle_body",
+            "backing_column": "vehicle_code",
+            "dataset_api_name": "vehicle_body"
+          }
+        },
+        {
+          "display_name": "车身名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_vehicle_body",
+            "backing_column": "body_name",
+            "dataset_api_name": "vehicle_body"
+          }
+        },
+        {
+          "display_name": "整车重量",
+          "description": "",
+          "data_type": "DOUBLE",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_vehicle_body",
+            "backing_column": "vehicle_weight",
+            "dataset_api_name": "vehicle_body"
+          }
+        },
+        {
+          "display_name": "外形形式",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_vehicle_body",
+            "backing_column": "body_form",
+            "dataset_api_name": "vehicle_body"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_vehicle_body",
+            "backing_column": "status",
+            "dataset_api_name": "vehicle_body"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_vehicle_body",
+            "backing_column": "create_time",
+            "dataset_api_name": "vehicle_body"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_vehicle_body",
+            "backing_column": "update_time",
+            "dataset_api_name": "vehicle_body"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "包含前部结构",
+          "api_name": "containsFront",
+          "description": "车身包含前部结构",
+          "target_object_type_id": "FrontStructure",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "包含侧面结构",
+          "api_name": "containsSide",
+          "description": "车身包含侧面结构",
+          "target_object_type_id": "SideStructure",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "包含尾部结构",
+          "api_name": "containsRear",
+          "description": "车身包含尾部结构",
+          "target_object_type_id": "RearStructure",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "包含底盘结构",
+          "api_name": "containsChassis",
+          "description": "车身包含底盘结构",
+          "target_object_type_id": "ChassisStructure",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "包含外饰造型",
+          "api_name": "containsExterior",
+          "description": "车身包含外饰造型（1车身多外饰方案）",
+          "target_object_type_id": "ExteriorDesign",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "FrontStructure",
+      "display_name": "前部结构",
+      "description": "车身前舱、防撞吸能核心结构：前纵梁、前防撞横梁、前吸能盒。设计直接影响正面碰撞安全性能。",
+      "storage_type": "VIRTUAL",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "结构编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_front_structure",
+            "backing_column": "front_structure_code",
+            "dataset_api_name": "front_structure"
+          }
+        },
+        {
+          "display_name": "所属车身编码",
+          "description": "FK → vehicleBody.body_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_front_structure",
+            "backing_column": "body_code",
+            "dataset_api_name": "front_structure"
+          }
+        },
+        {
+          "display_name": "结构名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_front_structure",
+            "backing_column": "front_structure_name",
+            "dataset_api_name": "front_structure"
+          }
+        },
+        {
+          "display_name": "前纵梁形式",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_front_structure",
+            "backing_column": "front_rail_form",
+            "dataset_api_name": "front_structure"
+          }
+        },
+        {
+          "display_name": "吸能盒类型",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_front_structure",
+            "backing_column": "energy_box_type",
+            "dataset_api_name": "front_structure"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_front_structure",
+            "backing_column": "status",
+            "dataset_api_name": "front_structure"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_front_structure",
+            "backing_column": "create_time",
+            "dataset_api_name": "front_structure"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_front_structure",
+            "backing_column": "update_time",
+            "dataset_api_name": "front_structure"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "包含零部件",
+          "api_name": "frontContainsComponent",
+          "description": "前部结构包含若干零部件",
+          "target_object_type_id": "Component",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "SideStructure",
+      "display_name": "侧面结构",
+      "description": "车身侧面碰撞防护结构：B柱、门槛、车门防撞梁。设计直接决定侧面碰撞保护能力。",
+      "storage_type": "VIRTUAL",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "结构编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_side_structure",
+            "backing_column": "side_structure_code",
+            "dataset_api_name": "side_structure"
+          }
+        },
+        {
+          "display_name": "所属车身编码",
+          "description": "FK → vehicleBody.body_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_side_structure",
+            "backing_column": "body_code",
+            "dataset_api_name": "side_structure"
+          }
+        },
+        {
+          "display_name": "结构名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_side_structure",
+            "backing_column": "side_structure_name",
+            "dataset_api_name": "side_structure"
+          }
+        },
+        {
+          "display_name": "B柱形式",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_side_structure",
+            "backing_column": "b_pillar_form",
+            "dataset_api_name": "side_structure"
+          }
+        },
+        {
+          "display_name": "门槛形式",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_side_structure",
+            "backing_column": "sill_form",
+            "dataset_api_name": "side_structure"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_side_structure",
+            "backing_column": "status",
+            "dataset_api_name": "side_structure"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_side_structure",
+            "backing_column": "create_time",
+            "dataset_api_name": "side_structure"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_side_structure",
+            "backing_column": "update_time",
+            "dataset_api_name": "side_structure"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "包含零部件",
+          "api_name": "sideContainsComponent",
+          "description": "侧面结构包含若干零部件",
+          "target_object_type_id": "Component",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "RearStructure",
+      "display_name": "尾部结构",
+      "description": "车尾防撞承载结构：后纵梁、后防撞横梁、后吸能盒。影响追尾碰撞安全表现。",
+      "storage_type": "VIRTUAL",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "结构编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_rear_structure",
+            "backing_column": "rear_structure_code",
+            "dataset_api_name": "rear_structure"
+          }
+        },
+        {
+          "display_name": "所属车身编码",
+          "description": "FK → vehicleBody.body_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_rear_structure",
+            "backing_column": "body_code",
+            "dataset_api_name": "rear_structure"
+          }
+        },
+        {
+          "display_name": "结构名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_rear_structure",
+            "backing_column": "rear_structure_name",
+            "dataset_api_name": "rear_structure"
+          }
+        },
+        {
+          "display_name": "后纵梁形式",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_rear_structure",
+            "backing_column": "rear_rail_form",
+            "dataset_api_name": "rear_structure"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_rear_structure",
+            "backing_column": "status",
+            "dataset_api_name": "rear_structure"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_rear_structure",
+            "backing_column": "create_time",
+            "dataset_api_name": "rear_structure"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_rear_structure",
+            "backing_column": "update_time",
+            "dataset_api_name": "rear_structure"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "包含零部件",
+          "api_name": "rearContainsComponent",
+          "description": "尾部结构包含若干零部件",
+          "target_object_type_id": "Component",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "ChassisStructure",
+      "display_name": "底盘结构",
+      "description": "整车行驶承载系统：前/后副车架、悬架、转向、制动。决定操控、NVH、底盘碰撞能量传递效率。",
+      "storage_type": "VIRTUAL",
+      "primary_key": null,
+      "title_property": null,
+      "properties": [
+        {
+          "display_name": "结构编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_chassis_structure",
+            "backing_column": "chassis_structure_code",
+            "dataset_api_name": "chassis_structure"
+          }
+        },
+        {
+          "display_name": "所属车身编码",
+          "description": "FK → vehicleBody.body_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_chassis_structure",
+            "backing_column": "body_code",
+            "dataset_api_name": "chassis_structure"
+          }
+        },
+        {
+          "display_name": "结构名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_chassis_structure",
+            "backing_column": "chassis_structure_name",
+            "dataset_api_name": "chassis_structure"
+          }
+        },
+        {
+          "display_name": "悬架形式",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_chassis_structure",
+            "backing_column": "suspension_form",
+            "dataset_api_name": "chassis_structure"
+          }
+        },
+        {
+          "display_name": "转向形式",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_chassis_structure",
+            "backing_column": "steering_form",
+            "dataset_api_name": "chassis_structure"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_chassis_structure",
+            "backing_column": "status",
+            "dataset_api_name": "chassis_structure"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_chassis_structure",
+            "backing_column": "create_time",
+            "dataset_api_name": "chassis_structure"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_chassis_structure",
+            "backing_column": "update_time",
+            "dataset_api_name": "chassis_structure"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "包含零部件",
+          "api_name": "chassisContainsComponent",
+          "description": "底盘结构包含若干零部件",
+          "target_object_type_id": "Component",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "ExteriorDesign",
+      "display_name": "外饰造型",
+      "description": "整车内外饰造型设计件：保险杠、大灯、格栅。外形、刚度直接影响行人保护、碰撞外观侵入量。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "exteriorCode",
+      "title_property": "exteriorName",
+      "properties": [
+        {
+          "display_name": "外饰编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_exterior_design",
+            "backing_column": "exterior_code",
+            "dataset_api_name": "exterior_design"
+          }
+        },
+        {
+          "display_name": "所属车身编码",
+          "description": "FK → vehicleBody.body_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_exterior_design",
+            "backing_column": "body_code",
+            "dataset_api_name": "exterior_design"
+          }
+        },
+        {
+          "display_name": "外饰名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_exterior_design",
+            "backing_column": "exterior_name",
+            "dataset_api_name": "exterior_design"
+          }
+        },
+        {
+          "display_name": "外饰类型",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_exterior_design",
+            "backing_column": "exterior_type",
+            "dataset_api_name": "exterior_design"
+          }
+        },
+        {
+          "display_name": "刚度参数",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_exterior_design",
+            "backing_column": "stiffness_param",
+            "dataset_api_name": "exterior_design"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_exterior_design",
+            "backing_column": "status",
+            "dataset_api_name": "exterior_design"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_exterior_design",
+            "backing_column": "create_time",
+            "dataset_api_name": "exterior_design"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_exterior_design",
+            "backing_column": "update_time",
+            "dataset_api_name": "exterior_design"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "包含零部件",
+          "api_name": "exteriorContainsComponent",
+          "description": "外饰造型包含若干零部件",
+          "target_object_type_id": "Component",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "Component",
+      "display_name": "零部件",
+      "description": "物理结构最小拆分单元，变化点分析的基础单元，所有变更最终落地到零部件粒度。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "componentId",
+      "title_property": "componentName",
+      "properties": [
+        {
+          "display_name": "零部件编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_component",
+            "backing_column": "component_id",
+            "dataset_api_name": "component"
+          }
+        },
+        {
+          "display_name": "所属结构编码",
+          "description": "FK → 所属 structure 的 code（前/侧/尾/底盘/外饰）",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_component",
+            "backing_column": "structure_code",
+            "dataset_api_name": "component"
+          }
+        },
+        {
+          "display_name": "所属结构类型",
+          "description": "标识属于哪类结构：front/side/rear/chassis/exterior",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_component",
+            "backing_column": "structure_type",
+            "dataset_api_name": "component"
+          }
+        },
+        {
+          "display_name": "零部件名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_component",
+            "backing_column": "component_name",
+            "dataset_api_name": "component"
+          }
+        },
+        {
+          "display_name": "零部件类别",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_component",
+            "backing_column": "component_category",
+            "dataset_api_name": "component"
+          }
+        },
+        {
+          "display_name": "规格型号",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_component",
+            "backing_column": "spec_model",
+            "dataset_api_name": "component"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_component",
+            "backing_column": "status",
+            "dataset_api_name": "component"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_component",
+            "backing_column": "create_time",
+            "dataset_api_name": "component"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_component",
+            "backing_column": "update_time",
+            "dataset_api_name": "component"
+          }
+        },
+        {
+          "display_name": "创建人",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_component",
+            "backing_column": "create_by",
+            "dataset_api_name": "component"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "关联变化点",
+          "api_name": "hasChangePoint",
+          "description": "零部件关联变化点",
+          "target_object_type_id": "ChangePointEntity",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "ChangePointEntity",
+      "display_name": "变化点实体",
+      "description": "核心变更业务概念，描述一处实物/设计改动，作为是否需要新增/重跑试验的判断依据。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "changePointId",
+      "title_property": "changeDescription",
+      "properties": [
+        {
+          "display_name": "变化点ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_change_point_entity",
+            "backing_column": "change_point_id",
+            "dataset_api_name": "change_point_entity"
+          }
+        },
+        {
+          "display_name": "所属零部件编码",
+          "description": "FK → component.component_id",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_change_point_entity",
+            "backing_column": "component_id",
+            "dataset_api_name": "change_point_entity"
+          }
+        },
+        {
+          "display_name": "变更描述",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_change_point_entity",
+            "backing_column": "change_description",
+            "dataset_api_name": "change_point_entity"
+          }
+        },
+        {
+          "display_name": "变更程度",
+          "description": "变更程度等级 1-5，数值越大影响越大",
+          "data_type": "INTEGER",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_change_point_entity",
+            "backing_column": "change_degree",
+            "dataset_api_name": "change_point_entity"
+          }
+        },
+        {
+          "display_name": "权重",
+          "description": "",
+          "data_type": "DOUBLE",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_change_point_entity",
+            "backing_column": "weight",
+            "dataset_api_name": "change_point_entity"
+          }
+        },
+        {
+          "display_name": "变更类型",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_change_point_entity",
+            "backing_column": "change_type",
+            "dataset_api_name": "change_point_entity"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_change_point_entity",
+            "backing_column": "status",
+            "dataset_api_name": "change_point_entity"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_change_point_entity",
+            "backing_column": "create_time",
+            "dataset_api_name": "change_point_entity"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_change_point_entity",
+            "backing_column": "update_time",
+            "dataset_api_name": "change_point_entity"
+          }
+        },
+        {
+          "display_name": "创建人",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_change_point_entity",
+            "backing_column": "create_by",
+            "dataset_api_name": "change_point_entity"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "触发试验工况",
+          "api_name": "triggersCondition",
+          "description": "变化点驱动受影响试验大类",
+          "target_object_type_id": "OperCondition",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "OperCondition",
+      "display_name": "试验工况大类",
+      "description": "试验顶层分类，用于归类所有测试场景（正面碰撞/侧面碰撞/行人保护/尾部低速刮擦等）。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "conditionCode",
+      "title_property": "conditionName",
+      "properties": [
+        {
+          "display_name": "工况编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition",
+            "backing_column": "condition_code",
+            "dataset_api_name": "oper_condition"
+          }
+        },
+        {
+          "display_name": "工况名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition",
+            "backing_column": "condition_name",
+            "dataset_api_name": "oper_condition"
+          }
+        },
+        {
+          "display_name": "工况描述",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition",
+            "backing_column": "condition_description",
+            "dataset_api_name": "oper_condition"
+          }
+        },
+        {
+          "display_name": "工况大类",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition",
+            "backing_column": "condition_category",
+            "dataset_api_name": "oper_condition"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition",
+            "backing_column": "status",
+            "dataset_api_name": "oper_condition"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition",
+            "backing_column": "create_time",
+            "dataset_api_name": "oper_condition"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition",
+            "backing_column": "update_time",
+            "dataset_api_name": "oper_condition"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "包含正碰工况",
+          "api_name": "hasFrontDetail",
+          "description": "工况大类含正面碰撞细分",
+          "target_object_type_id": "FrontCollision",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "包含尾碰工况",
+          "api_name": "hasRearDetail",
+          "description": "工况大类含尾部碰撞细分",
+          "target_object_type_id": "RearCollision",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "包含侧碰工况",
+          "api_name": "hasSideDetail",
+          "description": "工况大类含侧面碰撞细分",
+          "target_object_type_id": "SideCollision",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "包含行人保护工况",
+          "api_name": "hasPedestrianDetail",
+          "description": "工况大类含行人保护细分",
+          "target_object_type_id": "PedestrianProtect",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "FrontCollision",
+      "display_name": "正面碰撞工况",
+      "description": "正面碰撞细分工况：50km/h 刚性壁障正面撞击。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "detailConditionCode",
+      "title_property": "detailConditionName",
+      "properties": [
+        {
+          "display_name": "细分工况编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "detail_condition_code",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "所属工况编码",
+          "description": "FK → operCondition.condition_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "condition_code",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "工况类型",
+          "description": "判别列，本 OT 恒为 'front_collision'",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "condition_type",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "细分工况名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "detail_condition_name",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "测试描述",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "test_description",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "status",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "create_time",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "update_time",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "包含试验项",
+          "api_name": "frontContainsTestItem",
+          "description": "细分工况包含试验项",
+          "target_object_type_id": "TestItem",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "RearCollision",
+      "display_name": "尾部碰撞工况",
+      "description": "尾部碰撞细分工况：追尾低速碰撞。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "detailConditionCode",
+      "title_property": "detailConditionName",
+      "properties": [
+        {
+          "display_name": "细分工况编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "detail_condition_code",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "所属工况编码",
+          "description": "FK → operCondition.condition_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "condition_code",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "工况类型",
+          "description": "判别列，本 OT 恒为 'rear_collision'",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "condition_type",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "细分工况名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "detail_condition_name",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "测试描述",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "test_description",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "status",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "create_time",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "update_time",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "包含试验项",
+          "api_name": "rearContainsTestItem",
+          "description": "细分工况包含试验项",
+          "target_object_type_id": "TestItem",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "SideCollision",
+      "display_name": "侧面碰撞工况",
+      "description": "侧面碰撞细分工况：移动壁障侧面撞击。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "detailConditionCode",
+      "title_property": "detailConditionName",
+      "properties": [
+        {
+          "display_name": "细分工况编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "detail_condition_code",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "所属工况编码",
+          "description": "FK → operCondition.condition_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "condition_code",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "工况类型",
+          "description": "判别列，本 OT 恒为 'side_collision'",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "condition_type",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "细分工况名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "detail_condition_name",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "测试描述",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "test_description",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "status",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "create_time",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "update_time",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "包含试验项",
+          "api_name": "sideContainsTestItem",
+          "description": "细分工况包含试验项",
+          "target_object_type_id": "TestItem",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "PedestrianProtect",
+      "display_name": "行人保护工况",
+      "description": "行人保护细分工况：头型/腿型冲击器撞击。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "detailConditionCode",
+      "title_property": "detailConditionName",
+      "properties": [
+        {
+          "display_name": "细分工况编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "detail_condition_code",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "所属工况编码",
+          "description": "FK → operCondition.condition_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "condition_code",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "工况类型",
+          "description": "判别列，本 OT 恒为 'pedestrian_protect'",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "condition_type",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "细分工况名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "detail_condition_name",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "测试描述",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "test_description",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "status",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "create_time",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_oper_condition_detail",
+            "backing_column": "update_time",
+            "dataset_api_name": "oper_condition_detail"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "包含试验项",
+          "api_name": "pedestrianContainsTestItem",
+          "description": "细分工况包含试验项",
+          "target_object_type_id": "TestItem",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "TestItem",
+      "display_name": "试验项",
+      "description": "单个工况下需要执行的具体测量、检测条目，关联项目目标维度验证指标是否达标。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "testItemId",
+      "title_property": "testItemName",
+      "properties": [
+        {
+          "display_name": "试验项ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_test_item",
+            "backing_column": "test_item_id",
+            "dataset_api_name": "test_item"
+          }
+        },
+        {
+          "display_name": "所属细分工况编码",
+          "description": "FK → 细分工况 detail_condition_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_test_item",
+            "backing_column": "detail_condition_code",
+            "dataset_api_name": "test_item"
+          }
+        },
+        {
+          "display_name": "验证目标维度ID",
+          "description": "FK → lmsTargetDimension.dimension_id",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_test_item",
+            "backing_column": "dimension_id",
+            "dataset_api_name": "test_item"
+          }
+        },
+        {
+          "display_name": "规范编码",
+          "description": "FK → spec.spec_code (nullable)",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_test_item",
+            "backing_column": "spec_code",
+            "dataset_api_name": "test_item"
+          }
+        },
+        {
+          "display_name": "试验项名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_test_item",
+            "backing_column": "test_item_name",
+            "dataset_api_name": "test_item"
+          }
+        },
+        {
+          "display_name": "样本量",
+          "description": "",
+          "data_type": "INTEGER",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_test_item",
+            "backing_column": "sample_count",
+            "dataset_api_name": "test_item"
+          }
+        },
+        {
+          "display_name": "评价标准",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_test_item",
+            "backing_column": "evaluation_criteria",
+            "dataset_api_name": "test_item"
+          }
+        },
+        {
+          "display_name": "试验准备周期",
+          "description": "",
+          "data_type": "INTEGER",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_test_item",
+            "backing_column": "prep_period",
+            "dataset_api_name": "test_item"
+          }
+        },
+        {
+          "display_name": "测试负责人",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_test_item",
+            "backing_column": "test_response",
+            "dataset_api_name": "test_item"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "待执行/执行中/已完成等",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_test_item",
+            "backing_column": "status",
+            "dataset_api_name": "test_item"
+          }
+        },
+        {
+          "display_name": "计划完成时间",
+          "description": "",
+          "data_type": "DATE",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_test_item",
+            "backing_column": "plan_end_time",
+            "dataset_api_name": "test_item"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_test_item",
+            "backing_column": "create_time",
+            "dataset_api_name": "test_item"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_test_item",
+            "backing_column": "update_time",
+            "dataset_api_name": "test_item"
+          }
+        },
+        {
+          "display_name": "创建人",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_test_item",
+            "backing_column": "create_by",
+            "dataset_api_name": "test_item"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "引用规范",
+          "api_name": "referencesSpec",
+          "description": "试验项引用试验规范",
+          "target_object_type_id": "Spec",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "验证目标维度",
+          "api_name": "verifiesTarget",
+          "description": "试验项验证量化目标维度",
+          "target_object_type_id": "LmsTargetDimension",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "Spec",
+      "display_name": "试验规范",
+      "description": "试验操作、判定标准的完整文档载体，是试验执行、结果判定的唯一依据。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "specCode",
+      "title_property": "specName",
+      "properties": [
+        {
+          "display_name": "规范编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_spec",
+            "backing_column": "spec_code",
+            "dataset_api_name": "spec"
+          }
+        },
+        {
+          "display_name": "规范名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_spec",
+            "backing_column": "spec_name",
+            "dataset_api_name": "spec"
+          }
+        },
+        {
+          "display_name": "适用车型",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_spec",
+            "backing_column": "applicable_model",
+            "dataset_api_name": "spec"
+          }
+        },
+        {
+          "display_name": "试验准备",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_spec",
+            "backing_column": "test_preparation",
+            "dataset_api_name": "spec"
+          }
+        },
+        {
+          "display_name": "操作步骤",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_spec",
+            "backing_column": "operation_steps",
+            "dataset_api_name": "spec"
+          }
+        },
+        {
+          "display_name": "设备要求",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_spec",
+            "backing_column": "equipment_requirement",
+            "dataset_api_name": "spec"
+          }
+        },
+        {
+          "display_name": "合格阈值",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_spec",
+            "backing_column": "pass_threshold",
+            "dataset_api_name": "spec"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "草稿/已发布/作废",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_spec",
+            "backing_column": "status",
+            "dataset_api_name": "spec"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_spec",
+            "backing_column": "create_time",
+            "dataset_api_name": "spec"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_spec",
+            "backing_column": "update_time",
+            "dataset_api_name": "spec"
+          }
+        },
+        {
+          "display_name": "创建人",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_spec",
+            "backing_column": "create_by",
+            "dataset_api_name": "spec"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "扩展为LMS标准",
+          "api_name": "extendsTrialStandard",
+          "description": "规范扩展为 LMS 试验标准",
+          "target_object_type_id": "LmsTrialStandard",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "LmsTrialStandard",
+      "display_name": "LMS试验标准",
+      "description": "规范的扩展实体，集成更多管理属性：试验成本、人力、设备资源、试验周期，对接实验室系统。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "standardId",
+      "title_property": "standardName",
+      "properties": [
+        {
+          "display_name": "LMS标准ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_trial_standard",
+            "backing_column": "standard_id",
+            "dataset_api_name": "lms_trial_standard"
+          }
+        },
+        {
+          "display_name": "所属规范编码",
+          "description": "FK → spec.spec_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_trial_standard",
+            "backing_column": "spec_code",
+            "dataset_api_name": "lms_trial_standard"
+          }
+        },
+        {
+          "display_name": "标准名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_trial_standard",
+            "backing_column": "standard_name",
+            "dataset_api_name": "lms_trial_standard"
+          }
+        },
+        {
+          "display_name": "试验成本",
+          "description": "",
+          "data_type": "DOUBLE",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_trial_standard",
+            "backing_column": "test_cost",
+            "dataset_api_name": "lms_trial_standard"
+          }
+        },
+        {
+          "display_name": "总成本",
+          "description": "",
+          "data_type": "DOUBLE",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_trial_standard",
+            "backing_column": "total_cost",
+            "dataset_api_name": "lms_trial_standard"
+          }
+        },
+        {
+          "display_name": "外部机构报价",
+          "description": "",
+          "data_type": "DOUBLE",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_trial_standard",
+            "backing_column": "external_quote",
+            "dataset_api_name": "lms_trial_standard"
+          }
+        },
+        {
+          "display_name": "样本数量",
+          "description": "",
+          "data_type": "INTEGER",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_trial_standard",
+            "backing_column": "sample_count",
+            "dataset_api_name": "lms_trial_standard"
+          }
+        },
+        {
+          "display_name": "工时",
+          "description": "",
+          "data_type": "INTEGER",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_trial_standard",
+            "backing_column": "work_hours",
+            "dataset_api_name": "lms_trial_standard"
+          }
+        },
+        {
+          "display_name": "试验仪器清单",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_trial_standard",
+            "backing_column": "equipment_list",
+            "dataset_api_name": "lms_trial_standard"
+          }
+        },
+        {
+          "display_name": "试验周期",
+          "description": "",
+          "data_type": "INTEGER",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_trial_standard",
+            "backing_column": "test_period",
+            "dataset_api_name": "lms_trial_standard"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_trial_standard",
+            "backing_column": "status",
+            "dataset_api_name": "lms_trial_standard"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_trial_standard",
+            "backing_column": "create_time",
+            "dataset_api_name": "lms_trial_standard"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_lms_trial_standard",
+            "backing_column": "update_time",
+            "dataset_api_name": "lms_trial_standard"
+          }
+        }
+      ],
+      "links": []
+    },
+    {
+      "api_name": "DvpDesign",
+      "display_name": "DVP试验验证计划",
+      "description": "项目层整体试验规划，统筹全部试验任务，是整车研发周期内试验任务的顶层排程。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "dvpCode",
+      "title_property": "dvpName",
+      "properties": [
+        {
+          "display_name": "DVP计划编码",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_dvp_design",
+            "backing_column": "dvp_code",
+            "dataset_api_name": "dvp_design"
+          }
+        },
+        {
+          "display_name": "所属项目令号",
+          "description": "FK → projectBase.project_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_dvp_design",
+            "backing_column": "project_code",
+            "dataset_api_name": "dvp_design"
+          }
+        },
+        {
+          "display_name": "计划名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_dvp_design",
+            "backing_column": "dvp_name",
+            "dataset_api_name": "dvp_design"
+          }
+        },
+        {
+          "display_name": "计划开始日期",
+          "description": "",
+          "data_type": "DATE",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_dvp_design",
+            "backing_column": "plan_start_time",
+            "dataset_api_name": "dvp_design"
+          }
+        },
+        {
+          "display_name": "计划结束日期",
+          "description": "",
+          "data_type": "DATE",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_dvp_design",
+            "backing_column": "plan_end_time",
+            "dataset_api_name": "dvp_design"
+          }
+        },
+        {
+          "display_name": "试验预算",
+          "description": "",
+          "data_type": "DOUBLE",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_dvp_design",
+            "backing_column": "test_budget",
+            "dataset_api_name": "dvp_design"
+          }
+        },
+        {
+          "display_name": "样车数量",
+          "description": "",
+          "data_type": "INTEGER",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_dvp_design",
+            "backing_column": "sample_car_count",
+            "dataset_api_name": "dvp_design"
+          }
+        },
+        {
+          "display_name": "资源分配",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_dvp_design",
+            "backing_column": "resource_allocation",
+            "dataset_api_name": "dvp_design"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_dvp_design",
+            "backing_column": "status",
+            "dataset_api_name": "dvp_design"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_dvp_design",
+            "backing_column": "create_time",
+            "dataset_api_name": "dvp_design"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_dvp_design",
+            "backing_column": "update_time",
+            "dataset_api_name": "dvp_design"
+          }
+        },
+        {
+          "display_name": "创建人",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_dvp_design",
+            "backing_column": "create_by",
+            "dataset_api_name": "dvp_design"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "所属项目",
+          "api_name": "plansFor",
+          "description": "DVP 计划属于项目基准",
+          "target_object_type_id": "ProjectBase",
+          "cardinality": "ONE",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "拆分为轮次",
+          "api_name": "splitsIntoRound",
+          "description": "DVP 计划拆分为试验轮次",
+          "target_object_type_id": "ExperimentItemRound",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    },
+    {
+      "api_name": "ExperimentItemRound",
+      "display_name": "试验轮次计划",
+      "description": "试验计划的时间拆分单元，把试验任务分配到项目各开发阶段（ET/PT/SOP），绑定项目里程碑。",
+      "storage_type": "VIRTUAL",
+      "primary_key": "roundId",
+      "title_property": "roundName",
+      "properties": [
+        {
+          "display_name": "轮次ID",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": true,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_experiment_item_round",
+            "backing_column": "round_id",
+            "dataset_api_name": "experiment_item_round"
+          }
+        },
+        {
+          "display_name": "所属DVP计划编码",
+          "description": "FK → dvpDesign.dvp_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_experiment_item_round",
+            "backing_column": "dvp_code",
+            "dataset_api_name": "experiment_item_round"
+          }
+        },
+        {
+          "display_name": "排程工况编码",
+          "description": "FK → operCondition.condition_code",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_experiment_item_round",
+            "backing_column": "condition_code",
+            "dataset_api_name": "experiment_item_round"
+          }
+        },
+        {
+          "display_name": "轮次名称",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": true,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_experiment_item_round",
+            "backing_column": "round_name",
+            "dataset_api_name": "experiment_item_round"
+          }
+        },
+        {
+          "display_name": "开发阶段",
+          "description": "ET/PT/SOP 等",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_experiment_item_round",
+            "backing_column": "dev_phase",
+            "dataset_api_name": "experiment_item_round"
+          }
+        },
+        {
+          "display_name": "里程碑",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_experiment_item_round",
+            "backing_column": "milestone",
+            "dataset_api_name": "experiment_item_round"
+          }
+        },
+        {
+          "display_name": "轮次开始日期",
+          "description": "",
+          "data_type": "DATE",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_experiment_item_round",
+            "backing_column": "round_start_time",
+            "dataset_api_name": "experiment_item_round"
+          }
+        },
+        {
+          "display_name": "轮次结束日期",
+          "description": "",
+          "data_type": "DATE",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_experiment_item_round",
+            "backing_column": "round_end_time",
+            "dataset_api_name": "experiment_item_round"
+          }
+        },
+        {
+          "display_name": "状态",
+          "description": "",
+          "data_type": "STRING",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_experiment_item_round",
+            "backing_column": "status",
+            "dataset_api_name": "experiment_item_round"
+          }
+        },
+        {
+          "display_name": "创建时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_experiment_item_round",
+            "backing_column": "create_time",
+            "dataset_api_name": "experiment_item_round"
+          }
+        },
+        {
+          "display_name": "更新时间",
+          "description": "",
+          "data_type": "TIMESTAMP",
+          "searchable": true,
+          "is_primary_key": null,
+          "is_title_property": null,
+          "backing_mapping": {
+            "backing_catalog": "dvpMysql",
+            "backing_schema": "dvp_benchmark",
+            "backing_table": "t_experiment_item_round",
+            "backing_column": "update_time",
+            "dataset_api_name": "experiment_item_round"
+          }
+        }
+      ],
+      "links": [
+        {
+          "display_name": "排程工况",
+          "api_name": "schedulesCondition",
+          "description": "轮次排程试验工况",
+          "target_object_type_id": "OperCondition",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        },
+        {
+          "display_name": "排程试验项",
+          "api_name": "schedulesTestItem",
+          "description": "轮次排程试验项",
+          "target_object_type_id": "TestItem",
+          "cardinality": "MANY",
+          "direction": "OUTGOING"
+        }
+      ]
+    }
+  ],
+  "action_types": []
+}

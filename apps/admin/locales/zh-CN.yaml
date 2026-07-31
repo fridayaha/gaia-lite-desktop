@@ -1,0 +1,2126 @@
+nav:
+  docs: 资料中心
+  notice: 消息通知
+  community: 社区
+  translation: 语言切换
+buttons:
+  pureAccountSettings: 账户设置
+  pureLoginOut: 退出系统
+  pureLogin: 登录
+  pureOpenSystemSet: 打开系统配置
+  pureReload: 重新加载
+  pureCloseCurrentTab: 关闭当前标签页
+  pureCloseLeftTabs: 关闭左侧标签页
+  pureCloseRightTabs: 关闭右侧标签页
+  pureCloseOtherTabs: 关闭其他标签页
+  pureCloseAllTabs: 关闭全部标签页
+  pureContentFullScreen: 内容区全屏
+  pureContentExitFullScreen: 内容区退出全屏
+  pureClickCollapse: 点击折叠
+  pureClickExpand: 点击展开
+  pureConfirm: 确认
+  pureSwitch: 切换
+  pureClose: 关闭
+  pureBackTop: 回到顶部
+  pureOpenText: 开
+  pureCloseText: 关
+  pureWatchMore: 查看更多
+  pureMarkAsRead: 标为已读
+search:
+  pureTotal: 共
+  pureHistory: 搜索历史
+  pureCollect: 收藏
+  pureDragSort: （可拖拽排序）
+  pureEmpty: 暂无搜索结果
+  purePlaceholder: 搜索菜单（支持拼音搜索）
+panel:
+  pureSystemSet: 系统配置
+  pureCloseSystemSet: 关闭配置
+  pureClearCacheAndToLogin: 清空缓存并返回登录页
+  pureClearCache: 清空缓存
+  pureThemeMode: 主题模式
+  pureThemeModeLight: 浅色
+  pureThemeModeLightTip: 清新启航，点亮舒适的工作界面
+  pureThemeModeDark: 深色
+  pureThemeModeDarkTip: 月光序曲，沉醉于夜的静谧雅致
+  pureThemeModeSystem: 自动
+  pureThemeModeSystemTip: 同步时光，界面随晨昏自然呼应
+  pureThemeColor: 主题色
+  pureMenuLayout: 菜单布局
+  pureVerticalTip: 左侧菜单，亲切熟悉
+  pureHorizontalTip: 顶部菜单，简洁概览
+  pureMixTip: 混合菜单，灵活多变
+  pureStretch: 页宽
+  pureStretchFixed: 固定
+  pureStretchFixedTip: 紧凑页面，轻松找到所需信息
+  pureStretchCustom: 自定义
+  pureStretchCustomTip: 最小1280、最大1600
+  pureTagsStyle: 页签风格
+  pureTagsStyleSmart: 灵动
+  pureTagsStyleSmartTip: 灵动标签，添趣生辉
+  pureTagsStyleCard: 卡片
+  pureTagsStyleCardTip: 卡片标签，高效浏览
+  pureTagsStyleChrome: 谷歌
+  pureTagsStyleChromeTip: 谷歌风格，经典美观
+  pureFullScreenWatermark: 全屏水印
+  pureEnableWatermark: 水印
+  pureWatermarkText: 文本
+  pureWatermarkTextPlaceholder: 请输入水印文本
+  pureInterfaceDisplay: 界面显示
+  pureGreyModel: 灰色模式
+  pureWeakModel: 色弱模式
+  pureHiddenTags: 隐藏标签页
+  pureHiddenFooter: 隐藏页脚
+  pureMultiTagsCache: 页签持久化
+menus:
+  pureHome: 首页
+  pureLogin: 登录
+  pureEmpty: 无Layout页
+  pureCommunity: 社区
+  pureAgentDevelopment: 智能体模版
+  pureSkillStudio: 技能开发
+  pureAgentInstance: 智能体
+  pureResourcePools: 资源池
+  pureLiteLLM: 模型网关
+  pureLiteLLMModels: 模型管理
+  pureLiteLLMKeys: API Key 管理
+  pureMonitoring: 监控中心
+  pureMonitoringTrace: 链路追踪
+  pureMonitoringResources: 资源监控
+  pureMonitoringServiceHealth: 服务健康
+  pureMonitoringUsage: 用量分析
+  pureMonitoringCalls: 调用分析
+  pureMonitoringAlerts: 异常告警
+  pureMonitoringOperationLog: 操作记录
+  pureMonitoringLogSearch: 服务日志
+  pureKnowledge: 知识管理
+  pureHub: 能力中心
+  pureSysManagement: 系统管理
+  pureUser: 用户管理
+  pureRole: 角色管理
+  pureSystemMenu: 菜单管理
+  pureUserGroup: 用户组管理
+  pureEngineConfig: 引擎配置
+  pureSecurityConfig: 安全配置
+  pureAppRelease: APP 管理
+  pureAbnormal: 异常页面
+  purePageNotFound: "404"
+  pureAccessDenied: "403"
+  pureChildMenuOverflow: 子菜单溢出时显示提示文本
+  pureServerError: "500"
+status:
+  pureLoad: 加载中...
+  pureMessage: 消息
+  pureNotify: 通知
+  pureTodo: 待办
+  pureNoMessage: 暂无消息
+  pureNoNotify: 暂无通知
+  pureNoTodo: 暂无待办
+login:
+  slogan: 知行合一，笃行致远
+  tabs:
+    account: 账号密码
+    email: 邮箱
+    phone: 手机
+    smsCode: 手机验证码
+  email: 邮箱
+  phone: 手机号
+  smsLogin:
+    sendCode: 发送验证码
+    code: 验证码
+    codeSent: 验证码已发送
+    invalidCode: 验证码错误或已过期
+    loginFailed: 登录失败，请重试
+  pureUsername: 账号
+  purePassword: 密码
+  pureVerifyCode: 验证码
+  pureSure: 确认密码
+  pureForget: 忘记密码?
+  pureLogin: 登录
+  pureThirdLogin: 第三方登录
+  purePhoneLogin: 手机登录
+  pureQRCodeLogin: 二维码登录
+  pureRegister: 注册
+  pureWeChatLogin: 微信登录
+  pureAlipayLogin: 支付宝登录
+  pureQQLogin: QQ登录
+  pureWeiBoLogin: 微博登录
+  purePhone: 手机号码
+  pureSmsVerifyCode: 短信验证码
+  pureBack: 返回
+  pureTest: 模拟测试
+  pureTip: 扫码后点击"确认"，即可完成登录
+  pureDefinite: 确定
+  pureLoginSuccess: 登录成功
+  pureLoginFail: 登录失败
+  pureRegisterSuccess: 注册成功
+  pureTickPrivacy: 请勾选隐私政策
+  pureReadAccept: 我已仔细阅读并接受
+  purePrivacyPolicy: 《隐私政策》
+  pureGetVerifyCode: 获取验证码
+  pureInfo: 秒后重新获取
+  pureUsernameReg: 请输入账号
+  purePassWordReg: 请输入密码
+  pureVerifyCodeReg: 请输入验证码
+  pureVerifyCodeCorrectReg: 请输入正确的验证码
+  pureVerifyCodeSixReg: 请输入6位数字验证码
+  purePhoneReg: 请输入手机号码
+  purePhoneCorrectReg: 请输入正确的手机号码格式
+  purePassWordRuleReg: 密码格式应为8-18位数字、字母、符号的任意两种组合
+  purePassWordSureReg: 请输入确认密码
+  purePassWordDifferentReg: 两次密码不一致!
+  purePassWordUpdateReg: 修改密码成功
+  pureLoginExpired: 登录已过期，请重新登录
+  failed:
+    invalidCredentials: 账号或密码错误
+    accountLocked: 账号已锁定，请 {minutes} 分钟后重试
+    tooManyRequests: 操作过于频繁，请稍后再试
+    ipBanned: 该 IP 已被临时封禁，请稍后再试
+    noMenuPermission: 登录成功，但当前账号未配置任何菜单权限
+  captcha:
+    label: 图形验证码
+    placeholder: 请输入图中数字
+    refresh: 点击刷新
+    invalid: 图形验证码错误或已过期
+    required: 账号存在异常登录尝试，请完成图形验证码后重试
+  forgetPassword:
+    title: 忘记密码
+    noChannel: 系统未配置验证码发送渠道，请联系系统管理员重置密码
+    invalidCode: 验证码错误
+    verifyFailed: 校验失败，请重试
+    ticketInvalid: 验证码已失效，请重新操作
+    success: 密码已重置，请用新密码登录
+    resetFailed: 重置失败，请重试
+    step1:
+      emailChannel: 邮箱
+      smsChannel: 短信
+      targetRequired: 请输入邮箱或手机号
+      emailPlaceholder: 请输入注册邮箱
+      phonePlaceholder: 请输入注册手机号
+      sendCode: 发送验证码
+      codeSent: 验证码已发送，请查收
+      tooFrequent: 操作过于频繁，请稍后再试
+      ipBanned: 该 IP 已被临时封禁，请稍后再试
+      sendFailed: 验证码发送失败，请重试
+    step2:
+      codePlaceholder: 请输入 6 位数字验证码
+      verify: 验证
+    step3:
+      newPassword: 新密码
+      confirmPassword: 确认密码
+      reset: 重置密码
+  changeEmail:
+    title: 修改邮箱
+    newEmail: 新邮箱
+    sendCode: 发送验证码
+    code: 验证码
+    confirm: 确认修改
+    inUse: 该邮箱已被占用
+    codeSent: 验证码已发送至新邮箱
+    invalidCode: 验证码错误
+    success: 邮箱修改成功
+    failed: 邮箱修改失败
+  changePhone:
+    title: 修改手机号
+    newPhone: 新手机号
+    sendCode: 发送验证码
+    code: 验证码
+    confirm: 确认修改
+    inUse: 该手机号已被占用
+    codeSent: 验证码已发送至新手机号
+    invalidCode: 验证码错误
+    success: 手机号修改成功
+    failed: 手机号修改失败
+  verifyEmail:
+    title: 认证邮箱
+    sendCode: 发送验证码
+    code: 验证码
+    confirm: 确认认证
+    codeSent: 验证码已发送至当前邮箱
+    invalidCode: 验证码错误或已过期
+    alreadyVerified: 该邮箱已被其他用户认证
+    success: 邮箱认证成功
+    failed: 邮箱认证失败
+  verifyPhone:
+    title: 认证手机
+    sendCode: 发送验证码
+    code: 验证码
+    confirm: 确认认证
+    codeSent: 验证码已发送至当前手机
+    invalidCode: 验证码错误或已过期
+    alreadyVerified: 该手机已被其他用户认证
+    success: 手机认证成功
+    failed: 手机认证失败
+tableBar:
+  pureList: 列表
+  pureLarge: 宽松
+  pureDefault: 默认
+  pureSmall: 紧凑
+  pureColumnSettings: 列设置
+  pureCollapse: 折叠
+  pureExpand: 展开
+  pureRefresh: 刷新
+  pureDensity: 密度
+  pureColumnDisplay: 列展示
+  pureReset: 重置
+  pureExitFullScreen: 退出全屏
+  pureFullScreen: 全屏
+  purePinLeft: 固定在左边
+  purePinRight: 固定在右边
+  pureUnpin: 取消固定
+
+# ── 业务通用 ──
+common:
+  action:
+    edit: 编辑
+    create: 创建
+    add: 新增
+    delete: 删除
+    clone: 克隆
+    publish: 发布
+    offline: 下架
+    save: 保存
+    cancel: 取消
+    confirm: 确认
+    confirmDelete: 确认删除
+    copy: 复制
+    next: 下一步
+    ok: 确定
+    prev: 上一步
+    log: 日志
+    uninstall: 卸载
+    install: 安装
+    retry: 重试
+    later: 稍后
+    operation: 操作
+    refresh: 刷新
+  tip: 提示
+  status:
+    draft: 草稿
+    published: 已发布
+    offline: 已下架
+    running: 运行中
+    suspended: 已暂停
+    failed: 异常
+    pending: 等待中
+    deploying: 部署中
+    archived: 已归档
+    stopped: 停止
+    enabled: 已启用
+    disabled: 已禁用
+  scope:
+    all: 全员
+    allFull: 全员可用
+    user: 指定用户
+    userGroup: 指定用户组
+    allProfile: 全员（独立 Profile）
+    userProfile: 指定用户（独立 Profile）
+    groupProfile: 用户组（共享 Profile）
+  profile:
+    independent: 独立
+    shared: 共享
+  msg:
+    loadFailed: 加载失败
+    saveSuccess: 保存成功
+    operationFailed: 操作失败
+    deleteSuccess: 删除成功
+    deleteFailed: 删除失败
+    copied: 已复制
+
+# ── 智能体模块 ──
+# V3：通用 agent.* / engine.* 键由 definition/instance/resourcePool 视图复用，
+# 下列仅为三层模型新概念补的键（detailTitle/create/版本/运行时按钮等）。
+definition:
+  detailTitle: 智能体模版详情
+  create: 新建智能体模版
+  publishVersion: 发布版本
+  unpublishedChanges: 未发布修改
+  stats:
+    published: 已发布
+    draft: 草稿
+  version:
+    title: 版本
+    current: 当前版本
+    changeLog: 版本说明
+    empty: 暂无版本，发布后生成首个版本快照
+  msg:
+    createOk: 智能体模版创建成功
+    editOk: 智能体模版修改成功
+    published: 版本已发布
+    deleted: 已删除定义 {name}
+
+instance:
+  detailTitle: 智能体详情
+  create: 新建智能体
+  editTitle: 修改智能体
+  online: 上线
+  offline: 停用
+  resume: 恢复
+  restart: 重启
+  destroy: 销毁
+  deploy: 部署
+  switchVersion: 切换版本
+  noDescription: 暂无描述
+  empty: 暂无智能体
+  notFound: "{name} 智能体不存在"
+  filter:
+    allStatus: 全部状态
+    allEngine: 全部引擎
+    searchPlaceholder: 请输入智能体名称
+  stats:
+    published: 已上线
+    draft: 草稿
+    offline: 已停用
+  detail:
+    restarting: 引擎重启中
+    restartingHint: 引擎正在滚动重启，预计 30-60 秒。完成后自动恢复，期间操作已禁用。
+    restartReady: 引擎已就绪
+    restartTimeout: 重启超时，请到「运行状态」页查看 Pod 状态
+    restartSubmitted: 重启已提交，等待引擎就绪...
+    confirmRedeploy: 该实例已运行。重新部署将重建引擎 Pod，期间对话会短暂中断。是否继续？
+    redeployTitle: 重新部署确认
+    confirmDestroy: 销毁将清理引擎 Pod 和所有会话数据（MinIO 存档保留）。此操作不可撤销，是否继续？
+    destroyTitle: 销毁确认
+    deployReady: 引擎已部署就绪
+    label:
+      definition: 智能体模版
+      version: 版本
+      resourcePool: 资源池
+      engineType: 引擎类型
+      accessScope: 访问范围
+      group: 所属组
+      creator: 创建者
+      updatedAt: 更新时间
+      browserSandbox: 浏览器沙箱
+    browserSandboxEnabled: 已启用
+    browserSandboxDisabled: 未启用
+  version:
+    hasUpdate: 有新版本可更新
+    upgrade: 更新到新版本
+    upgradeHot: 已热更新生效，无需重启
+    upgradeRestart: 模型组变更，引擎滚动重启中（约 30-60 秒）
+    upgradeNotRunning: 已更新版本绑定，实例未运行，待部署/恢复时生效
+    upgradeFailed: "更新版本失败：{detail}"
+    changeLog: 更新内容
+    targetVersion: 目标版本
+    noChangeLog: （未填写更新说明）
+    confirm: 将把定义新版本的人设/技能/模型增量推送到运行中的引擎，无需重新部署 Pod。是否继续？
+  deployStep:
+    title: 部署进度
+    subscribed: 已订阅部署事件流
+    waiting: 等待部署事件…
+    starting: 开始部署
+    buildImage: 构建镜像
+    createPod: 创建 Pod
+    configuring: 注入引擎配置
+    waitRunning: 等待 Pod 就绪
+    healthCheck: 健康检查
+    ready: 引擎就绪
+    unknown: 未知步骤
+    connectFailed: 部署事件流连接失败
+    streamEndNoEvent: 部署事件流已结束但未收到完成事件
+    failedUnknown: 部署失败
+    failedReason: "失败原因：{reason}"
+    deployFailed: "部署失败：{reason}"
+    timeout: 部署超时，请稍后重试
+  form:
+    step:
+      basic: 基本信息
+      pool: 定义与资源池
+      access: 访问范围
+      dify: Dify 应用
+    field:
+      name: 实例名称
+      namePlaceholder: 请输入实例名称，如：通用助手-生产实例
+      description: 描述
+      descriptionPlaceholder: 简要描述该实例的用途（可选）
+      definition: 智能体模版
+      definitionPlaceholder: 请选择智能体模版
+      version: 版本
+      versionPlaceholder: 请选择版本
+      resourcePool: 资源池
+      resourcePoolPlaceholder: 请选择资源池
+      browserSandbox: 浏览器沙箱
+      browserSandboxEnable: 启用浏览器沙箱
+      browserSandboxHint: 启用后，智能体可操作独立浏览器，并在需要时由用户经云桌面接管完成登录等操作
+      browserSandboxResourceHint: 占用资源较多，请按需启用
+      accessScope: 访问范围
+      selectUser: 指定用户
+      selectUserPlaceholder: 请选择用户
+      selectGroup: 指定用户组
+      selectGroupPlaceholder: 请选择用户组
+    rule:
+      nameRequired: 请输入实例名称
+      definitionRequired: 请选择智能体模版
+      versionRequired: 请选择版本
+      resourcePoolRequired: 请选择资源池
+      groupRequired: 请至少选择一个用户组
+      userRequired: 请至少选择一个用户
+  msg:
+    createOk: 实例创建成功
+    createOkAndOnline: 实例创建成功，已自动上线
+    createOkButOnlineFailed: 实例已创建，但自动上线失败，请稍后手动点「上线」
+    editOk: 实例修改成功
+    onlined: 实例已上线
+    onlinedFailed: 上线失败
+    offlined: 实例已停用
+    offlineFailed: 停用失败
+    deployed: 部署已开始
+    deployFailed: "部署失败: {detail}"
+    suspended: 已暂停
+    suspendFailed: "暂停失败: {detail}"
+    resumed: 已恢复
+    resumeFailed: "恢复失败: {detail}"
+    restarted: 重启已提交
+    restartFailed: "重启失败: {detail}"
+    destroyed: 已销毁
+    destroyFailed: "销毁失败: {detail}"
+    deleted: 已删除实例 {name}
+    deleteFailed: 删除失败
+    deleteFailedDetail: "删除失败: {detail}"
+    cloneOk: 克隆成功
+    cloneFailed: 克隆失败
+    fetchListFailed: 获取实例列表失败
+    loadFailed: 加载实例信息失败
+    loadVersionsFailed: 加载版本列表失败
+
+resourcePool:
+  detailTitle: 资源池详情
+  create: 新建资源池
+
+agent:
+  name: 智能体
+  instanceUnit: 实例
+  create: 创建智能体
+  editTitle: 修改智能体
+  detailTitle: 智能体详情
+  noDescription: 暂无描述
+  unboundEngine: 未绑定引擎
+  difyExternalNoPool: Dify 外接
+  unbound: 未绑定
+  empty: 暂无智能体
+  notFound: "{name} 智能体不存在"
+  filter:
+    allStatus: 全部状态
+    allEngine: 全部引擎
+    searchPlaceholder: 请输入智能体名称
+  stats:
+    published: 已发布
+    draft: 草稿
+    offline: 已下架
+  dialogTitle: "{title}智能体"
+  msg:
+    fetchListFailed: 获取智能体列表失败
+    loadFailed: 加载智能体信息失败
+    published: 智能体已发布
+    publishFailed: 发布失败
+    publishNoEngine: 该智能体未绑定引擎，无法发布
+    offlined: 智能体已下架
+    offlineFailed: 下架失败
+    deleted: "已删除智能体 {name}"
+    deleteFailed: 删除失败
+    cloneOk: 克隆成功
+    cloneFailed: 克隆失败
+    deployStarted: 部署已启动
+    deployFailed: "部署失败: {detail}"
+    suspendSent: 已发送暂停指令，数据将存档到 MinIO
+    suspendFailed: "暂停失败: {detail}"
+    redeployStarted: 重新部署已启动，预计 30-60 秒完成
+    redeployFailed: "重新部署失败: {detail}"
+    destroyed: K8s 资源已清理，MinIO 存档数据保留
+    destroyFailed: "销毁失败: {detail}"
+    deleteFailedDetail: "删除失败: {detail}"
+  detail:
+    suspend: 暂停
+    redeploy: 重新部署
+    destroy: 销毁
+    deploy: 部署
+    restarting: 引擎重启中
+    restartingHint: 引擎正在滚动重启，预计 30-60 秒。完成后自动恢复，期间操作已禁用。
+    restartReady: 引擎已就绪
+    restartTimeout: 重启超时，请到「实例」页查看 Pod 状态
+    restartSubmitted: 重启已提交，等待引擎就绪...
+    confirmRedeploy: 该智能体已运行。重新部署将重建引擎 Pod，期间对话会短暂中断。是否继续？
+    redeployTitle: 重新部署确认
+    confirmDestroy: 销毁将清理引擎 Pod 和所有会话/Profile 数据（MinIO 存档保留）。此操作不可撤销，是否继续？
+    destroyTitle: 销毁确认
+    unboundAlert: 该智能体未绑定引擎，无法发布，请先编辑并绑定资源池
+    label:
+      engineType: 引擎类型
+      resourcePool: 资源池
+      modelGroup: 模型组
+      accessScope: 访问范围
+      creator: 创建者
+      updatedAt: 更新时间
+    tabs:
+      overview: 概览
+      monitor: 监控
+      memory: 记忆
+      skills: 技能
+      persona: 人设
+      channels: 渠道
+      apiKeys: API Key
+      runtime: 运行状态
+  form:
+    step:
+      basic: 基本信息
+      persona: 人设配置
+      access: 访问权限
+    field:
+      name: 模版名称
+      namePlaceholder: 请输入模版名称，如：通用助手
+      avatarColor: 头像颜色
+      avatarColorHint: 卡片头像背景色
+      description: 描述
+      descriptionPlaceholder: 简要描述智能体的功能和定位
+      engineInstance: 资源池
+      engineInstancePlaceholder: 选择资源池
+      memory: 内存
+      systemPrompt: 人设 (SOUL.md)
+      systemPromptPlaceholder: |
+        定义智能体的身份、核心能力、行为准则与语气风格。该内容会作为 SOUL.md 注入引擎，每次对话都会读取，修改后下次对话即时生效（无需重启）。
+      personaTemplate: 插入模板
+      personaSample: 使用样例
+      personaHelp: 填写说明
+      personaSampleCode: 代码助手
+      personaSampleService: 客服助手
+      personaSampleKnowledge: 知识库问答
+      personaHelpText: |
+        SOUL.md 是智能体的「人设说明书」，引擎在每次对话开始时读取。建议包含：角色（一句话定位）、核心能力、行为准则、语气风格、约束边界。内容越具体，回答越稳定。修改后对现有引擎在下一次对话即生效，无需重启。
+      personaConfirmReplace: 当前已有内容，确认用样例替换吗？
+      modelConfig: 模型配置
+      modelGroup: 模型组
+      modelGroupPlaceholder: 选择模型组（来自 LiteLLM 模型管理）
+      litellmHint: 引擎只走 LiteLLM 统一网关，无需单独配置供应商与 API Key；保存时后端按计费 Team 自动生成虚拟 Key。
+      contextLength: 上下文长度
+      difyConfig: Dify 引擎配置
+      difyAppType: 应用类型
+      difyAppTypePlaceholder: 选择 Dify 应用类型
+      difyAppTypeHint: Chat=对话型应用；Agent=智能体（含工具调用）；Workflow=工作流（无会话状态，outputs 兜底取 text/answer/output）。
+      difyBaseUrl: 外部实例 URL
+      difyBaseUrlPlaceholder: https://your-dify-instance.com（留空则使用平台部署的 Dify Pod）
+      difyBaseUrlHint: 外部实例模式（用户自管 Dify SaaS / 自托管）；留空 = Pod 模式（平台在 k3s 部署 Dify Pod）。外部 URL 必须以 http(s):// 开头。
+      difyApiKey: App API Key
+      difyApiKeyPlaceholder: app-xxxxxxxxxxxxxxxxxx
+      difyApiKeyHint: Dify 应用的 API Key（在 Dify 应用的「访问 API」页面获取）；密文存储。
+      difyManagedHint: 托管模式 — 平台自动部署 Dify Pod，无需配置应用信息
+      difyInstanceStepHint: 选择 Dify 平台应用或手填外部应用信息；每个实例独立绑定一个 Dify 应用（dev/staging/prod 可指向不同 app）
+      difyApp: Dify 应用
+      difyAppPlaceholder: 选择 Dify 应用
+      difyAppHint: 点击选择从 Dify 平台拉取的应用；如列表为空请先到「系统管理 → 引擎配置」配置 Dify 平台管理员账号
+      difyRefreshApps: 刷新
+      difySelectedApp: 已选应用
+      difyVerifyBtn: 校验
+      difyVerifiedApp: 校验通过
+      rawJsonMode: 原始 JSON 编辑模式
+      skillConfig: 技能配置 (skill_config)
+      accessScope: 访问范围
+      selectGroup: 选择用户组
+      selectGroupPlaceholder: 请选择用户组
+      selectUser: 选择用户
+      selectUserPlaceholder: 请选择用户
+      targetGroup: 目标用户组
+      targetGroupPlaceholder: 选择定义归属的用户组
+    billingHint: "计费将归属第一个用户组：{name}（谁能用谁出钱）"
+    msg:
+      loadModelFailed: 加载模型组失败，请先在模型管理中配置
+      selectModel: 请选择一个模型组
+      skillJsonError: 技能配置 JSON 格式错误，请检查
+      editOk: 智能体修改成功
+      createOk: 智能体创建成功
+      difyAppsLoadFailed: 加载 Dify 应用列表失败
+      difyAppSelectFailed: 选择 Dify 应用失败
+      difyVerifyNeedBoth: 请先填写 base_url 和 App API Key
+      difyVerifySuccess: "校验通过，应用名称：{name}"
+      difyVerifyModeUnsupported: 该应用类型暂不支持，请选择 chat/agent/workflow 类型
+      difyVerifyFailed: 校验失败
+      difyAppIdRequired: 请选择 Dify 应用
+    rule:
+      nameRequired: 模版名称为必填项
+      engineRequired: 请选择引擎类型
+      modelRequired: 请选择模型组
+      groupRequired: 请至少选择一个用户组
+      userRequired: 请至少选择一个用户
+      difyAppTypeRequired: 请选择 Dify 应用类型
+      difyApiKeyRequired: 请填写 Dify App API Key
+  config:
+    engineDetailTitle: 配置详情
+    metaTitle: 元信息
+    label:
+      engineType: 引擎类型
+      model: 模型
+      systemPrompt: 人设 (SOUL.md)
+      avatarColor: 头像颜色
+      other: 其他配置项
+      accessScope: 访问范围
+      authUsers: 授权用户
+      authGroups: 授权用户组
+      conversationCount: 对话总数
+      creator: 创建者
+      createdAt: 创建时间
+      updatedAt: 更新时间
+      publishedAt: 发布时间
+    notConfigured: 未配置
+    notSet: 未设置
+    notPublished: 未发布
+    rawJson: 原始配置 JSON
+  channel:
+    create: + 新建渠道
+    empty: 暂无渠道配置
+    col:
+      channel: 渠道
+      status: 状态
+      scope: 范围
+      callback: 回调地址
+      createdAt: 创建时间
+      operation: 操作
+    type:
+      wecom: 企业微信
+      wecom_bot_callback: 企业微信
+      feishu: 飞书
+      dingtalk: 钉钉
+    typeSub:
+      wecom: 自建应用
+      wecom_bot_callback: 智能机器人
+    typeDesc:
+      wecom: 企业内部应用，回调签名验证
+      wecom_bot_callback: URL 回调，原生流式回复
+      feishu: 飞书机器人，支持卡片流式输出
+      dingtalk: 钉钉机器人，Stream/Webhook 接入
+    connMode: 连接方式
+    mode:
+      callback: URL 回调
+      ws: 长连接
+    modeSoon: 暂未开放
+    http:
+      title: Web 聊天（HTTP）
+      desc: 终端门户网页对话渠道，发布智能体后自动创建
+      autoCreate: 发布智能体后自动创建
+    field:
+      corp_id: 企业ID (CorpId)
+      secret: 应用Secret
+      token: Token
+      encoding_aes_key: EncodingAESKey
+      agent_id: 应用 AgentId
+      app_secret: App Secret
+      verification_token: Verification Token
+      encrypt_key: Encrypt Key
+      client_id: Client ID
+      client_secret: Client Secret
+    placeholder:
+      wecomSecret: 企业微信应用 Secret
+      callbackToken: 回调 URL 验证 Token
+      aesKey: 43 位 AES Key
+      feishuAppSecret: 飞书应用 Secret
+      eventToken: 事件验证 Token
+      encryptKey: 消息加密 Key（可选）
+      dingtalkClientId: 钉钉应用 Client ID
+      dingtalkClientSecret: 钉钉应用 Secret
+    dialogTitle:
+      edit: 编辑渠道配置
+      create: 新建渠道
+    formType: 渠道类型
+    formProfile: Profile 模式
+    tip:
+      inherit: 继承自智能体
+      scopePrefix: "访问范围："
+      credentials: 提示：凭据字段以星号掩码显示，留空保持不变，输入新值将覆盖原配置。
+    msg:
+      loadFailed: 加载渠道配置失败
+      copied: 已复制回调地址
+      confirmDelete: "确定删除 {type} 渠道配置吗？"
+  apiKey:
+    create: 创建 API Key
+    createdTitle: API Key 已创建
+    copyWarning: 请立即复制并妥善保存此 Key。出于安全考虑，关闭后将无法再次查看。
+    copy: 复制
+    copied: 已复制
+    confirmSaved: 我已保存
+    confirmDelete: 确定删除此 API Key 吗？删除后使用此 Key 的请求将立即失效。
+    namePlaceholder: 请输入名称，如：生产环境调用
+    empty: 暂无 API Key
+    limitReached: 每个智能体最多 10 个 API Key
+    col:
+      name: 名称
+      key: API Key
+      createdAt: 创建时间
+      lastUsedAt: 最近使用
+      operation: 操作
+    msg:
+      loadFailed: 加载 API Key 失败
+      createFailed: 创建 API Key 失败
+      deleteSuccess: 已删除 API Key
+      deleteFailed: 删除 API Key 失败
+      copyFailed: 复制失败
+  memory:
+    filter:
+      allType: 全部类型
+      longTerm: 长期记忆
+      session: 会话记忆
+      manual: 手动标记
+      allSource: 全部来源
+      auto: 自动
+      manualSource: 手动
+    type:
+      long_term: 长期
+      session: 会话
+      manual: 手动
+    stat:
+      total: 总记忆数
+      longTerm: 长期记忆
+      session: 会话记忆
+    dialogTitle:
+      edit: 编辑记忆
+      create: 新建记忆
+    field:
+      type: 记忆类型
+      content: 记忆内容
+      contentPlaceholder: 输入智能体需要记住的信息...
+    msg:
+      emptyContent: 请输入记忆内容
+      updated: 记忆更新成功
+      created: 记忆创建成功
+      backendPending: 操作失败，记忆功能后端接入中
+      deleted: 记忆已删除
+      deleteFailed: 删除失败，记忆功能后端接入中
+      batchDeleted: "已删除 {count} 条记忆"
+    col:
+      type: 类型
+      source: 来源
+      createdAt: 创建时间
+      updatedAt: 更新时间
+      operation: 操作
+    confirmDelete: 确定删除这条记忆吗？
+    placeholder:
+      title: 记忆功能后端接入中
+      desc: Agent 记忆管理 API 尚未部署，当前无法查看或管理记忆数据。后端就绪后将自动连接。
+  skill:
+    empty: 暂无技能，点击下方「+」安装新技能
+    searchPlaceholder: 请输入技能名称
+    marketEmpty: 技能市场即将开放，敬请期待
+    builtin: 内置
+    preset: 预置
+    notSynced: 未同步
+    notDeployedTitle: 智能体尚未部署引擎
+    notDeployedDesc: 当前仅展示已安装的技能，部署引擎后将自动扫描并展示内置技能。技能开关与安装需在引擎运行后生效。
+    install:
+      local: 从本地上传
+      market: 从技能市场安装
+    dialogTitle:
+      preview: 安装技能预览
+      market: 技能市场
+      detail: 技能详情
+    drawer:
+      configTitle: 配置参数
+      usage: 使用次数
+      usageUnit: 次
+      engine: 兼容引擎
+      engineAll: 全部
+      credConfigured: 已配置
+      credPlaceholder: 输入凭证
+    msg:
+      toggled: "技能 \"{name}\" 已{state}"
+      toggledLocal: "技能 \"{name}\" 已{state}（本地生效，后端同步待接入）"
+      configSaved: "技能 \"{name}\" 配置已保存"
+      uninstalled: "技能 \"{name}\" 已卸载"
+      zipOnly: 仅支持 .zip 格式的技能包
+      parsing: 正在解析技能包...
+      installOk: "技能 \"{name}\" 安装成功"
+    preview:
+      author: "作者: {author}"
+      params: 可配置参数
+      safe: 安全扫描通过，未发现风险
+      confirmInstall: 确认安装
+    newSkillName: 新技能
+    newSkillDesc: 这是一个从本地上传的技能
+    custom: 自定义
+    installCount: "{count} 次安装"
+    installed: 已安装
+    placeholder:
+      title: 技能管理后端接入中
+      desc: Agent 技能管理 API 尚未部署，当前无法查看或管理技能。后端就绪后将自动连接。
+  instance:
+    col:
+      name: Pod 名称
+      status: 状态
+      node: 节点
+      memory: 内存
+      restarts: 重启次数
+      age: 运行时间
+      operation: 操作
+    summary:
+      running: 运行中
+      stopped: 停止
+      failed: 异常
+    runtime:
+      noPodTitle: 外部实例无 Pod
+      noPodDesc: Dify 对接模式实例不通过 K8s Pod 部署，运行状态请到 Dify 平台查看
+    msg:
+      logPending: "Pod {name} 的日志查看功能待实现"
+      logFailed: 日志获取失败
+      logEmpty: 暂无日志
+      loadFailed: 实例列表加载失败
+  monitor:
+    range:
+      h1: 1 小时
+      h6: 6 小时
+      h24: 24 小时
+      d7: 7 天
+    chart:
+      cpu: CPU 使用率 (m)
+      memory: 内存使用 (Mi)
+      requests: 请求次数
+      token: Token 用量
+      tokenIn: 输入 Token
+      tokenOut: 输出 Token
+      request: 请求
+    loadFailed: 加载监控数据失败
+    loading: 正在加载监控数据...
+    placeholder:
+      title: 指标数据接入中
+      desc: 当前环境的 Prometheus / Metrics Server 尚未配置，CPU、内存、请求量、Token 用量等指标暂不可用。配置 K8s 集群指标采集后，此处将自动展示实时监控数据。
+    dify:
+      noDataTitle: 外部实例暂不支持监控数据展示
+      noDataDesc: Dify 对接模式实例不采集 CPU / 内存 / 请求量 / Token 指标，相关数据请到 Dify 平台查看
+  overview:
+    stat:
+      conversation: 对话总数
+      token: Token 用量
+      activeUser: 活跃会话
+      deploy: 部署状态
+    percent:
+      real: 真实数据
+      noData: 暂无数据
+      notConnected: 暂未接入
+      connected: 已连接
+      notDeployed: 未部署
+    chart:
+      trend: 最近 7 天对话趋势
+    dify:
+      title: Dify 对接配置
+      baseUrl: Base URL
+      appTypeLabel: 应用类型
+      appApiKey: API Key
+      mode: 对接模式
+      modeExternal: 外部对接
+      appType:
+        chat: 对话
+        agent: Agent
+        workflow: 工作流
+      noDataTitle: 外部实例暂不支持监控数据展示
+      noDataDesc: Dify 对接模式实例的 Token / 会话 / 趋势数据请到 Dify 平台查看
+    model:
+      title: 模型配置（LiteLLM 网关）
+      redeploy: 重新部署
+      tip: 修改配置请在 Agent 编辑页面更新。修改后点击"重新部署"使配置生效（引擎将短暂重启，约 30-60 秒）。
+      msg:
+        applied: 配置已应用
+        applyFailed: 应用配置失败
+      confirm:
+        content: 重新部署将导致智能体引擎短暂重启（约 30-60 秒），期间在线用户将无法使用该智能体。是否继续？
+        title: 确认重新部署
+
+# ── 知识管理 ──
+knowledge:
+  placeholder:
+    title: 知识管理规划中
+    desc: 知识库（文档检索 / RAG）能力尚未上线，敬请期待。
+
+# ── 系统管理模块 ──
+system:
+  user:
+    title: 用户管理
+    create: 新增用户
+    dialogTitle: "{title}用户"
+    verifyEmailTitle: 邮箱认证
+    verifyPhoneTitle: 手机认证
+    filter:
+      allStatus: 全部状态
+      searchPlaceholder: 请输入用户名称
+    selected: "已选 {count} 项"
+    cancelSelect: 取消选择
+    batchDelete: 批量删除
+    confirmBatchDelete: 是否确认删除?
+    confirmDelete: "是否确认删除用户 {name}？"
+    confirmDeleteWithProfiles: "该用户在 {count} 个智能体实例上存在独立会话空间，删除将一并清理相关数据，此操作不可撤销。是否继续？"
+    col:
+      username: 用户名称
+      realName: 真实姓名
+      phone: 绑定手机
+      email: 绑定邮箱
+      roles: 角色
+      status: 状态
+      locked: 锁定
+      createdAt: 创建时间
+      lastLogin: 上次登录
+      operation: 操作
+    locked:
+      badge: "已锁定 剩 {minutes} 分钟"
+      unlockLabel: 解锁账号
+    msg:
+      fetchFailed: 获取用户列表失败
+      deleted: "已删除用户 {name}"
+      deleteFailed: 删除用户失败
+      batchDeleted: "已删除用户编号为 {ids} 的数据"
+      statusChanged: 已成功修改用户状态
+      statusChangeFailed: 修改用户状态失败
+      created: 用户创建成功
+      updated: 用户修改成功
+      operationFailed: 操作失败
+      emailAlreadyUsed: 邮箱已被其他用户绑定
+      usernameAlreadyUsed: 用户名已被占用
+      emailAlreadyVerified: 该邮箱已被其他用户认证
+      phoneAlreadyVerified: 该手机已被其他用户认证
+      invalidCode: 验证码错误或已过期
+      userNoEmail: 该用户未绑定邮箱
+      userNoPhone: 该用户未绑定手机
+      noActiveProvider: 未配置发码服务商
+      providerSendFailed: 验证码发送失败
+      sendFailed: 验证码发送失败
+      verifyFailed: 认证失败
+      verifySuccess: 认证成功
+      verifyEmail: 认证邮箱
+      verifyPhone: 认证手机
+      alreadyVerified: 该用户已认证
+      codeSent: "验证码已发送至 {target}，请向用户索取 6 位验证码"
+      verifyCodePlaceholder: 请输入 6 位验证码
+      verified: 已认证
+      unverified: 未认证
+      notBound: 未绑定
+      unlocked: "已解锁用户 {name}，可立即登录"
+      unlockFailed: 解锁用户失败
+      userNotLocked: 该用户未处于锁定状态
+      userNotFound: 用户不存在
+    confirm:
+      statusTitle: 系统提示
+      statusContent: "确认要{action}用户 {name} 吗?"
+      ok: 确定
+      unlockTitle: 解锁确认
+      unlockContent: "确认要解锁用户 {name} 吗？解锁后该用户可立即登录，失败计数同时清零。"
+    pwd:
+      resetTitle: "重置 {name} 用户的密码"
+      resetLabel: 重置密码
+      newPwdPlaceholder: 请输入新密码（至少 8 位）
+      newPwdRequired: 请输入新密码
+      newPwdWeak: 新密码至少 8 位
+      resetOk: "已成功重置 {name} 用户的密码"
+      resetFailed: 重置密码失败
+      strength:
+        veryWeak: 非常弱
+        weak: 弱
+        fair: 一般
+        strong: 强
+        veryStrong: 非常强
+    role:
+      assignTitle: "分配 {name} 用户的角色"
+      assignLabel: 分配角色
+      assignOk: "已成功分配 {name} 的角色"
+      assignFailed: 分配角色失败
+    form:
+      username: 用户名称
+      usernamePlaceholder: 请输入用户名称
+      realName: 真实姓名
+      realNamePlaceholder: 请输入真实姓名
+      password: 用户密码
+      passwordPlaceholder: 请输入用户密码
+      email: 邮箱
+      emailPlaceholder: 请输入邮箱
+      phone: 手机号
+      phonePlaceholder: 请输入手机号
+      status: 用户状态
+      imDivider: IM 平台绑定
+      addBinding: + 添加绑定
+      bindingDialogTitle: 添加 IM 绑定
+      platformType: 平台类型
+      selectPlaceholder: 请选择
+      imUserId: IM 用户 ID
+      imUserIdPlaceholder: 输入 IM 平台的用户 ID
+      displayName: 显示名称
+      displayNamePlaceholder: 可选：用户显示名称
+      businessDivider: 业务用户绑定
+      businessUsername: 业务用户名
+      businessUsernamePlaceholder: 请输入业务系统用户名
+      businessPhone: 业务手机号
+      businessPhonePlaceholder: 请输入业务手机号
+      businessEmail: 业务邮箱
+      businessEmailPlaceholder: 请输入业务邮箱
+      saveBusiness: 保存
+      removeBusiness: 解除绑定
+      col:
+        platform: 平台
+        imUserId: IM 用户 ID
+        displayName: 显示名称
+        operation: 操作
+      msg:
+        imUserIdRequired: 请输入 IM 用户 ID
+        uidUnavailable: 用户 ID 不可用，请重新打开编辑对话框
+        bindOk: 绑定成功
+        bindFailed: 绑定失败
+        unbindOk: 解除绑定成功
+        unbindFailed: 解除绑定失败
+        businessUsernameRequired: 请输入业务用户名
+        businessSaveOk: 业务用户绑定保存成功
+        businessSaveFailed: 业务用户绑定保存失败
+        businessRemoveOk: 业务用户绑定已解除
+        businessRemoveFailed: 解除业务用户绑定失败
+      rule:
+        usernameRequired: 用户名称为必填项
+        passwordRequired: 用户密码为必填项
+        passwordWeak: 用户密码至少 8 位
+        passwordStrength: 密码强度不足，请使用大小写字母 + 数字 + 符号的组合，长度 ≥ 8 位
+        passwordStrengthFair: 密码强度一般，建议增加长度或添加更多字符类型（大小写字母/数字/符号）
+        emailRequired: 绑定邮箱为必填项
+        emailInvalid: 请输入正确的邮箱格式
+    roleForm:
+      username: 用户名称
+      roleList: 角色列表
+  role:
+    title: 角色管理
+    create: 新增角色
+    dialogTitle: "{title}角色"
+    search: 搜索
+    reset: 重置
+    searchPlaceholder: 请输入角色名称
+    nameLabel: "角色名称："
+    nameForm: 角色名称
+    namePlaceholder: 请输入角色名称
+    descForm: 角色描述
+    descPlaceholder: 请输入角色描述
+    permission: 权限
+    permissionTitle: 权限设置
+    permissionSearchPlaceholder: 请输入权限名称进行搜索
+    expandToggle: 展开/折叠
+    selectAllToggle: 全选/全不选
+    linkage: 父子联动
+    close: 关闭
+    savePermission: 保存权限
+    confirmDelete: "是否确认删除角色 {name}？"
+    col:
+      name: 角色名称
+      description: 角色描述
+      permissionCodes: 权限标识
+      userCount: 用户数
+      createdAt: 创建时间
+      operation: 操作
+    resource:
+      user: 用户管理
+      role: 角色管理
+      agent_definition: 智能体模版
+      agent_instance: 智能体
+      resource_pool: 资源池
+      user_group: 用户组
+      litellm: 模型网关
+      hub: 能力中心
+      monitoring: 监控中心
+      system: 系统管理
+      dashboard: 仪表盘
+      menu: 菜单管理
+      dept: 部门管理
+      api: API 权限
+      button: 按钮权限
+      agent: Agent 管理
+    msg:
+      fetchFailed: 获取角色列表失败
+      deleted: "已删除角色 {name}"
+      deleteFailed: 删除角色失败
+      created: 角色创建成功
+      updated: 角色修改成功
+      operationFailed: 操作失败
+      permissionFetchFailed: 获取权限信息失败
+      permissionSaved: "角色 {name} 的权限修改成功"
+      permissionSaveFailed: 保存权限失败
+    rule:
+      nameRequired: 角色名称为必填项
+  userGroup:
+    title: 用户组管理
+    create: 新增用户组
+    dialogTitle: "{title}用户组"
+    members: 成员
+    confirmDelete: "是否确认删除用户组 {name}？"
+    col:
+      name: 用户组名称
+      code: 组码
+      description: 描述
+      memberCount: 成员数
+      createdAt: 创建时间
+      operation: 操作
+    form:
+      nameForm: 用户组名称
+      namePlaceholder: 请输入用户组名称
+      descForm: 描述
+      descPlaceholder: 请输入用户组描述
+    member:
+      manageTitle: "管理 {name} 的成员"
+      selected: "已选 {count} 名成员"
+      searchPlaceholder: 搜索用户...
+      joined: 已加入
+      empty: 暂无匹配用户
+      fetchFailed: 获取数据失败
+      updated: "用户组 {name} 的成员已更新"
+      updateFailed: 更新成员失败
+    msg:
+      fetchFailed: 获取用户组列表失败
+      deleted: "已删除用户组 {name}"
+      deleteFailed: 删除用户组失败
+      created: 用户组创建成功
+      updated: 用户组修改成功
+      operationFailed: 操作失败
+    rule:
+      nameRequired: 用户组名称为必填项
+
+  engineConfig:
+    title: 引擎配置
+    subtitle: 管理 Dify 等引擎的系统级配置
+    difyTitle: Dify 引擎
+    mode: 对接模式
+    modeManaged: 托管模式
+    modeManagedDesc: 平台自动部署 Dify Pod，无需额外配置
+    modeExternal: 外接模式
+    modeExternalDesc: 对接用户自部署或 Dify Cloud 平台
+    baseUrl: Dify 平台地址
+    baseUrlPlaceholder: https://your-dify.example.com
+    adminEmail: 管理员邮箱
+    adminEmailPlaceholder: "admin{'@'}your-dify.com"
+    adminPassword: 管理员密码
+    adminPasswordPlaceholder: 留空表示不修改
+    adminPasswordPlaceholderConfigured: "••••••（已加密保存，留空不修改，输入新值则覆盖）"
+    adminPasswordConfigured: 已配置
+    adminPasswordNotConfigured: 未配置
+    adminOptionalHint: 配置后可在创建智能体时下拉选择 Dify 应用；不配置则需手填 base_url + API Key
+    langfuseIntegration: Langfuse 集成
+    langfuseHost: Langfuse Host
+    langfuseHostPlaceholder: http://langfuse.monitoring:3000
+    langfusePublicKey: Public Key
+    langfusePublicKeyPlaceholder: pk-lf-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    langfuseSecretKey: Secret Key
+    langfuseSecretKeyPlaceholder: sk-lf-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    langfuseSecretKeyPlaceholderConfigured: "••••••（已加密保存，留空不修改，输入新值则覆盖）"
+    langfuseSecretKeyConfigured: 已配置
+    langfuseSecretKeyNotConfigured: 未配置
+    langfuseHint: 配置后，监控中心「用量分析」页可按 Dify 应用维度查看 token 用量与成本。前提：Dify workspace 后台已对接同一 Langfuse 实例（trace.metadata 含 app_id）。
+    testConnection: 测试 Dify 连接
+    testing: 测试中...
+    testSuccess: "连接成功，发现 {count} 个可用应用"
+    testFailedNoAdmin: 未配置管理员账号，无法测试 Console 连接
+    testFailed: "连接失败：{error}"
+    testLangfuse: 测试 Langfuse 连接
+    testingLangfuse: 测试中...
+    testLangfuseSuccess: "Langfuse 连接成功，当前共有 {count} 条 trace"
+    testLangfuseFailed: "Langfuse 连接失败：{error}"
+    testLangfuseNotConfigured: 未配置 Langfuse 凭据，无法测试
+    save: 保存配置
+    saved: 配置已保存
+    saveFailed: 保存失败
+    difyAppsTitle: Dify 应用列表
+    difyAppsSubtitle: 创建智能体时从此列表选择应用
+    refreshApps: 刷新应用列表
+    loadingApps: 加载应用列表中...
+    noApps: 暂无应用
+    appsLoadFailed: "加载应用列表失败：{error}"
+    col:
+      appName: 应用名称
+      mode: 类型
+      description: 描述
+      appId: 应用 ID
+
+  securityConfig:
+    title: 安全配置
+    subtitle: 配置短信/邮件服务商信息，用于登录 / 改绑 / 找回密码场景
+
+  appRelease:
+    title: APP 管理
+    subtitle: 管理终端用户 APP 发布物，发布后下载页可下载
+    col:
+      version: 版本
+      platform: 平台
+      displayName: 名称
+      icon: 图标
+      description: 描述
+      status: 状态
+      createdAt: 创建时间
+      publishedAt: 发布时间
+      operation: 操作
+    status:
+      draft: 待发布
+      published: 已发布
+    platform:
+      android: Android
+      harmony: 鸿蒙
+    platformAll: 全部平台
+    upload: 上传安装包
+    uploadDialogTitle: 上传安装包
+    uploadTip: "文件名需以 -版本.apk 或 -版本.hap 结尾（如 知行-0.8.123.apk），用于解析版本号"
+    uploadSuccess: 上传成功
+    edit: 编辑
+    editDialogTitle: 编辑 APP 信息
+    displayName: 名称
+    displayNamePlaceholder: 如「知行」
+    description: 描述
+    descriptionPlaceholder: APP 描述（可选）
+    iconUpload: 修改图标
+    iconUploadTip: 支持 PNG / JPG / WebP / GIF，≤ 2MB
+    iconOk: 图标已更新
+    publish: 发布
+    publishDialogTitle: 发布 APP
+    publishTip: 发布过程约需数十秒，请耐心等待
+    confirmPublish: 确认发布
+    publishing: 发布中…
+    publishSuccess: 已发布，下载页可下载
+    delete: 删除
+    confirmDelete: 是否确认删除该 APP 发布记录？相关安装包文件也会一并清理
+    copyDownloadUrl: 复制下载地址
+    emptyText: 暂无 APP 发布记录
+
+  smsConfig:
+    section:
+      provider: 短信服务商配置
+    create: 新建
+    active: 当前发码渠道
+    activate: 设为发码渠道
+    activateSuccess: 已设为当前发码渠道
+    deactivate: 取消发码渠道
+    deactivateSuccess: 已取消发码渠道
+    mainField: 签名/模板
+    emptyText: 暂无短信服务商配置，请新建
+    provider: 服务商
+    providerAliyun: 阿里云
+    providerTencent: 腾讯云
+    providerHuawei: 华为云
+    providerInUse: 该服务商已配置，请选择其他服务商
+    signName: 签名名称
+    signNamePlaceholder: 如「知行」
+    templateCode: 模板 CODE
+    templateCodePlaceholder: 如 SMS_123456789
+    accessKeyId: AccessKey ID
+    accessKeySecret: AccessKey Secret
+    accessKeyIdPlaceholderConfigured: "••••••（已加密保存，留空不修改，输入新值则覆盖）"
+    accessKeyIdPlaceholderEmpty: 请输入 AccessKey ID
+    accessKeySecretPlaceholderConfigured: "••••••（已加密保存，留空不修改，输入新值则覆盖）"
+    accessKeySecretPlaceholderEmpty: 请输入 AccessKey Secret
+    sdkAppId: SDK AppID
+    sdkAppIdPlaceholder: 腾讯云必填
+    region: 地域
+    regionPlaceholder: 阿里云如 cn-hangzhou；华为云如 cn-north-4
+    dailyLimit: 每日上限
+    dailyLimitHint: 单日同一手机号最大发送条数
+    intervalSeconds: 同号最小间隔
+    intervalSecondsHint: 单位秒，避免对同一手机号频繁发送
+    configured: 已配置
+    notConfigured: 未配置
+    save: 保存
+    saved: 保存成功
+    saveFailed: 保存失败
+    test: 测试连接
+    testing: 测试中...
+    testSuccess: 配置校验通过
+    testFailed: "配置校验失败：{error}"
+    createDialog: 新建短信服务商
+    editDialog: 编辑短信服务商
+    deleteConfirm: 确定删除该短信服务商配置？
+
+  emailConfig:
+    section:
+      provider: 邮件服务商配置
+    smtpHost: SMTP 主机
+    smtpHostPlaceholder: 如 smtp.qq.com
+    encryption: 加密方式
+    smtpPort: SMTP 端口
+    username: SMTP 用户名
+    usernamePlaceholder: 如 12345{'@'}qq.com（通常为完整邮箱地址）
+    password: SMTP 密码 / 授权码
+    passwordPlaceholderConfigured: "••••••（已加密保存，留空不修改，输入新值则覆盖）"
+    passwordPlaceholderEmpty: 请输入 SMTP 密码或授权码
+    fromName: 发件人显示名
+    fromNamePlaceholder: 如「知行平台」
+    dailyLimit: 每日上限
+    dailyLimitHint: 单日同一邮箱最大发送条数
+    intervalSeconds: 同邮箱最小间隔
+    intervalSecondsHint: 单位秒，避免对同一邮箱频繁发送
+    configured: 已配置
+    notConfigured: 未配置
+    save: 保存
+    saved: 保存成功
+    saveFailed: 保存失败
+    test: 测试连接
+    testing: 测试中...
+    testSuccess: 探活成功
+    testFailed: "探活失败：{error}"
+    create: 新建
+    active: 当前发码渠道
+    activate: 设为发码渠道
+    activateSuccess: 已设为当前发码渠道
+    deactivate: 取消发码渠道
+    deactivateSuccess: 已取消发码渠道
+    mainField: 主字段
+    accessKeyId: AccessKey ID
+    accessKeySecret: AccessKey Secret
+    accessKeyIdPlaceholderConfigured: "••••••（已加密保存，留空不修改）"
+    accessKeyIdPlaceholderEmpty: 请输入 AccessKey ID
+    accessKeySecretPlaceholderConfigured: "••••••（已加密保存，留空不修改）"
+    accessKeySecretPlaceholderEmpty: 请输入 AccessKey Secret
+    fromEmail: 发信地址
+    fromEmailPlaceholder: 如 alerts{'@'}mycompany.com
+    region: 地域
+    regionPlaceholder: "阿里云: cn-hangzhou / 腾讯云: ap-hongkong / 华为云: cn-north-4"
+    providerSmtp: SMTP
+    providerAliyun: 阿里云
+    providerTencent: 腾讯云
+    providerHuawei: 华为云
+    providerInUse: 该服务商已配置，请选择其他服务商
+    provider: 服务商
+    createDialog: 新建邮件服务商
+    editDialog: 编辑邮件服务商
+    deleteConfirm: 确定删除该邮件服务商配置？
+    emptyText: 暂无邮件服务商配置，请新建
+
+# ── 模型网关（LiteLLM）模块 ──
+litellm:
+  loading: 加载中...
+  default: 默认
+  platformDefault: 平台默认
+  model:
+    create: 新建模型组
+    edit: 编辑
+    searchPlaceholder: 搜索模型组
+    empty: 暂无模型组，请新建
+    dialogTitle: 新建模型组
+    dialogEditTitle: 编辑模型组
+    createBtn: 创建
+    confirmBtn: 保存
+    stats:
+      total: 模型组总数
+      providers: 供应商数
+    col:
+      name: 模型组
+      upstream: 上游模型
+      provider: 供应商
+      apiBase: API Base
+      contextLength: 上下文长度
+      inputPrice: 输入价格
+      outputPrice: 输出价格
+      operation: 操作
+    field:
+      name: 模型组
+      nameHint: 对 Agent 暴露的名称，Agent 选用此名
+      namePlaceholder: 如 gpt-4o-group
+      upstream: 上游模型
+      upstreamHint: LiteLLM 实际模型标识
+      upstreamPlaceholder: 如 openai/gpt-4o、anthropic/claude-3-5-sonnet、zhipu/glm-4
+      apiKey: 上游 API Key
+      apiKeyPlaceholder: 上游供应商 API Key（编辑时留空表示不变）
+      apiKeyHint: 上游供应商凭据，仅系统内部使用
+      apiBase: API Base
+      apiBasePlaceholder: 可选，自定义上游端点
+      customProvider: 供应商
+      customProviderPlaceholder: 选择或自定义，如 openai、anthropic、zhipu
+      contextLength: 上下文长度
+      contextLengthHint: 模型支持的最大上下文 token 数；填写后可加快首次响应
+      priceTarget: 目标模型
+    msg:
+      loadFailed: 加载模型失败
+      required: 模型组、上游模型、API Key 均为必填
+      created: 模型组创建成功
+      createFailed: 创建失败
+      updated: 模型组已更新
+      updateFailed: 更新失败
+      confirmDelete: "确认删除模型组「{name}」？"
+      deleteTitle: 删除确认
+      deleted: 已删除
+      deleteFailed: 删除失败
+      priceUpdated: 价格已更新
+      priceUpdateFailed: 价格更新失败
+    action:
+      editPrice: 编辑价格
+    dialog:
+      inputPrice: 输入价格
+      outputPrice: 输出价格
+    tag:
+      priceNotSet: 未配置
+    tip:
+      priceHint: 未配置价格时，调用成本将记为 0。补充价格后立即生效，仅影响新调用，历史记录不回填。
+  key:
+    title: 密钥监控
+    searchPlaceholder: 搜索智能体/组
+    groupFilterPlaceholder: 按用户组筛选
+    allModels: 全部
+    empty: 暂无密钥
+    stats:
+      total: 密钥总数
+      normal: 正常
+      blocked: 已封禁
+    col:
+      agent: 所属智能体
+      group: 所属组
+      models: 模型白名单
+      budget: 预算(USD)
+      spend: 已用(¥)
+      status: 状态
+      operation: 操作
+    status:
+      blocked: 已封禁
+      normal: 正常
+    action:
+      unblock: 解封
+      block: 封禁
+      revoke: 吊销
+      edit: 预算/限速
+    dialogEditTitle: 编辑密钥预算与限速
+    confirmBtn: 保存
+    field:
+      maxBudget: 最大预算(USD)
+      budgetDuration: 预算周期
+      budgetDurationPlaceholder: 如 30d
+      rpm: RPM 限速
+      tpm: TPM 限速
+      duration: 有效期
+      durationPlaceholder: 如 30d，留空则永久
+      invalidDuration: 格式无效，如 30d、1mo、24hr
+      invalidNumber: 必须为非负数
+    msg:
+      loadGroupsFailed: 加载用户组失败
+      loadAgentsFailed: 加载智能体失败
+      loadFailed: 加载密钥失败
+      unblocked: 已解封
+      blocked: 已封禁
+      operationFailed: 操作失败
+      confirmBlock: "封禁将中断该智能体的模型调用，直到解封或重部署。确认封禁？"
+      confirmUnblock: 确认解封该密钥？
+      blockTitle: 封禁确认
+      confirmRevoke: "吊销后该智能体立即失效，需重部署生成新密钥。此操作不可恢复。确认吊销？"
+      revokeTitle: 吊销确认
+      revoked: 已吊销
+      revokeFailed: 吊销失败
+      updated: 密钥已更新
+      updateFailed: 更新失败
+
+
+# ── 资源池模块 ──
+engine:
+  loading: 加载中...
+  create: 新建资源池
+  dialogTitle: "{title}资源池"
+  detailTitle: 资源池详情
+  builtin: 内置
+  autoRecycle: 自动回收
+  manualManage: 手动管理
+  empty: 暂无资源池
+  stats:
+    total: 资源池
+    builtin: 内置资源池
+    custom: 自定义资源池
+  filter:
+    engineType: 引擎类型
+    searchPlaceholder: 搜索名称
+  card:
+    memory: 内存
+    replicas: 副本
+  detail:
+    tabs:
+      pods: Pod 管理
+      monitor: 监控
+      logs: 日志
+    label:
+      sessionPerPod: 会话/Pod
+      idleSuspend: 空闲暂停
+      destroy: 销毁
+      image: 镜像
+      creator: 创建者
+  msg:
+    loadFailed: 加载资源池信息失败
+    loadDataFailed: "加载资源池数据失败: {detail}"
+    cloneOk: 克隆成功
+    cloneFailed: "克隆失败: {detail}"
+    deleteOk: 删除成功
+    deleteFailed: "删除失败: {detail}"
+    builtinNoDelete: 内置资源池不可删除
+    created: 资源池创建成功
+    updated: 资源池修改成功
+    operationFailed: 操作失败
+  form:
+    step:
+      basic: 基本信息
+      pod: Pod 资源配置
+      recycle: 资源回收策略
+    field:
+      name: 名称
+      namePlaceholder: 如：通用资源池
+      description: 描述
+      descriptionPlaceholder: 资源池用途说明
+      engineType: 引擎类型
+      minCpu: 最小 CPU
+      maxCpu: 最大 CPU
+      minMemory: 最小内存
+      maxMemory: 最大内存
+      minReplicas: 最小副本数
+      maxReplicas: 最大副本数
+      maxProfiles: 单 Pod 最大会话数
+      maxProfilesHint: 单个 Pod 承载的用户会话数上限，超出后自动扩容
+      targetGroup: 归属用户组
+      targetGroupPlaceholder: 选择资源池归属的用户组
+      sharedPool: 平台共享（所有组可用）
+      sharedPoolHint: 留空"平台共享"则所有用户组可用；选某组则为该组私有池
+      autoRecycle: 自动回收
+      autoRecycleOn: 空闲时自动休眠，超时后释放资源
+      autoRecycleOff: 手动管理（不自动回收）
+      idleSuspend: 空闲后休眠
+      idleSuspendHint: 分钟（默认 30）
+      idleDestroy: 休眠后释放
+      idleDestroyHint: 小时（默认 24）
+    rule:
+      nameRequired: 资源池名称为必填项
+  pod:
+    col:
+      agent: 智能体
+      name: Pod 名称
+      status: 状态
+      node: 节点
+      memory: 内存
+      restarts: 重启次数
+      age: 运行时间
+      operation: 操作
+    action:
+      log: 日志
+      restart: 重启
+    msg:
+      restarting: Pod 重启中
+      restartFailed: "重启 Pod 失败: {detail}"
+      fetchFailed: "获取 Pod 列表失败: {detail}"
+  log:
+    selectPod: "选择 Pod："
+    selectPlaceholder: 请选择 Pod
+    autoRefresh: 自动刷新
+    refresh: 刷新日志
+    empty: 请先选择一个 Pod 以查看日志
+    source: "来源："
+    sourceEngine: 引擎(Nginx/启动)
+    sourceGateway: Profile 网关
+    selectProfile: 选择 Profile
+    tailLines: "行数："
+    msg:
+      fetchPodsFailed: 获取 Pod 列表失败
+      fetchLogsFailed: 获取日志失败
+  monitor:
+    timeRange: "时间范围："
+    range:
+      h1: 1 小时
+      h6: 6 小时
+      h24: 24 小时
+      d7: 7 天
+    chart:
+      cpu: CPU 使用率汇总
+      memory: 内存使用汇总
+
+# ── 账户设置模块 ──
+account:
+  back: 返回
+  tabs:
+    profile: 个人信息
+    preferences: 偏好设置
+    securityLog: 安全日志
+  profile:
+    title: 个人信息
+    roles: 角色
+    avatar: 头像
+    updateAvatar: 更新头像
+    presetAvatar: 选择预置头像
+    presetAvatarTitle: 选择预置头像
+    nickname: 真实姓名
+    nicknamePlaceholder: 请输入真实姓名
+    nicknameRequired: 真实姓名必填
+    emailRequired: 绑定邮箱必填
+    emailInvalid: 请输入正确的邮箱格式
+    email: 绑定邮箱
+    emailPlaceholder: 请输入邮箱
+    phone: 绑定手机
+    phonePlaceholder: 请输入手机号
+    update: 更新信息
+    editAvatarTitle: 编辑头像
+    changePassword: 修改密码
+    pwdDialog:
+      title: 修改密码
+      old: 原密码
+      oldPlaceholder: 请输入原密码
+      new: 新密码
+      newPlaceholder: 至少 8 位
+      confirm: 确认新密码
+      confirmPlaceholder: 请再次输入新密码
+      submit: 确定
+      strength:
+        veryWeak: 非常弱
+        weak: 弱
+        fair: 一般
+        strong: 强
+        veryStrong: 非常强
+      msg:
+        mismatch: 两次输入的新密码不一致
+        weak: 新密码至少 8 位
+        wrongOld: 原密码错误
+        ok: 密码修改成功
+    msg:
+      avatarOk: 更新头像成功
+      avatarFailed: 更新头像失败
+      submitError: "提交异常 {error}"
+      updateOk: 更新信息成功
+  preferences:
+    title: 偏好设置
+    yes: 是
+    no: 否
+    msg:
+      setOk: "{title}设置成功"
+    items:
+      accountPwd: 账户密码
+      accountPwdDesc: 其他用户的消息将以站内信的形式通知
+      system: 系统消息
+      systemDesc: 系统消息将以站内信的形式通知
+      todo: 待办任务
+      todoDesc: 待办任务将以站内信的形式通知
+  securityLog:
+    title: 安全日志
+    hint: 仅显示近 3 个月的账户安全相关操作记录，更早的已归档。
+    col:
+      action: 操作
+      ip: IP 地址
+      ua: 用户代理
+      time: 时间
+
+# ── 仪表盘（首页）模块 ──
+welcome:
+  stat:
+    agentTotal: 智能体总数
+    weeklyNew: 本周新增
+    userTotal: 用户总数
+    systemUser: 系统用户
+    publishedAgent: 已发布智能体
+    publishRate: "{rate}% 发布率"
+    poolStock: 资源池数
+    engineTemplate: 个
+    groupAgent: 组内智能体
+    groupMember: 组成员
+    todayConversation: 今日对话
+    accessibleAgent: 可访问智能体
+    monthlyConversation: 本月对话
+  health: 系统健康
+  healthHint: "（实时探测各服务运行状态）"
+  healthUnknown: 未知
+  healthDown: 异常
+  healthUndeployed: 未部署
+  groupPrefix: "用户组：{name}"
+  chart:
+    agentStatus: 智能体状态分布
+    engineDist: 引擎分布
+    instanceStatus: 实例状态
+    resource: 资源配额
+    realtime: 实时
+    allocated: 已分配
+    metricPending: 指标接入中
+    recentActivity: 最近操作动态
+    sampleData: 示例数据
+    quickEntry: 快速入口
+    myAgent: 我的智能体
+    viewAll: 查看全部
+    trend7d: 近 7 天对话趋势
+    topAgents: 热门智能体Top5
+    billing: Token / 计费概览
+  billing:
+    todayTokens: 今日 Token
+    monthlyTokens: 本月 Token
+    monthlyCost: 本月费用
+    unreachable: 计费服务不可达
+  resource:
+    cpu: CPU
+    memory: 内存
+    pods: 个运行 Pod
+    noData: 暂无运行实例
+    used: "已用 {used} / {limit}"
+  activity:
+    legend:
+      publish: 发布
+      create: 创建
+      offline: 下架
+      edit: 更新
+  quickEntry:
+    createAgent: 创建智能体
+    enginePool: 资源池管理
+    modelGateway: 模型网关
+    userMgmt: 用户管理
+    billing: 计费查看
+    knowledge: 知识管理
+  action:
+    manageGroupAgent: 管理组内智能体
+
+# ── 错误页 ──
+error:
+  notFound: 抱歉，你访问的页面不存在
+  forbidden: 抱歉，你无权访问该页面
+  serverError: 抱歉，服务器出错了
+  backHome: 返回首页
+hub:
+  detailTitle: 能力详情
+  action:
+    initPresets: 初始化预置能力
+    refresh: 刷新
+    detail: 详情
+    createVersion: 创建版本
+    submitReview: 提交审核
+    approve: 通过
+    reject: 驳回
+    publish: 发布
+  studio:
+    title: 技能工作室
+    developSkill: 开发技能
+    backToHub: 返回能力中心
+    createSkill: 创建技能
+    searchPlaceholder: 搜索技能…
+    empty: 还没有技能，点击左上角「创建技能」开始
+    notFound: 没有找到匹配「{name}」的技能
+    createDialog:
+      title: 创建技能
+      name: 技能名称
+      namePlaceholder: 如：图表绘制技能
+      description: 技能描述
+      descriptionPlaceholder: 描述这个技能要做什么
+      confirm: 创建并开发
+    card:
+      open: 进入开发
+      delete: 删除
+    detail:
+      dev: 开发
+      debug: 调试
+      stopInstance: 停止实例
+      restartInstance: 重启实例
+      reloadSkill: 重载技能
+      reloaded: 技能已重载
+      configTitle: 技能配置
+      editConfig: 编辑配置
+      editConfigTitle: 编辑技能配置
+      cancel: 取消
+      save: 保存
+      invalidJson: manifest.json 格式有误
+      unsaved: 未保存的改动
+      discard: 放弃改动
+      discardHint: 当前文件有未保存的改动，切换将丢失，是否继续？
+      noManifest: 未找到 manifest.json，请先在开发会话中创建
+      filesTitle: 文件
+      refreshFiles: 刷新
+      newFile: 新建文件
+      newFileHint: 输入文件路径
+      create: 创建
+      upload: 上传文件
+      markerNew: 新增
+      markerModified: 已修改
+      noFileSelected: 选择左侧文件查看内容
+      binaryHint: 二进制文件不支持预览
+      inputPlaceholder: 描述你的需求…
+      send: 发送
+      abort: 中断
+      connecting: 正在连接…
+      streaming: 生成中…
+      terminal: 终端
+      terminalEmpty: 暂无命令输出
+      validate: 校验
+      package: 打包
+      publish: 发布
+      publishHint: 将打包当前技能并上传到能力中心，自动安全扫描后创建草稿版本。如需发布新版本，请先在配置编辑器里修改 manifest 的 version。
+      version: 版本
+      validateOk: 校验通过
+      validateFailed: 校验未通过
+      published: 已发布到能力中心
+      riskLevel: 风险等级
+      riskLow: 低
+      riskMedium: 中
+      riskHigh: 高
+      riskBlocking: 阻断
+      findings: 发现项
+      blockingHint: 存在阻断级风险，需在能力中心处理后方可发布。
+      done: 完成
+      clarify:
+        submit: 提交
+        submitted: 已提交，等待处理
+        other: 其他
+        otherPlaceholder: 请输入
+        required: 此题为必填
+        yes: 是
+        no: 否
+        unanswered: 未回答
+      greeting:
+        dev:
+          title: 开发助手
+          desc: 告诉我你想做什么技能，我会帮你编写 SKILL.md、设计 manifest 并实现工具逻辑。
+          hint: 你可以这样开始
+          ex1: 帮我做一个柱状图绘制技能
+          ex2: 设计一个把 Markdown 转成 PDF 的技能
+          ex3: 我想创建一个能联网搜索的技能
+        debug:
+          title: 调试助手
+          desc: 我已加载你正在开发的技能。像真实用户一样对我说一句话，验证它的表现。
+          hint: 试着这样对我说
+          ex1: 画一个本周销售柱状图
+          ex2: 把这份说明转成 PDF
+          ex3: 演示一下这个技能能做什么
+      toolCall:
+        running: 运行中
+        done: 完成
+        error: 失败
+        command: 命令
+        output: 输出
+        noOutput: 无输出
+        path: 路径
+        diff: 改动
+        pattern: 匹配
+        content: 内容
+        args: 参数
+        result: 结果
+    msg:
+      createSuccess: 技能已创建
+      deleteSuccess: 技能已删除
+      loadFailed: 加载失败，请重试
+      saveFailed: 保存失败，请重试
+      saveSuccess: 已保存
+  filter:
+    type: 能力类型
+    status: 状态
+    searchPlaceholder: 搜索能力…
+  col:
+    name: 名称
+    type: 类型
+    description: 描述
+    status: 状态
+    risk: 风险等级
+    creator: 创建者
+    industry: 行业
+    scenario: 场景
+    source: 来源
+    operation: 操作
+    versionNo: 版本号
+    createdAt: 创建时间
+    findings: 项发现
+    ruleId: 规则
+    message: 描述
+    location: 位置
+  section:
+    basic: 基本信息
+    versions: 版本管理
+    scan: 安全扫描
+  status:
+    draft: 草稿
+    pending_review: 待审核
+    approved: 已通过
+    published: 已发布
+    rejected: 已驳回
+    disabled: 已禁用
+    archived: 已归档
+  risk:
+    low: 低
+    medium: 中
+    high: 高
+    blocking: 阻断
+  msg:
+    loadFailed: 加载能力列表失败
+    presetsOk: 已初始化 {count} 个预置能力
+    presetsFailed: 初始化失败
+    versionCreated: 版本创建成功
+    versionCreateFailed: 创建失败
+    submitted: 已提交审核
+    approved: 审批通过
+    rejected: 已驳回
+    published: 发布成功
+    noScanFindings: 暂无扫描发现
+  overview:
+    agent: 智能体
+    skill: 技能
+    tool: 工具
+    mcp: MCP 服务
+    total: 总计
+  featured: 精选
+  all: 全部
+  import:
+    title: "导入{type}"
+    custom: 自定义导入
+    thirdparty: 第三方平台导入
+    doImport: 确认导入
+    comingSoon: 即将开放
+    comingSoonMsg: 第三方平台导入即将开放，后续将支持从 Dify、Coze、OpenAI GPTs 等平台一键导入。
+    platform: 来源平台
+    identifier: 平台标识
+    identifierPlaceholder: 输入平台上的 App ID / 仓库 URL 等
+    syncMode: 同步方式
+    syncOnce: 一次性导入
+    syncSubscribe: 订阅同步（自动更新）
+    name: 名称
+    namePlaceholder: 能力名称
+    descriptionPlaceholder: 能力描述
+    manifest: Manifest
+    manifestPlaceholder: 输入 JSON 配置
+    industryPlaceholder: 如：通用、DevOps、金融
+    scenarioPlaceholder: 如：数据分析、合规检查
+    tagsPlaceholder: 选择或输入标签
+    typeAuto: 由类别自动确定
+    successMsg: "导入成功：{name}"
+    nameRequired: 请输入名称
+    failed: 导入失败，请重试
+  subscribe:
+    title: 订阅到智能体模版
+    short: 订阅
+    targetAgent: 目标模版
+    targetAgentPlaceholder: 选择要订阅的智能体模版
+    tplPublished: 已发布
+    tplDraft: 草稿
+    installNote: 订阅后该能力将安装到目标模版的技能列表，并 fan-out 到模版下各实例。需在模版页发布新版本后，对实例执行热更新方可生效。
+    confirm: 确认订阅
+    cancelSub: 已订阅
+    currentSub: 已订阅模版
+    selectAgent: 请选择目标模版
+    successMsg: "已将「{name}」订阅到模版「{agent}」"
+    cancelMsg: "已取消「{name}」对「{agent}」的订阅"
+    loadTemplatesFailed: 加载智能体模版列表失败
+    noVersion: 该能力尚无版本，无法订阅
+    failed: 订阅失败，请重试
+    publishTitle: 发布模版新版本
+    publishHint: 订阅已写入模版。是否立即发布模版新版本？（发布后可在实例页对运行中实例执行热更新生效）
+    publishNow: 立即发布
+    published: 模版已发布新版本
+    publishFailed: 模版发布失败
+    publishChangeLog: "订阅能力：{name}"
+    upgradeHint: 该模版下有运行中实例，请前往智能体实例页执行版本热更新以生效
+  sourceType:
+    preset: 预置
+    manual: 手动
+    custom: 自定义
+  creator:
+    platform: 平台
+    admin: 管理员
+    dev_team: 开发团队
+    data_team: 数据团队
+    ops_team: 运维团队
+    research: 研发团队
+    procurement: 采购团队
+    legal_team: 法务团队
+    nlp_team: NLP 团队
+    hr_team: 人力资源
+    sec_team: 安全团队
+    marketing: 营销团队
+    current_user: 当前用户
+operationLog:
+  targetType:
+    user: 用户
+    agent_instance: 智能体
+    agent_definition: 智能体模版
+    user_group: 用户组
+    role: 角色
+    resource_pool: 资源池
+    engine_config: 引擎配置
+    agent_channel: 渠道
+    agent_skill: 智能体技能
+    litellm_model: 模型网关模型
+    litellm_key: 模型网关凭证
+    litellm_team: 模型网关团队
+  actionDomain:
+    auth: 鉴权
+    agent_instance: 智能体
+    agent_definition: 智能体模版
+    user: 用户
+    user_group: 用户组
+    role: 角色
+    resource_pool: 资源池
+    engine_config: 引擎配置
+    agent_channel: 渠道
+    agent_skill: 智能体技能
+    litellm_model: 模型网关模型
+    litellm_key: 模型网关凭证
+    litellm_team: 模型网关团队
+  actionVerb:
+    login: 登录
+    logout: 登出
+    create: 创建
+    update: 更新
+    delete: 删除
+    publish: 发布
+    unpublish: 下架
+    start: 启动
+    stop: 停止
+    suspend: 挂起
+    resume: 恢复
+    restart: 重启
+    clone: 克隆
+    toggle: 切换
+    assign: 分配
+    revoke: 撤销
+    deploy: 部署
+    destroy: 销毁
+    offline: 下线
+    reprovision_key: 重置密钥
+    switch_version: 切换版本
+    upgrade: 升级
+    install: 安装
+    uninstall: 卸载
+    reorder: 排序
+    credentials_save: 保存凭证
+    block: 封禁
+    unblock: 解封
+    sync: 同步
+    upsert: 保存
+    change_password: 修改密码
+    self_update: 修改资料
+    update_avatar: 修改头像
+  status:
+    success: 成功
+    failure: 失败
+  targetPrefix:
+    user: 用户
+    agent_instance: 智能体
+    agent_definition: 智能体模版
+    user_group: 用户组
+    role: 角色
+    resource_pool: 资源池
+    engine_config: 引擎
+    agent_channel: 渠道
+    agent_skill: 技能
+    litellm_model: 模型网关模型
+    litellm_key: 模型网关凭证
+    litellm_team: 模型网关团队
+  targetDeleted: 已删除
+
+# ── 社区（技术文章）──
+community:
+  createArticle: 发布文章
+  editArticle: 编辑文章
+  auditTitle: 文章审核
+  listTitle: 社区
+  listSearchPlaceholder: 搜索文章标题
+  listEmpty: 暂无文章
+  btnCreate: 发布文章
+  btnSubmit: 提交审核
+  btnEdit: 编辑
+  btnDelete: 删除
+  btnAudit: 审核
+  btnApprove: 通过
+  btnReject: 驳回
+  btnSaveDraft: 保存草稿
+  titleLabel: 标题
+  titlePlaceholder: 请输入文章标题
+  slugLabel: URL 路径
+  slugPlaceholder: 留空自动生成（建议英文/数字）
+  excerptLabel: 摘要
+  excerptPlaceholder: 一句话概括文章内容（选填）
+  contentLabel: 正文
+  viewCount: 阅读
+  byAuthor: 作者
+  publishedAt: 发布于
+  draftBadge: 草稿
+  pendingBadge: 待审核
+  publishedBadge: 已发布
+  rejectedBadge: 已驳回
+  rejectReasonLabel: 驳回理由
+  rejectReasonPlaceholder: 请填写驳回理由
+  msg:
+    createSuccess: 文章已创建
+    updateSuccess: 文章已保存
+    submitSuccess: 已提交审核
+    submitConfirm: 提交后文章将进入审核队列，审核通过后才会上线。确认提交？
+    approveSuccess: 审核通过，文章已发布
+    rejectSuccess: 已驳回
+    deleteSuccess: 已删除
+    deleteConfirm: 确认删除这篇文章？删除后不可恢复
+    needLogin: 登录后可发布文章
+    rejectReasonRequired: 驳回时必须填写理由
+    loadFailed: 加载失败

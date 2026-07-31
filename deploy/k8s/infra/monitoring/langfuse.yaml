@@ -1,0 +1,316 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: langfuse-secret
+  namespace: monitoring
+type: Opaque
+stringData:
+  nextauth-secret: "change-me-to-a-random-64-char-hex-string"
+  salt: "change-me-to-another-random-32-char-hex-string"
+  encryption-key: "0000000000000000000000000000000000000000000000000000000000000000"
+  langfuse-database-url: "postgresql://unionagents:change-me@postgres.unionagents:5432/langfuse"
+  clickhouse-password: "ch_dev_2026"
+  langfuse-public-key: "pk-lf-change-me"
+  langfuse-secret-key: "sk-lf-change-me"
+  s3-access-key-id: "unionagents"
+  s3-secret-access-key: "change-me"
+  redis-host: "redis.monitoring"
+  redis-port: "6379"
+  redis-auth: "redis_dev_2026"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: langfuse-config
+  namespace: monitoring
+data:
+  NEXTAUTH_URL: "http://124.243.186.4:30030"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: langfuse
+  namespace: monitoring
+  labels:
+    app: langfuse
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: langfuse }
+  template:
+    metadata:
+      labels: { app: langfuse }
+    spec:
+      containers:
+        - name: langfuse
+          image: langfuse/langfuse:3
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: NODE_OPTIONS
+              value: "--max-old-space-size=1536"
+            - name: AUTH_DISABLE_SIGNUP
+              value: "true"
+            - name: NEXTAUTH_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: langfuse-config
+                  key: NEXTAUTH_URL
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: nextauth-secret
+            - name: SALT
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: salt
+            - name: ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: encryption-key
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: langfuse-database-url
+            - name: CLICKHOUSE_URL
+              value: "http://clickhouse.monitoring:8123"
+            - name: CLICKHOUSE_MIGRATION_URL
+              value: "clickhouse://langfuse:ch_dev_2026@clickhouse.monitoring:9000/langfuse"
+            - name: CLICKHOUSE_USER
+              value: "langfuse"
+            - name: CLICKHOUSE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: clickhouse-password
+            - name: CLICKHOUSE_DB
+              value: "default"
+            - name: LANGFUSE_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: langfuse-public-key
+            - name: LANGFUSE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: langfuse-secret-key
+            - name: LANGFUSE_S3_EVENT_UPLOAD_BUCKET
+              value: "langfuse-events"
+            - name: LANGFUSE_S3_EVENT_UPLOAD_REGION
+              value: "us-east-1"
+            - name: LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: s3-access-key-id
+            - name: LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: s3-secret-access-key
+            - name: LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT
+              value: "http://minio.unionagents:9000"
+            - name: LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE
+              value: "true"
+            - name: LANGFUSE_S3_MEDIA_UPLOAD_BUCKET
+              value: "langfuse-media"
+            - name: LANGFUSE_S3_MEDIA_UPLOAD_REGION
+              value: "us-east-1"
+            - name: LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: s3-access-key-id
+            - name: LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: s3-secret-access-key
+            - name: LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT
+              value: "http://minio.unionagents:9000"
+            - name: LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE
+              value: "true"
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: redis-host
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: redis-port
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: redis-auth
+            - name: REDIS_AUTH
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: redis-auth
+            - name: LANGFUSE_REDIS_EVENT_QUEUE_MAX_SIZE
+              value: "10000"
+          readinessProbe:
+            httpGet:
+              path: /api/public/health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 24
+          livenessProbe:
+            httpGet:
+              path: /api/public/health
+              port: 3000
+            initialDelaySeconds: 120
+            periodSeconds: 30
+          resources:
+            requests: { cpu: "200m", memory: "1Gi" }
+            limits: { cpu: "1", memory: "1Gi" }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: langfuse-worker
+  namespace: monitoring
+  labels:
+    app: langfuse-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: langfuse-worker }
+  template:
+    metadata:
+      labels: { app: langfuse-worker }
+    spec:
+      containers:
+        - name: langfuse-worker
+          image: langfuse/langfuse-worker:3
+          env:
+            - name: NODE_OPTIONS
+              value: "--max-old-space-size=1536"
+            - name: AUTH_DISABLE_SIGNUP
+              value: "true"
+            - name: NEXTAUTH_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: langfuse-config
+                  key: NEXTAUTH_URL
+            - name: SALT
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: salt
+            - name: ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: encryption-key
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: langfuse-database-url
+            - name: CLICKHOUSE_URL
+              value: "http://clickhouse.monitoring:8123"
+            - name: CLICKHOUSE_MIGRATION_URL
+              value: "clickhouse://langfuse:ch_dev_2026@clickhouse.monitoring:9000/langfuse"
+            - name: CLICKHOUSE_USER
+              value: "langfuse"
+            - name: CLICKHOUSE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: clickhouse-password
+            - name: CLICKHOUSE_DB
+              value: "default"
+            - name: LANGFUSE_S3_EVENT_UPLOAD_BUCKET
+              value: "langfuse-events"
+            - name: LANGFUSE_S3_EVENT_UPLOAD_REGION
+              value: "us-east-1"
+            - name: LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: s3-access-key-id
+            - name: LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: s3-secret-access-key
+            - name: LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT
+              value: "http://minio.unionagents:9000"
+            - name: LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE
+              value: "true"
+            - name: LANGFUSE_S3_MEDIA_UPLOAD_BUCKET
+              value: "langfuse-media"
+            - name: LANGFUSE_S3_MEDIA_UPLOAD_REGION
+              value: "us-east-1"
+            - name: LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: s3-access-key-id
+            - name: LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: s3-secret-access-key
+            - name: LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT
+              value: "http://minio.unionagents:9000"
+            - name: LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE
+              value: "true"
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: redis-host
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: redis-port
+            - name: REDIS_AUTH
+              valueFrom:
+                secretKeyRef:
+                  name: langfuse-secret
+                  key: redis-auth
+            - name: LANGFUSE_BULLMQ_SKIP_REDIS_VERSION_CHECK
+              value: "true"
+          readinessProbe:
+            exec:
+              command: ["pgrep", "-f", "worker/dist/index.js"]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 24
+          livenessProbe:
+            exec:
+              command: ["pgrep", "-f", "worker/dist/index.js"]
+            initialDelaySeconds: 120
+            periodSeconds: 30
+          resources:
+            requests: { cpu: "200m", memory: "1Gi" }
+            limits: { cpu: "1", memory: "1Gi" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: langfuse
+  namespace: monitoring
+  labels:
+    app: langfuse
+spec:
+  type: NodePort
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30030
+      name: http
+  selector: { app: langfuse }

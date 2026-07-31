@@ -1,0 +1,121 @@
+# Kestra（Pipeline Builder 编排引擎，ADR-018）
+# 相比 docker-compose 的优化：
+# - 去掉 kestra-entrypoint.sh（装 DuckDB iceberg 扩展，k3s 暂不引入，按需后补）
+# - 用原生 kestra/kestra 镜像，配置走 KESTRA_CONFIGURATION env
+# - JDBC backend 复用 Gaia PG（独立 kestra schema，自动建）
+#
+# ⚠️ 默认 replicas: 0（暂不启用数据管道能力）。
+# 原因：上游 kestra/kestra:latest tag 曾变更导致 /app/kestra 缺失（CrashLoop），
+# 且当前业务未接入 Pipeline Builder。需要时改 replicas: 1 并确认镜像可用。
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gaia-kestra-data
+  namespace: gaia
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: ${STORAGE_CLASS}
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gaia-kestra
+  namespace: gaia
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: gaia-kestra
+  template:
+    metadata:
+      labels:
+        app: gaia-kestra
+    spec:
+      initContainers:
+        - name: wait-postgres
+          image: postgres:16-alpine
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          command:
+            - sh
+            - -c
+            - "until pg_isready -h gaia-postgres -U ontology; do sleep 2; done"
+      containers:
+        - name: kestra
+          image: kestra/kestra:latest
+          imagePullPolicy: ${IMAGE_PULL_POLICY_INFRA}
+          args:
+            - server
+            - standalone
+            - --worker-thread
+            - "4"
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: MICRONAUT_SECURITY_ENABLED
+              value: "true"
+            - name: KESTRA_CONFIGURATION
+              value: |
+                datasources:
+                  postgres:
+                    url: jdbc:postgresql://gaia-postgres:5432/ontology?currentSchema=kestra
+                    driverClassName: org.postgresql.Driver
+                    username: ontology
+                    password: ontology
+                kestra:
+                  repository:
+                    type: postgres
+                  storage:
+                    type: local
+                    local:
+                      basePath: /app/storage
+                  queue:
+                    type: postgres
+                  tasks:
+                    tmpDir:
+                      path: /tmp/kestra-wd/tmp
+                  url: http://gaia-kestra:8080/
+          volumeMounts:
+            - mountPath: /app
+              name: data
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+          readinessProbe:
+            httpGet:
+              path: /api/v1/configs
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/v1/configs
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: gaia-kestra-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gaia-kestra
+  namespace: gaia
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: gaia-kestra

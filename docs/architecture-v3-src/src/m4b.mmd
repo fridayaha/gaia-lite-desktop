@@ -1,0 +1,21 @@
+sequenceDiagram
+    autonumber
+    participant WeCom as 企业微信
+    participant GW as Gateway dispatcher
+    participant DB as PostgreSQL
+    participant Ctrl as Controller
+    participant Engine as Engine Pod
+    participant Lite as LiteLLM
+    WeCom->>GW: POST /webhook/wecom 加密 XML
+    GW->>GW: WeComAdapter.parse_incoming 解密 MessageEvent
+    GW->>DB: 消息去重 MsgId
+    GW->>DB: _check_im_access 权限闸门 用户绑定 access_scope
+    GW->>Ctrl: ensure_engine_ready 实例运行
+    Ctrl-->>GW: engine_url
+    GW->>Engine: 创建恢复 session Profile
+    GW->>DB: 加载 litellm_config per-instance key
+    GW->>Engine: 转发消息
+    Engine->>Lite: per-instance key 调用
+    Lite-->>Engine: 回复
+    Engine-->>GW: 响应
+    GW->>WeCom: WeComAdapter.send_message 分段 2048 字节

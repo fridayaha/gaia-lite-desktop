@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: manager
+  namespace: unionagents
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: controller-engine-manager
+  namespace: unionagents
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+# deployments/scale 是独立子资源，suspend(scale_to_zero)/resume 需要 patch 它
+- apiGroups: ["apps"]
+  resources: ["deployments/scale"]
+  verbs: ["get", "patch", "update"]
+- apiGroups: [""]
+  resources: ["pods", "services", "persistentvolumeclaims", "events"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["pods/exec", "pods/log"]
+  verbs: ["create", "get"]
+# 浏览器沙箱：browser Pod 创建需 VNC Secret / ConfigMap / NetworkPolicy
+- apiGroups: [""]
+  resources: ["secrets", "configmaps"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["networking.k8s.io"]
+  resources: ["networkpolicies"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: controller-engine-manager-binding
+  namespace: unionagents
+subjects:
+- kind: ServiceAccount
+  name: manager
+  namespace: unionagents
+roleRef:
+  kind: Role
+  name: controller-engine-manager
+  apiGroup: rbac.authorization.k8s.io
+---
+# metrics-server 实时用量读取（pods/nodes.metrics.k8s.io 为集群级资源，需 ClusterRole）
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: controller-metrics-reader
+rules:
+- apiGroups: ["metrics.k8s.io"]
+  resources: ["pods", "nodes"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: controller-metrics-reader-binding
+subjects:
+- kind: ServiceAccount
+  name: manager
+  namespace: unionagents
+roleRef:
+  kind: ClusterRole
+  name: controller-metrics-reader
+  apiGroup: rbac.authorization.k8s.io

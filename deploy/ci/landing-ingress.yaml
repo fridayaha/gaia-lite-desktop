@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: landing-ingress
+  annotations:
+    kubernetes.io/ingress.class: __INGRESS_CLASS__
+spec:
+  tls:
+  - hosts:
+    - __DOMAIN__
+    secretName: unionagentservice-tls
+  rules:
+  - host: __DOMAIN__
+    http:
+      paths:
+      # 前端 SPA（VitePress 静态站点）
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: console-landing
+            port:
+              number: 80

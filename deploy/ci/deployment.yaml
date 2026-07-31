@@ -1,0 +1,725 @@
+# ============================================================
+# UnionAgents 知行 — 集群部署清单（不包含 Secret / Ingress）
+# 使用方式:
+#   1. 先创建 secret.yaml 和 ingress.yaml
+#   2. sed "s/\${VERSION}/0.5.1/g" deployment.yaml | kubectl apply -f -
+# ⚠️ 同步约束：本文件是 deploy.sh 的唯一清单（合并版）。Gitee Go CI 走按服务拆分的
+#   deploy/ci/deploy-*.yaml（deploy-gateway.yaml 等）。改容器/env/sidecar 时必须
+#   两边同步，否则两条部署路径会漂移（如 asr-sidecar 曾只在 deploy-gateway.yaml
+#   而漏在此文件 → deploy.sh 部署后语音 ASR 不生效）。
+# ============================================================
+
+---
+# ── 命名空间 ──
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: unionagents
+
+---
+# ── Manager RBAC（controller 已并入 manager，引擎 Pod 管理由 manager 承担）──
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: manager
+  namespace: unionagents
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: controller-engine-manager
+  namespace: unionagents
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+# deployments/scale 是独立子资源，suspend(scale_to_zero)/resume 需要 patch 它
+- apiGroups: ["apps"]
+  resources: ["deployments/scale"]
+  verbs: ["get", "patch", "update"]
+- apiGroups: [""]
+  resources: ["pods", "services", "persistentvolumeclaims", "events"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["pods/exec", "pods/log"]
+  verbs: ["create", "get"]
+# 浏览器沙箱：browser Pod 创建需 VNC Secret / ConfigMap / NetworkPolicy
+- apiGroups: [""]
+  resources: ["secrets", "configmaps"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["networking.k8s.io"]
+  resources: ["networkpolicies"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: controller-engine-manager-binding
+  namespace: unionagents
+subjects:
+- kind: ServiceAccount
+  name: manager
+  namespace: unionagents
+roleRef:
+  kind: Role
+  name: controller-engine-manager
+  apiGroup: rbac.authorization.k8s.io
+---
+# metrics-server 实时用量读取（pods/nodes.metrics.k8s.io 为集群级资源，需 ClusterRole）
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: controller-metrics-reader
+rules:
+- apiGroups: ["metrics.k8s.io"]
+  resources: ["pods", "nodes"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: controller-metrics-reader-binding
+subjects:
+- kind: ServiceAccount
+  name: manager
+  namespace: unionagents
+roleRef:
+  kind: ClusterRole
+  name: controller-metrics-reader
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# ── 网关服务 ──
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  namespace: unionagents
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: gateway }
+  template:
+    metadata:
+      labels: { app: gateway }
+      annotations:
+        unionagents/rollUpdate: "${GITEE_COMMIT}"
+    spec:
+      imagePullSecrets:
+      - name: registry-secret
+      containers:
+      - name: gateway
+        image: "${REGISTRY}/unionagents/gateway:${VERSION}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8010
+        env:
+        - name: TZ
+          value: Asia/Shanghai
+        - name: UA_JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: jwt-secret
+        - name: UA_API_SERVER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: api-server-key
+        # gateway↔manager 内部服务令牌（#4：sk- 客户端图片解析用 X-Internal-Token 头）
+        # optional=true：secret 无此 key 时不阻断启动（prod 需在 unionagents-secret 加 internal-token）
+        - name: UA_INTERNAL_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: internal-token
+              optional: true
+        # OpenAI 兼容 API Key HMAC 签名密钥（与 manager 共用；prod 必填 ≥ 32 字符）
+        - name: UA_API_KEY_HMAC_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: api-key-hmac-secret
+        - name: UA_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: database-url
+        - name: UA_K8S_NAMESPACE
+          value: "unionagents"
+        # 语音 ASR（外部豆包 OpenSpeech volc.seedasr.auc）。X-Api-Key 走 Secret
+        - name: UA_ASR_PROVIDER
+          value: "volcengine"
+        - name: UA_ASR_VOLC_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: asr-volc-api-key
+        - name: UA_ASR_VOLC_RESOURCE_ID
+          value: "volc.seedasr.auc"
+        - name: UA_ENVIRONMENT
+          value: "prod"
+        # controller 已并入 manager：/api/controller/* 由 manager:8002 提供
+        - name: UA_CONTROLLER_URL
+          value: "http://manager:8002"
+        # CORS 白名单：Gateway 服务终端门户 chat 域名（显式 origin → 允许凭证）
+        - name: UA_CORS_ORIGINS
+          value: "https://chat.__DOMAIN__"
+        # Langfuse tracing（env 未配置时 gateway 自动 no-op，不影响请求）
+        # langfuse-secret 需在 unionagents ns 拷贝一份（monitoring ns 的原版）
+        - name: LANGFUSE_HOST
+          value: "http://langfuse.monitoring:3000"
+        - name: LANGFUSE_PUBLIC_KEY
+          valueFrom:
+            secretKeyRef:
+              name: langfuse-secret
+              key: langfuse-public-key
+        - name: LANGFUSE_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: langfuse-secret
+              key: langfuse-secret-key
+        resources:
+          requests: { cpu: "100m", memory: "128Mi" }
+          limits: { cpu: "500m", memory: "256Mi" }
+        livenessProbe:
+          httpGet: { path: /health, port: 8010 }
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet: { path: /health, port: 8010 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+  namespace: unionagents
+spec:
+  ports:
+  - port: 8010
+    targetPort: 8010
+  selector: { app: gateway }
+
+---
+# ── 管理 API ──
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manager
+  namespace: unionagents
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: manager }
+  template:
+    metadata:
+      labels: { app: manager }
+      annotations:
+        unionagents/rollUpdate: "${GITEE_COMMIT}"
+    spec:
+      serviceAccountName: manager
+      automountServiceAccountToken: true
+      imagePullSecrets:
+      - name: registry-secret
+      containers:
+      - name: manager
+        image: "${REGISTRY}/unionagents/manager:${VERSION}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8002
+        env:
+        - name: TZ
+          value: Asia/Shanghai
+        - name: UA_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: database-url
+        - name: UA_JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: jwt-secret
+        # Skill 凭证加密 key（Fernet 派生；prod 必填，设后不可改）
+        - name: UA_CREDENTIAL_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: credential-encryption-key
+        # OpenAI 兼容 API Key HMAC 签名密钥（prod 必填 ≥ 32 字符，设后不可改）
+        - name: UA_API_KEY_HMAC_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: api-key-hmac-secret
+        - name: UA_ENVIRONMENT
+          value: "prod"
+        # CORS 白名单：Manager 服务管理台 admin 域名（显式 origin → 允许凭证）
+        - name: UA_CORS_ORIGINS
+          value: "https://admin.__DOMAIN__"
+        # Langfuse trace 查询凭据（langfuse-secret 在 unionagents ns 拷贝一份）
+        # BASE_URL=集群内地址（manager 查 Langfuse API），EXTERNAL_URL=浏览器打开的地址（"在 Langfuse 中查看"链接）
+        - name: UA_LANGFUSE_BASE_URL
+          value: "http://langfuse.monitoring:3000"
+        - name: UA_LANGFUSE_EXTERNAL_URL
+          value: "http://__DOMAIN__:30030"
+        - name: UA_LANGFUSE_PUBLIC_KEY
+          valueFrom:
+            secretKeyRef:
+              name: langfuse-secret
+              key: langfuse-public-key
+        - name: UA_LANGFUSE_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: langfuse-secret
+              key: langfuse-secret-key
+        # ── controller 已并入 manager：以下原 controller env 迁入（引擎 Pod 管理 + OSS + PVC）──
+        - name: UA_CONTROLLER_BASE_URL
+          value: "http://manager:8002"
+        - name: UA_GATEWAY_URL
+          value: "http://gateway:8010"
+        - name: UA_K8S_NAMESPACE
+          value: "unionagents"
+        # 浏览器沙箱：browser Pod 的 PVC 存储类（k3s 用 local-path；云上已 set env，落清单持久化）
+        - name: UA_BROWSER_PVC_STORAGE_CLASS
+          value: "local-path"
+        - name: UA_API_SERVER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: api-server-key
+        # gateway↔manager 内部服务令牌（#4：sk- 客户端图片解析用 X-Internal-Token 头）
+        # optional=true：secret 无此 key 时不阻断启动（prod 需在 unionagents-secret 加 internal-token）
+        - name: UA_INTERNAL_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: internal-token
+              optional: true
+        # 对象存储 endpoint：由 deploy.sh 从 .env.local 的 UA_MINIO_ENDPOINT 注入
+        # 云上用 S3 兼容对象存储（OSS/COS 等），本地用 MinIO（http://minio:9000）
+        - name: UA_MINIO_ENDPOINT
+          value: "${UA_MINIO_ENDPOINT}"
+        - name: UA_MINIO_USER
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: oss-secret-id
+        - name: UA_MINIO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: oss-secret-key
+        - name: UA_MINIO_REGION
+          value: "${UA_MINIO_REGION}"
+        # 引擎镜像含 5GB+ hermes-agent 基础层，公网拉取过慢，云上建议走镜像仓库内网端点
+        - name: UA_ENGINE_IMAGE
+          value: "${REGISTRY}/unionagents/engine-hermes-v2:${VERSION}"
+        - name: UA_ENGINE_IMAGE_PULL_POLICY
+          value: "IfNotPresent"
+        - name: UA_ENGINE_IMAGE_PULL_SECRETS
+          value: "registry-secret"
+        # skill-secret-sidecar 镜像（云端走镜像仓库；裸名默认走 docker.io 会被墙）
+        - name: UA_SKILL_SIDECAR_IMAGE
+          value: "${REGISTRY}/unionagents/skill-secret-sidecar:${VERSION}"
+        # PVC persistent volume（云盘）
+        - name: UA_PVC_ENABLED
+          value: "true"
+        - name: UA_PVC_STORAGE_CLASS
+          value: "__PVC_SC__"
+        - name: UA_PVC_STORAGE_SIZE
+          value: "5Gi"
+        # ── LiteLLM 模型网关（manager 管理模型配置）──
+        - name: UA_LITELLM_BASE_URL
+          value: "http://litellm:4000"
+        - name: UA_LITELLM_MASTER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: litellm-master-key
+        - name: UA_LITELLM_SALT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: litellm-salt-key
+        # Prometheus 查询地址（监控中心资源监控页数据源）
+        - name: UA_PROMETHEUS_URL
+          value: "http://prometheus.monitoring:9090"
+        # Grafana 外部可访问地址（NodePort 30090，浏览器可打开），用于前端"在 Grafana 中查看"链接
+        # 由 deploy.sh 从 .env.local 的 GRAFANA_EXTERNAL_URL 注入
+        - name: UA_GRAFANA_EXTERNAL_URL
+          value: "${GRAFANA_EXTERNAL_URL}"
+        resources:
+          requests: { cpu: "100m", memory: "256Mi" }
+          limits: { cpu: "500m", memory: "768Mi" }
+        livenessProbe:
+          httpGet: { path: /health, port: 8002 }
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet: { path: /health, port: 8002 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: manager
+  namespace: unionagents
+spec:
+  ports:
+  - port: 8002
+    targetPort: 8002
+  selector: { app: manager }
+
+---
+# ── 管理台前端 ──
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: console-admin
+  namespace: unionagents
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: console-admin }
+  template:
+    metadata:
+      labels: { app: console-admin }
+      annotations:
+        unionagents/rollUpdate: "${GITEE_COMMIT}"
+    spec:
+      imagePullSecrets:
+      - name: registry-secret
+      containers:
+      - name: admin
+        image: "${REGISTRY}/unionagents/console-admin:${VERSION}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          requests: { cpu: "50m", memory: "64Mi" }
+          limits: { cpu: "200m", memory: "256Mi" }
+        livenessProbe:
+          httpGet: { path: /, port: 80 }
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet: { path: /, port: 80 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: console-admin
+  namespace: unionagents
+spec:
+  type: NodePort
+  externalTrafficPolicy: Local  # 保留客户端真实 IP（否则 SNAT 到 node IP，operator_ip 全是 10.42.0.1）
+  ports:
+  - port: 80
+    targetPort: 80
+  selector: { app: console-admin }
+
+---
+# ── 用户门户前端 ──
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enduser-portal
+  namespace: unionagents
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: enduser-portal }
+  template:
+    metadata:
+      labels: { app: enduser-portal }
+      annotations:
+        unionagents/rollUpdate: "${GITEE_COMMIT}"
+    spec:
+      imagePullSecrets:
+      - name: registry-secret
+      containers:
+      - name: portal
+        image: "${REGISTRY}/unionagents/enduser-portal:${VERSION}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          requests: { cpu: "100m", memory: "64Mi" }
+          limits: { cpu: "500m", memory: "256Mi" }
+        livenessProbe:
+          httpGet: { path: /, port: 80 }
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet: { path: /, port: 80 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: enduser-portal
+  namespace: unionagents
+spec:
+  type: NodePort
+  externalTrafficPolicy: Local  # 保留客户端真实 IP
+  ports:
+  - port: 80
+    targetPort: 80
+  selector: { app: enduser-portal }
+
+---
+# ── 产品主页前端 ──
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: console-landing
+  namespace: unionagents
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: console-landing }
+  template:
+    metadata:
+      labels: { app: console-landing }
+      annotations:
+        unionagents/rollUpdate: "${GITEE_COMMIT}"
+    spec:
+      imagePullSecrets:
+      - name: registry-secret
+      containers:
+      - name: landing
+        image: "${REGISTRY}/unionagents/console-landing:${VERSION}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          requests: { cpu: "50m", memory: "64Mi" }
+          limits: { cpu: "200m", memory: "256Mi" }
+        livenessProbe:
+          httpGet: { path: /, port: 80 }
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet: { path: /, port: 80 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: console-landing
+  namespace: unionagents
+spec:
+  type: NodePort
+  externalTrafficPolicy: Local  # 保留客户端真实 IP
+  ports:
+  - port: 80
+    targetPort: 80
+  selector: { app: console-landing }
+
+---
+# ── Hub 能力中心 ──
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hub
+  namespace: unionagents
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: hub }
+  template:
+    metadata:
+      labels: { app: hub }
+      annotations:
+        unionagents/rollUpdate: "${GITEE_COMMIT}"
+    spec:
+      imagePullSecrets:
+      - name: registry-secret
+      containers:
+      - name: hub
+        image: "${REGISTRY}/unionagents/hub:${VERSION}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8003
+        env:
+        - name: TZ
+          value: Asia/Shanghai
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: hub-database-url
+        - name: HUB_AUTH_MODE
+          value: "header"
+        resources:
+          requests: { cpu: "100m", memory: "128Mi" }
+          limits: { cpu: "500m", memory: "512Mi" }
+        livenessProbe:
+          httpGet: { path: /api/hub/health, port: 8003 }
+          initialDelaySeconds: 15
+          periodSeconds: 30
+        readinessProbe:
+          httpGet: { path: /api/hub/health, port: 8003 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hub
+  namespace: unionagents
+spec:
+  ports:
+  - port: 8003
+    targetPort: 8003
+  selector: { app: hub }
+
+---
+# ── Skill Engine 服务（技能开发/调试引擎，Node.js Fastify :8004）──
+# manager 的 skill_engine_proxy 路由 /api/skill-engine/* → http://skill-engine:8004。
+# 工作区数据落 PVC；LLM key 运行时从 manager 拉（Phase 5），pod env 不含 LITELLM_API_KEY。
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: skill-engine-workspaces
+  namespace: unionagents
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: __PVC_SC__
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skill-engine
+  namespace: unionagents
+  labels:
+    app: skill-engine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: skill-engine
+  template:
+    metadata:
+      labels:
+        app: skill-engine
+      annotations:
+        unionagents/rollUpdate: "${GITEE_COMMIT}"
+    spec:
+      imagePullSecrets:
+        - name: registry-secret
+      containers:
+        - name: skill-engine
+          image: "${REGISTRY}/unionagents/skill-engine:${VERSION}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8004
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: unionagents-secret
+                  key: skill-engine-database-url
+            - name: WORKSPACE_BASE_DIR
+              value: /data/workspaces
+            - name: LOG_LEVEL
+              value: info
+            # pi SDK 启动时默认做版本检查/telemetry（联网），无外网会致 createAgentSession 挂起。
+            - name: PI_OFFLINE
+              value: "1"
+            - name: PI_SKIP_VERSION_CHECK
+              value: "1"
+            - name: PI_TELEMETRY
+              value: "0"
+            # Phase 5：LLM key 运行时用 UA_INTERNAL_TOKEN 调 manager 内部端点拉取，不落 pod env。
+            # UA_INTERNAL_TOKEN 与 manager 共用 unionagents-secret/internal-token（云端由 .env.local 注入，天然对齐）。
+            - name: MANAGER_BASE_URL
+              value: http://manager:8002
+            - name: UA_INTERNAL_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: unionagents-secret
+                  key: internal-token
+            # config_params secret:true 加密存储用（与 manager 共用 unionagents-secret/credential-encryption-key，
+            # 云端由 .env.local 的 CREDENTIAL_ENCRYPTION_KEY 经 deploy.sh envsubst 注入，同值）。
+            - name: UA_CREDENTIAL_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: unionagents-secret
+                  key: credential-encryption-key
+            - name: HUB_BASE_URL
+              value: http://hub:8003
+            - name: SKILL_ENGINE_MODEL
+              value: deepseek-v4-flash
+            - name: SKILL_ENGINE_PROVIDER
+              value: litellm
+            # 并发 worker 上限。2Gi 内存实际只够 ~2-3 个忙会话（pi worker + LLM 流 + bash 脚本，
+            # 单会话峰值 ~935Mi），降到 5 让并发上限与内存上限对齐，超额干净失败而非 OOM-kill。
+            - name: MAX_INSTANCES
+              value: "5"
+            # REDIS_URL 未配置：消息缓存降级为 PG 直写（生产建议接 redis）
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          volumeMounts:
+            - name: workspace-data
+              mountPath: /data/workspaces
+          readinessProbe:
+            httpGet:
+              path: /api/skill-engine/workspaces
+              port: 8004
+              httpHeaders:
+                - name: x-actor-id
+                  value: healthz
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /api/skill-engine/workspaces
+              port: 8004
+              httpHeaders:
+                - name: x-actor-id
+                  value: healthz
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 3
+      volumes:
+        - name: workspace-data
+          persistentVolumeClaim:
+            claimName: skill-engine-workspaces
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: skill-engine
+  namespace: unionagents
+spec:
+  ports:
+    - port: 8004
+      targetPort: 8004
+  selector:
+    app: skill-engine

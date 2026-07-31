@@ -1,0 +1,12 @@
+# 回退本地 whisper 的 overlay（特殊场景用）。
+# apply: kubectl apply -k deploy/k8s/services/overlays/with-asr-sidecar/
+# 前提：已 `make build-asr-sidecar` build 镜像并 import 到节点。
+# 详见 services/gateway/docs/wecom(callback)支持语音方案设计.md §七.2
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../gateway.yaml
+
+patches:
+  - path: sidecar-patch.yaml

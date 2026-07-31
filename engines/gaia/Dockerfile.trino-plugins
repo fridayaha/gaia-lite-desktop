@@ -1,0 +1,11 @@
+# 极小镜像：只含 Gravitino Trino Connector 插件（~31MB）
+# 用途：trino Pod 的 initContainer 从此镜像拷贝插件到 emptyDir，挂载到 /usr/lib/trino/plugin/gravitino
+# 这样主容器用官方 trinodb/trino:478（从 docker.io 拉），不需要 2GB 的自定义镜像。
+# 插件来源：https://github.com/apache/gravitino/releases（gravitino-trino-connector-473-478-1.3.0.tar.gz）
+# 升级流程见 engines/gaia/CLAUDE.md「组件升级指南」。
+# 注：用 nginx:alpine 基础镜像（已确认 mirror 可靠拉取），alpine 拉取不稳定故不用。
+FROM nginx:alpine
+# 插件文件（解压后已 strip-components=1，直接 COPY 目录）
+COPY config/trino/gravitino/ /gravitino-connector/
+# 标记，便于 initContainer 校验
+RUN echo "gravitino-trino-connector-1.3.0" > /gravitino-connector/VERSION

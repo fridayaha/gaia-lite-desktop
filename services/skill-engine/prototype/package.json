@@ -1,0 +1,16 @@
+{
+  "name": "skill-engine-prototype",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "main": "node main.js",
+    "test:concurrent": "node test-concurrent.js",
+    "test:dev-debug": "node test-dev-debug.js",
+    "test:state-restore": "node test-state-restore.js"
+  },
+  "dependencies": {
+    "@earendil-works/pi-coding-agent": "0.81.1",
+    "fastify": "^5.3.0"
+  }
+}

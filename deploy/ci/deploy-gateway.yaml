@@ -1,0 +1,90 @@
+# ============================================================
+# UnionAgents 知行 — Gateway 部署清单
+# 使用方式:
+#   ${VERSION} / ${REGISTRY} 由 Gitee Go deploy@k8s 的 params 自动替换（REGISTRY 在 Gitee Go 配置为变量）
+# ============================================================
+
+---
+# ── 网关服务 ──
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  namespace: unionagents
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: gateway }
+  template:
+    metadata:
+      labels: { app: gateway }
+      annotations:
+        unionagents/rollUpdate: "${GITEE_COMMIT}"
+    spec:
+      imagePullSecrets:
+      - name: registry-secret
+      containers:
+      - name: gateway
+        image: "${REGISTRY}/unionagents/gateway:${VERSION}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8010
+        env:
+        - name: UA_JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: jwt-secret
+        - name: UA_API_SERVER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: api-server-key
+        # gateway↔manager 内部服务令牌（#4：sk- 客户端图片解析用 X-Internal-Token 头）
+        # optional=true：secret 无此 key 时不阻断启动（prod 需在 unionagents-secret 加 internal-token）
+        - name: UA_INTERNAL_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: internal-token
+              optional: true
+        - name: UA_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: database-url
+        - name: UA_K8S_NAMESPACE
+          value: "unionagents"
+        # 语音 ASR（外部豆包 OpenSpeech volc.seedasr.auc）。X-Api-Key 走 Secret
+        - name: UA_ASR_PROVIDER
+          value: "volcengine"
+        - name: UA_ASR_VOLC_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: asr-volc-api-key
+        - name: UA_ASR_VOLC_RESOURCE_ID
+          value: "volc.seedasr.auc"
+        resources:
+          requests: { cpu: "100m", memory: "128Mi" }
+          limits: { cpu: "500m", memory: "256Mi" }
+        livenessProbe:
+          httpGet: { path: /health, port: 8010 }
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet: { path: /health, port: 8010 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+  namespace: unionagents
+spec:
+  ports:
+  - port: 8010
+    targetPort: 8010
+  selector: { app: gateway }

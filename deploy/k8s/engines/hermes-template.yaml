@@ -1,0 +1,151 @@
+# UnionAgents V2 — Engine Deployment 模板（Scope-aware + multi-Profile）
+# 此模板被 Controller 的 k8s_manager.py 程序化创建时参考
+# 实际创建使用 Python K8s API，不使用此 YAML
+
+# 关键变更 vs V1:
+#   1. 命名: engine-hermes-{agent_id[:8]}-{scope_hash[:6]}
+#   2. Labels: 新增 scope-hash, scope-type
+#   3. Env: 新增 SCOPE_TYPE, SCOPE_TARGET_ID, PROFILES_JSON
+#   4. 镜像: 使用 V2 Dockerfile (Hermes official + nginx)
+#   5. 端口: 8642 (nginx) → 内部路由到各 Hermes 进程
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: engine-hermes-{agent_short}-{scope_hash}
+  namespace: unionagents
+  labels:
+    app: engine-hermes
+    agent.unionagents/agent-id: "{agent_id}"
+    agent.unionagents/scope-hash: "{scope_hash}"
+    agent.unionagents/scope-type: "{scope_type}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: engine-hermes-{agent_short}
+      agent-id: "{agent_id}"
+      scope-hash: "{scope_hash}"
+  template:
+    metadata:
+      labels:
+        app: engine-hermes-{agent_short}
+        agent-id: "{agent_id}"
+        scope-hash: "{scope_hash}"
+    spec:
+      containers:
+      - name: engine
+        image: {engine_image}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8642
+          name: api
+        env:
+        - name: TZ
+          value: Asia/Shanghai
+        - name: AGENT_ID
+          value: "{agent_id}"
+        - name: API_SERVER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: api-server-key
+        - name: API_SERVER_ENABLED
+          value: "true"
+        - name: API_SERVER_HOST
+          value: "0.0.0.0"
+        - name: GATEWAY_ALLOW_ALL_USERS
+          value: "true"
+        # V2 新增
+        - name: SCOPE_TYPE
+          value: "{scope_type}"
+        - name: SCOPE_TARGET_ID
+          value: "{scope_target_id}"
+        # LiteLLM 模型网关（引擎只走 LiteLLM）
+        - name: LITELLM_BASE_URL
+          value: "{litellm_base_url}"
+        - name: LITELLM_API_KEY
+          value: "{litellm_api_key}"
+        - name: LITELLM_MODEL
+          value: "{litellm_model}"
+        - name: PROFILES_JSON
+          value: "{profiles_json}"
+        # Langfuse 双写：Hermes 内置 langfuse 插件 env，指向与 Gateway 相同的
+        # Langfuse 实例。Gateway 写外层 trace（含 agent_id/session_id/enduser_id
+        # 等业务字段），Hermes 插件写内层 trace（含 Hermes 内部多轮 LLM 调用 /
+        # tool 调用 / reasoning）。两端通过 session_id + last_user_message_hash
+        # 软关联，admin 监控中心 trace 详情页做关联查询展示。
+        # 未注入这些 env 时插件 fail open（hooks 静默 no-op），不影响生产。
+        # 详见 engines/hermes/CLAUDE.md "Langfuse trace 归属"。
+        - name: HERMES_LANGFUSE_PUBLIC_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: hermes-langfuse-public-key
+              optional: true
+        - name: HERMES_LANGFUSE_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: hermes-langfuse-secret-key
+              optional: true
+        - name: HERMES_LANGFUSE_BASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: hermes-langfuse-base-url
+              optional: true
+        # Controller(manager) API 地址：entrypoint 回调（profiles/register 等）+
+        # current-user-info 预置 skill 调 /user-context 端点。实际由 k8s_manager
+        # 创建 Pod 时从 settings.controller_base_url 注入（lifecycle/profiles 两路径）。
+        - name: CONTROLLER_URL
+          value: "{controller_url}"
+        # manager 内部令牌：current-user-info skill 调 /user-context 的 X-Internal-Token。
+        # optional=true：Secret 无 internal-token key 时不阻断启动（端点未配 token 时放行）。
+        - name: UA_INTERNAL_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: unionagents-secret
+              key: internal-token
+              optional: true
+        resources:
+          requests:
+            cpu: {min_cpu}
+            memory: {min_memory}
+          limits:
+            cpu: {max_cpu}
+            memory: {max_memory}
+        volumeMounts:
+        - name: hermes-data
+          mountPath: /opt/data
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8642
+          initialDelaySeconds: 10
+          periodSeconds: 3
+          timeoutSeconds: 3
+          failureThreshold: 60
+      volumes:
+      - name: hermes-data
+        emptyDir: {}
+      imagePullSecrets:
+      - name: {image_pull_secret}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: engine-hermes-{agent_short}-{scope_hash}
+  namespace: unionagents
+  labels:
+    app: engine-hermes
+    agent.unionagents/agent-id: "{agent_id}"
+    agent.unionagents/scope-hash: "{scope_hash}"
+spec:
+  ports:
+  - port: 8642
+    targetPort: 8642
+  selector:
+    app: engine-hermes-{agent_short}
+    scope-hash: "{scope_hash}"

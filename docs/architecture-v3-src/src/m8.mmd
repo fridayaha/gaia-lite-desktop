@@ -1,0 +1,15 @@
+flowchart TD
+    In["请求进入 Gateway<br/>X-Agent-ID 头"] --> GetAgent
+    GetAgent["_get_agent<br/>FROM agent_instances WHERE id AND status=PUBLISHED"] --> NotFound{找到实例?}
+    NotFound -->|否| N404["404"]
+    NotFound -->|是| Acl["_check_access<br/>ALL→通过 / USER→user_access / USER_GROUP→组交集"]
+    Acl --> AclR{通过?}
+    AclR -->|否| D403["403"]
+    AclR -->|是| Chan["_match_channel<br/>agent_instance_channels enabled"]
+    Chan --> DerScope["_derive_scope<br/>由 instance.access_scope 派生"]
+    DerScope --> PName["_build_profile_name"]
+    PName --> FindDep["查 agent_deployments"]
+    FindDep --> EnsCtl["ensure_profile → controller<br/>返回 engine_url"]
+    EnsCtl --> Build["_build_engine_url<br/>http pod.ns.svc.cluster.local:8642"]
+    Build --> Strip["proxy 透传<br/>去掉 host/origin/referer/x-hermes-profile"]
+    Strip --> Up["→ Engine Pod"]

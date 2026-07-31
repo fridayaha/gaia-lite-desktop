@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多 Profile 动态创建与用户隔离方案</title>
+<style>
+  :root {
+    --primary: #3b82f6; --primary-dark: #1d4ed8;
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --text: #e2e8f0; --text-dim: #94a3b8;
+    --success: #22c55e; --warning: #f59e0b; --error: #ef4444;
+    --accent: #8b5cf6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg); color: var(--text); overflow: hidden;
+    height: 100vh; width: 100vw;
+  }
+
+  .nav-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 24px; background: var(--surface); border-bottom: 1px solid var(--surface2);
+    height: 48px;
+  }
+  .nav-bar .title { font-size: 14px; font-weight: 600; }
+  .nav-bar .page-indicator { font-size: 12px; color: var(--text-dim); }
+  .nav-controls { display: flex; gap: 8px; }
+  .nav-controls button {
+    padding: 4px 14px; border: 1px solid var(--surface2); border-radius: 6px;
+    background: var(--bg); color: var(--text); cursor: pointer; font-size: 13px;
+    transition: all .15s;
+  }
+  .nav-controls button:hover { background: var(--primary); border-color: var(--primary); }
+  .nav-controls button:disabled { opacity: .3; cursor: not-allowed; }
+
+  .slides { margin-top: 48px; height: calc(100vh - 48px); overflow: hidden; position: relative; }
+  .slide {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    padding: 32px 48px; overflow-y: auto;
+    opacity: 0; transition: opacity .3s; pointer-events: none;
+  }
+  .slide.active { opacity: 1; pointer-events: auto; position: relative; }
+
+  .slide h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+  .slide h2 { font-size: 18px; font-weight: 600; margin-top: 14px; margin-bottom: 8px; color: var(--primary); }
+  .slide h3 { font-size: 15px; font-weight: 600; margin-top: 10px; margin-bottom: 6px; }
+  .slide p { font-size: 14px; line-height: 1.7; color: var(--text-dim); margin-bottom: 6px; }
+  .slide .subtitle { font-size: 14px; color: var(--text-dim); margin-bottom: 16px; }
+
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 10px 0; }
+  .card {
+    background: var(--surface); border: 1px solid var(--surface2); border-radius: 10px;
+    padding: 14px; transition: border-color .2s;
+  }
+  .card:hover { border-color: var(--primary); }
+  .card .card-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .card .card-body { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+  .card .tag {
+    display: inline-block; padding: 1px 8px; border-radius: 4px; font-size: 10px;
+    font-weight: 600; margin-bottom: 4px;
+  }
+  .tag-blue { background: #3b82f618; color: #3b82f6; }
+  .tag-green { background: #22c55e18; color: #22c55e; }
+  .tag-purple { background: #8b5cf618; color: #8b5cf6; }
+  .tag-orange { background: #f59e0b18; color: #f59e0b; }
+  .tag-red { background: #ef444418; color: #ef4444; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+  th, td { padding: 6px 10px; text-align: left; border-bottom: 1px solid var(--surface2); }
+  th { background: var(--surface); color: var(--text-dim); font-weight: 600; font-size: 12px; }
+  td { color: var(--text); }
+
+  code { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: 12px; }
+  pre {
+    background: #0f172a; border: 1px solid var(--surface2); border-radius: 8px;
+    padding: 12px; font-size: 11px; line-height: 1.5; overflow-x: auto; margin: 8px 0;
+  }
+
+  .diagram-box {
+    background: var(--surface); border: 1px solid var(--surface2); border-radius: 10px;
+    padding: 16px; margin: 8px 0; overflow-x: auto;
+    display: flex; justify-content: center;
+  }
+
+  ul, ol { font-size: 14px; line-height: 1.8; color: var(--text-dim); padding-left: 20px; margin: 6px 0; }
+
+  .alert {
+    padding: 10px 14px; border-radius: 8px; font-size: 13px;
+    margin: 8px 0; border-left: 3px solid;
+  }
+  .alert-info { background: #3b82f610; border-color: var(--primary); }
+  .alert-success { background: #22c55e10; border-color: var(--success); }
+  .alert-warning { background: #f59e0b10; border-color: var(--warning); }
+
+  .flow-row { display: flex; align-items: center; justify-content: center; gap: 4px; flex-wrap: wrap; margin: 12px 0; }
+  .flow-item {
+    padding: 6px 12px; background: var(--surface); border: 1px solid var(--surface2);
+    border-radius: 6px; font-size: 11px; text-align: center;
+  }
+  .flow-arrow { color: var(--primary); font-size: 14px; padding: 0 4px; }
+
+  svg { display: block; }
+  text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <span class="title">📋 Profile 隔离方案</span>
+  <span class="page-indicator" id="pageIndicator">1 / 13</span>
+  <div class="nav-controls">
+    <button id="prevBtn" onclick="prevSlide()">◀ 上一页</button>
+    <button id="nextBtn" onclick="nextSlide()">下一页 ▶</button>
+  </div>
+</div>
+
+<div class="slides" id="slides">
+
+<!-- ═══════ Slide 1: Title ═══════ -->
+<div class="slide active">
+  <h1 style="font-size:34px;margin-top:60px">🚀 多 Profile 动态创建 &amp; 用户隔离方案</h1>
+  <p style="font-size:16px;margin-top:14px;color:var(--text-dim)">令每个用户拥有独立的 AI Agent 运行时沙箱</p>
+  <div style="margin-top:40px">
+    <div class="card-grid" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="card"><div class="tag tag-green">✅ 已完成</div><div class="card-title">动态 Profile 创建</div><div class="card-body">用户首次对话时自动创建独立运行时实例</div></div>
+      <div class="card"><div class="tag tag-green">✅ 已完成</div><div class="card-title">用户级数据隔离</div><div class="card-body">每个 Profile 独立 SQLite 存储，互不干扰</div></div>
+      <div class="card"><div class="tag tag-green">✅ 已完成</div><div class="card-title">IM 渠道集成</div><div class="card-body">企业微信/飞书/钉钉消息自动路由到对应 Profile</div></div>
+    </div>
+  </div>
+  <div style="margin-top:60px;color:var(--text-dim);font-size:13px">UnionAgents · 2026-06</div>
+</div>
+
+<!-- ═══════ Slide 2: 什么是 Profile ═══════ -->
+<div class="slide">
+  <h1>📖 什么是 Profile</h1>
+  <p class="subtitle">Profile = 一个用户专属的 AI Agent 运行时沙箱</p>
+  <div class="card-grid" style="grid-template-columns:1fr 1fr">
+    <div class="card">
+      <div class="tag tag-blue">进程</div>
+      <div class="card-title">独立 Hermes Gateway 进程</div>
+      <div class="card-body">每个 Profile 在 Pod 内运行一个独立的 hermes gateway 进程，占用一个端口（8644+），进程间无任何共享状态</div>
+    </div>
+    <div class="card">
+      <div class="tag tag-green">数据</div>
+      <div class="card-title">独立 SQLite 数据库</div>
+      <div class="card-body">每个 Profile 拥有独立的 <code>state.db</code>，存储该用户的全部会话和消息记录，Profile 间完全不可见</div>
+    </div>
+    <div class="card">
+      <div class="tag tag-purple">配置</div>
+      <div class="card-title">独立环境配置</div>
+      <div class="card-body">每个 Profile 有独立的 <code>.env</code> 和 <code>config.yaml</code>，可分别配置不同的模型和提示词</div>
+    </div>
+    <div class="card">
+      <div class="tag tag-orange">目录</div>
+      <div class="card-title">独立文件系统</div>
+      <div class="card-body">密钥、记忆、技能、缓存各自独立的目录层次，Profile 间互相隔离</div>
+    </div>
+  </div>
+  <h3>引擎 Pod 内部目录结构</h3>
+  <pre style="margin-top:4px">/opt/data/profiles/                          ← PVC 持久化卷
+├── base/                                     ← 基础 Profile 模板
+│   ├── .env, config.yaml, state.db ...
+├── d38e436e-f664d6-39c9e118/                ← 用户 A 的 Profile
+│   ├── .env                                  ← 环境变量（API Key 等）
+│   ├── config.yaml                           ← 引擎配置
+│   ├── state.db                              ← SQLite 会话数据库
+│   ├── sessions/                             ← 会话元数据
+│   ├── memories/                             ← 长期记忆
+│   └── skills/                               ← 技能插件
+└── d38e436e-f664d6-21d72d5b/                ← 用户 B 的 Profile
+    └── ...</pre>
+</div>
+
+<!-- ═══════ Slide 3: 解决了什么 ═══════ -->
+<div class="slide">
+  <h1>🎯 解决的问题</h1>
+  <p class="subtitle">没有 Profile 隔离 vs 有 Profile 隔离</p>
+  <table>
+    <tr><th style="width:120px">场景</th><th>❌ 无 Profile 隔离</th><th>✅ 有 Profile 隔离</th></tr>
+    <tr><td>多用户并发</td><td>共享上下文，A问"查库存"B问"今天天气"，引擎混淆上下文</td><td>各自独立上下文，并行互不干扰</td></tr>
+    <tr><td>运营统计</td><td>无法区分用户，所有消息混在一起</td><td>按 Profile 粒度统计，精确到每个用户的使用量</td></tr>
+    <tr><td>引擎重启</td><td>所有会话/记忆丢失，用户需重新建立上下文</td><td>Profile 目录持久化（PVC），重启后恢复</td></tr>
+    <tr><td>多租户</td><td>无法实现——所有用户共享引擎实例</td><td>天然隔离，每个租户独立 Profile</td></tr>
+    <tr><td>定制化</td><td>全局生效，无法按用户差异化</td><td>每个 Profile 可配置不同的模型和提示词</td></tr>
+  </table>
+  <div class="alert alert-info" style="margin-top:12px">
+    <strong>核心价值：</strong>多 Profile 将一个"共享的引擎实例"升级为"一个引擎实例 = 多个独立 AI Agent"，实现用户级的资源隔离和数据安全。
+  </div>
+</div>
+
+<!-- ═══════ Slide 4: 架构图 ═══════ -->
+<div class="slide">
+  <h1>🏗️ 系统架构</h1>
+  <p class="subtitle">四层架构：外部 → 入口 → 编排 → 引擎</p>
+  <div class="diagram-box">
+    <svg width="720" height="420" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#3b82f6"/></marker>
+        <filter id="s"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity=".25"/></filter>
+      </defs>
+      <rect x="0" y="0" width="720" height="420" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+
+      <!-- 层分隔线 -->
+      <line x1="0" y1="42" x2="720" y2="42" stroke="#334155" stroke-width="1" stroke-dasharray="6,3"/>
+      <line x1="0" y1="112" x2="720" y2="112" stroke="#334155" stroke-width="1" stroke-dasharray="6,3"/>
+      <line x1="0" y1="210" x2="720" y2="210" stroke="#334155" stroke-width="1" stroke-dasharray="6,3"/>
+
+      <!-- 左侧层标 -->
+      <text x="10" y="26" font-size="10" fill="#64748b" font-weight="600">外部</text>
+      <text x="10" y="90" font-size="10" fill="#64748b" font-weight="600">入口</text>
+      <text x="10" y="180" font-size="10" fill="#64748b" font-weight="600">编排</text>
+      <text x="10" y="310" font-size="10" fill="#64748b" font-weight="600">引擎</text>
+
+      <!-- ═══ 外部 ═══ -->
+      <rect x="120" y="10" width="80" height="24" rx="6" fill="#1e40af" filter="url(#s)"/>
+      <text x="160" y="27" font-size="12" fill="#fff" text-anchor="middle" font-weight="600">用户</text>
+      <rect x="230" y="10" width="90" height="24" rx="6" fill="#1e40af" filter="url(#s)"/>
+      <text x="275" y="27" font-size="11" fill="#fff" text-anchor="middle">企业微信</text>
+      <rect x="340" y="10" width="70" height="24" rx="6" fill="#1e40af" filter="url(#s)"/>
+      <text x="375" y="27" font-size="11" fill="#fff" text-anchor="middle">飞书</text>
+      <rect x="430" y="10" width="70" height="24" rx="6" fill="#1e40af" filter="url(#s)"/>
+      <text x="465" y="27" font-size="11" fill="#fff" text-anchor="middle">钉钉</text>
+
+      <!-- 弧线 → Gateway -->
+      <path d="M 200 22 C 220 22, 240 50, 250 60" stroke="#3b82f6" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+      <path d="M 320 22 C 310 22, 300 50, 300 60" stroke="#3b82f6" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+      <path d="M 430 22 C 420 22, 380 50, 370 60" stroke="#3b82f6" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+
+      <!-- ═══ Gateway ═══ -->
+      <rect x="230" y="60" width="180" height="34" rx="8" fill="#3b82f6" filter="url(#s)"/>
+      <text x="320" y="82" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">Gateway (8010)</text>
+
+      <!-- Gateway 子模块 -->
+      <rect x="240" y="98" width="75" height="18" rx="4" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+      <text x="277" y="111" font-size="9" fill="#94a3b8" text-anchor="middle">渠道路由</text>
+      <rect x="325" y="98" width="75" height="18" rx="4" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+      <text x="362" y="111" font-size="9" fill="#94a3b8" text-anchor="middle">Profile解析</text>
+
+      <!-- 弧线 → Controller -->
+      <path d="M 277 116 C 277 130, 240 145, 240 155" stroke="#8b5cf6" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+      <path d="M 362 116 C 362 130, 340 145, 340 155" stroke="#8b5cf6" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+
+      <!-- ═══ Controller ═══ -->
+      <rect x="150" y="155" width="250" height="34" rx="8" fill="#8b5cf6" filter="url(#s)"/>
+      <text x="275" y="177" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">Controller (8001)</text>
+      <rect x="160" y="193" width="105" height="18" rx="4" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+      <text x="212" y="206" font-size="9" fill="#94a3b8" text-anchor="middle">K8sManager</text>
+      <rect x="275" y="193" width="115" height="18" rx="4" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+      <text x="332" y="206" font-size="9" fill="#94a3b8" text-anchor="middle">ProfileScheduler</text>
+
+      <!-- Controller → K8s 弧线 -->
+      <path d="M 212 211 C 140 220, 140 240, 180 250" stroke="#8b5cf6" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+      <text x="140" y="240" font-size="9" fill="#8b5cf6" text-anchor="end">K8s API</text>
+
+      <!-- ═══ 引擎 Pod ═══ -->
+      <rect x="50" y="250" width="500" height="140" rx="10" fill="#dc2626" filter="url(#s)"/>
+      <text x="300" y="270" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">Hermes 引擎 Pod</text>
+      <text x="300" y="284" font-size="9" fill="#fca5a5" text-anchor="middle">PVC 持久化 · 按需创建 · 空闲回收</text>
+
+      <!-- Nginx Sidecar -->
+      <rect x="70" y="296" width="110" height="48" rx="6" fill="#f59e0b" filter="url(#s)"/>
+      <text x="125" y="318" font-size="11" fill="#fff" text-anchor="middle" font-weight="600">Nginx</text>
+      <text x="125" y="336" font-size="9" fill="#fde68a" text-anchor="middle">Sidecar 反向代理</text>
+
+      <!-- Hermes Engine -->
+      <rect x="210" y="296" width="320" height="48" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+      <text x="370" y="314" font-size="11" fill="#22c55e" text-anchor="middle" font-weight="600">Hermes Engine 容器</text>
+
+      <!-- Profiles -->
+      <rect x="225" y="322" width="60" height="18" rx="4" fill="#1e293b" stroke="#22c55e" stroke-width="1"/>
+      <text x="255" y="335" font-size="9" fill="#22c55e" text-anchor="middle">Profile A</text>
+      <rect x="295" y="322" width="60" height="18" rx="4" fill="#1e293b" stroke="#3b82f6" stroke-width="1"/>
+      <text x="325" y="335" font-size="9" fill="#3b82f6" text-anchor="middle">Profile B</text>
+      <rect x="365" y="322" width="60" height="18" rx="4" fill="#1e293b" stroke="#f59e0b" stroke-width="1"/>
+      <text x="395" y="335" font-size="9" fill="#f59e0b" text-anchor="middle">Profile C</text>
+      <text x="440" y="334" font-size="9" fill="#64748b">...最多 20</text>
+
+      <!-- Nginx → Profile 弧线 -->
+      <path d="M 180 320 C 200 320, 225 331, 255 331" stroke="#f59e0b" stroke-width="1" fill="none" marker-end="url(#a)"/>
+      <path d="M 180 320 C 215 320, 295 331, 325 331" stroke="#f59e0b" stroke-width="1" fill="none" marker-end="url(#a)"/>
+      <path d="M 180 320 C 230 320, 365 331, 395 331" stroke="#f59e0b" stroke-width="1" fill="none" marker-end="url(#a)"/>
+
+      <!-- 数据流向（右侧，不与图重叠） -->
+      <rect x="570" y="10" width="140" height="200" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+      <text x="640" y="30" font-size="11" fill="#3b82f6" text-anchor="middle" font-weight="600">数据流向</text>
+      <text x="578" y="50" font-size="10" fill="#94a3b8">① 用户 → IM 消息</text>
+      <text x="578" y="70" font-size="10" fill="#94a3b8">② Gateway 接收</text>
+      <text x="578" y="90" font-size="10" fill="#94a3b8">③ Profile 解析</text>
+      <text x="578" y="110" font-size="10" fill="#94a3b8">④ 确保 Profile</text>
+      <text x="578" y="130" font-size="10" fill="#94a3b8">⑤ 转发到引擎</text>
+      <text x="578" y="150" font-size="10" fill="#94a3b8">⑥ Nginx 路由</text>
+      <text x="578" y="170" font-size="10" fill="#94a3b8">⑦ AI 推理</text>
+      <text x="578" y="190" font-size="10" fill="#94a3b8">⑧ 回复回推</text>
+    </svg>
+  </div>
+  <div class="alert alert-info" style="margin-top:4px">
+    <strong>关键架构决策：</strong>Nginx 是引擎 Pod 的 <strong>Sidecar 容器</strong>，与 Hermes 引擎同 Pod。
+    根据请求头 <code>X-Hermes-Profile</code> 将请求路由到对应 Profile 的端口。
+  </div>
+</div>
+
+<!-- ═══════ Slide 5: 数据模型 ═══════ -->
+<div class="slide">
+  <h1>🗃️ 数据模型</h1>
+  <p class="subtitle">agent_profiles 表 · Profile 命名规范 · 端口池</p>
+  <div class="card-grid" style="grid-template-columns:1fr 1fr">
+    <div class="card">
+      <div class="tag tag-purple">表结构</div>
+      <div class="card-title">agent_profiles</div>
+      <div class="card-body">
+<pre style="margin:4px 0;padding:8px;font-size:10px">id            UUID      PK
+deployment_id UUID      FK→agent_deployments
+agent_id      UUID      FK→agents
+profile_name  VARCHAR(64)  确定性命名
+profile_type  VARCHAR(16)  INDEPENDENT/SHARED
+internal_port INTEGER      8644+
+user_id       UUID      FK→users (INDEPENDENT)
+group_id      UUID      FK→user_groups (SHARED)
+hermes_home   VARCHAR(256) 引擎内路径
+
+UNIQUE(deployment_id, profile_name)
+UNIQUE(agent_id, engine_instance_id, user_id)</pre>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tag tag-green">命名规范</div>
+      <div class="card-title">确定性 Profile 名称</div>
+      <div class="card-body">
+        <p><strong>格式：</strong><code>{agent_id[:8]}-{scope_hash6}-{user_id[:8]}</code></p>
+        <p><strong>示例：</strong><code>d38e436e-f664d6-39c9e118</code></p>
+        <p style="margin-top:6px;font-size:11px">相同用户 + 相同 Agent + 相同 Scope → 相同 Profile 名称（幂等保障）</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>端口分配策略</h3>
+  <div style="background:var(--surface);border:1px solid var(--surface2);border-radius:8px;padding:12px;margin-top:6px">
+    <svg width="650" height="60" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="6" width="90" height="28" rx="5" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+      <text x="45" y="25" font-size="10" fill="#94a3b8" text-anchor="middle">8642 API Server</text>
+      <rect x="100" y="6" width="100" height="28" rx="5" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+      <text x="150" y="25" font-size="10" fill="#94a3b8" text-anchor="middle">8643 默认 Profile</text>
+      <rect x="210" y="6" width="70" height="28" rx="5" fill="#22c55e" stroke="#166534" stroke-width="1"/>
+      <text x="245" y="25" font-size="10" fill="#fff" text-anchor="middle">8644 A</text>
+      <rect x="290" y="6" width="70" height="28" rx="5" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1"/>
+      <text x="325" y="25" font-size="10" fill="#fff" text-anchor="middle">8645 B</text>
+      <rect x="370" y="6" width="70" height="28" rx="5" fill="#f59e0b" stroke="#b45309" stroke-width="1"/>
+      <text x="405" y="25" font-size="10" fill="#fff" text-anchor="middle">8646 C</text>
+      <rect x="450" y="6" width="40" height="28" rx="5" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+      <text x="470" y="25" font-size="10" fill="#64748b" text-anchor="middle">...</text>
+      <rect x="500" y="6" width="40" height="28" rx="5" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+      <text x="520" y="25" font-size="9" fill="#64748b" text-anchor="middle">8661</text>
+
+      <text x="45" y="56" font-size="9" fill="#ef4444" text-anchor="middle">引擎主端口</text>
+      <text x="150" y="56" font-size="9" fill="#ef4444" text-anchor="middle">默认 Profile</text>
+      <text x="405" y="56" font-size="9" fill="#22c55e" text-anchor="middle">动态 Profile（最多 20 个 / Pod）</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══════ Slide 6: 隔离机制 ═══════ -->
+<div class="slide">
+  <h1>🔒 用户隔离机制</h1>
+  <p class="subtitle">四层隔离确保用户间零干扰</p>
+  <table>
+    <tr><th style="width:120px">隔离维度</th><th style="width:200px">策略</th><th>实现方式</th></tr>
+    <tr><td>存储隔离</td><td>独立 SQLite</td><td>每个 Profile 独立的 <code>state.db</code>，表结构相同但数据完全独立</td></tr>
+    <tr><td>进程隔离</td><td>独立 Hermes Gateway 进程</td><td>各占一个端口（8644+），进程间无共享状态</td></tr>
+    <tr><td>配置隔离</td><td>Profile 级 .env</td><td>每个 Profile 有自己的 <code>.env</code> 和 <code>config.yaml</code></td></tr>
+    <tr><td>文件隔离</td><td>Profile 级目录</td><td>sessions/、memories/、skills/ 各自独立</td></tr>
+  </table>
+
+  <h3>IM 用户映射流程</h3>
+  <div class="flow-row">
+    <span class="flow-item">WeCom<br><small>LiaoQiWang</small></span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-item">im_user_bindings<br><small>channel_type='wecom', im_user_id='LiaoQiWang'</small></span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-item">内部 UUID<br><small>21d72d5b-...</small></span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-item" style="border-color:#22c55e">Profile<br><small>d38e436e-f664d6-21d72d5b</small></span>
+  </div>
+  <div class="alert alert-info" style="margin-top:8px">
+    <strong>关键点：</strong>IM 平台的用户 ID（如 WeCom 的 <code>FromUserName</code>）通过 <code>im_user_bindings</code> 表映射为内部用户 UUID。
+    映射关系在 Admin 前端的"用户管理 → 编辑用户 → IM 绑定"中配置。
+  </div>
+</div>
+
+<!-- ═══════ Slide 7: Profile 类型 ═══════ -->
+<div class="slide">
+  <h1>📋 Profile 类型与派生规则</h1>
+  <p class="subtitle">INDEPENDENT（独立）vs SHARED（共享）</p>
+  <table>
+    <tr><th style="width:140px">属性</th><th style="width:180px">INDEPENDENT</th><th>SHARED</th></tr>
+    <tr><td>适用范围</td><td>Agent 访问范围 = ALL 或 USER</td><td>Agent 访问范围 = USER_GROUP</td></tr>
+    <tr><td>用户关系</td><td>1 个 Profile = 1 个用户</td><td>1 个 Profile = 1 个用户组</td></tr>
+    <tr><td>数据隔离</td><td>完全独立</td><td>组内共享</td></tr>
+    <tr><td>典型场景</td><td>通用 Agent，每人独立上下文</td><td>门店助手，店员共享 Profile</td></tr>
+  </table>
+
+  <h3>派生规则（后端自动执行，无需用户配置）</h3>
+  <table>
+    <tr><th>Agent.access_scope</th><th>派生 scope_type</th><th>派生 profile_type</th><th>含义</th></tr>
+    <tr><td>ALL</td><td>ALL</td><td>INDEPENDENT</td><td>全员可见，每人独立 Profile</td></tr>
+    <tr><td>USER</td><td>ALL</td><td>INDEPENDENT</td><td>指定用户可见，每人独立 Profile</td></tr>
+    <tr><td>USER_GROUP</td><td>USER_GROUP</td><td>SHARED</td><td>用户组可见，组内共享 Profile</td></tr>
+  </table>
+  <pre style="margin-top:8px">def derive_scope_and_profile(agent):
+    if agent.access_scope in (ALL, USER):
+        return scope="ALL", profile="INDEPENDENT"
+    if agent.access_scope == USER_GROUP:
+        return scope="USER_GROUP", profile="SHARED"</pre>
+  <div class="alert alert-info" style="margin-top:4px">
+    <strong>重要：</strong>Channel 不再独立设置 scope_type 和 profile_type。创建渠道时自动从 Agent 派生，避免不一致。
+  </div>
+</div>
+
+<!-- ═══════ Slide 8: 时序图 ═══════ -->
+<div class="slide">
+  <h1>⏱️ 动态创建时序图</h1>
+  <p class="subtitle">从用户发消息到 Profile 创建完成的全流程</p>
+  <div class="diagram-box">
+    <svg width="720" height="480" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ar" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#3b82f6"/></marker>
+        <marker id="ar2" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#8b5cf6"/></marker>
+        <marker id="ar3" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#22c55e"/></marker>
+        <marker id="arRet" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#94a3b8"/></marker>
+      </defs>
+
+      <rect x="0" y="0" width="720" height="480" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+
+      <!-- 参与者 -->
+      <rect x="10" y="12" width="64" height="22" rx="5" fill="#3b82f6"/>
+      <text x="42" y="27" font-size="10" fill="#fff" text-anchor="middle" font-weight="600">用户</text>
+      <line x1="42" y1="34" x2="42" y2="470" stroke="#334155" stroke-width="1" stroke-dasharray="4,4"/>
+
+      <rect x="110" y="12" width="64" height="22" rx="5" fill="#8b5cf6"/>
+      <text x="142" y="27" font-size="10" fill="#fff" text-anchor="middle" font-weight="600">Gateway</text>
+      <line x1="142" y1="34" x2="142" y2="470" stroke="#334155" stroke-width="1" stroke-dasharray="4,4"/>
+
+      <rect x="210" y="12" width="70" height="22" rx="5" fill="#059669"/>
+      <text x="245" y="27" font-size="10" fill="#fff" text-anchor="middle" font-weight="600">Controller</text>
+      <line x1="245" y1="34" x2="245" y2="470" stroke="#334155" stroke-width="1" stroke-dasharray="4,4"/>
+
+      <rect x="320" y="12" width="64" height="22" rx="5" fill="#dc2626"/>
+      <text x="352" y="27" font-size="10" fill="#fff" text-anchor="middle" font-weight="600">引擎 Pod</text>
+      <line x1="352" y1="34" x2="352" y2="470" stroke="#334155" stroke-width="1" stroke-dasharray="4,4"/>
+
+      <rect x="430" y="12" width="56" height="22" rx="5" fill="#f59e0b"/>
+      <text x="458" y="27" font-size="10" fill="#fff" text-anchor="middle" font-weight="600">Nginx</text>
+      <line x1="458" y1="34" x2="458" y2="470" stroke="#334155" stroke-width="1" stroke-dasharray="4,4"/>
+
+      <rect x="540" y="12" width="64" height="22" rx="5" fill="#6366f1"/>
+      <text x="572" y="27" font-size="10" fill="#fff" text-anchor="middle" font-weight="600">Hermes</text>
+      <line x1="572" y1="34" x2="572" y2="470" stroke="#334155" stroke-width="1" stroke-dasharray="4,4"/>
+
+      <!-- ① -->
+      <text x="7" y="68" font-size="9" fill="#3b82f6" font-weight="600">①</text>
+      <line x1="42" y1="74" x2="138" y2="74" stroke="#3b82f6" stroke-width="1.2" marker-end="url(#ar)"/>
+      <text x="90" y="68" font-size="9" fill="#3b82f6" text-anchor="middle">IM 回调消息</text>
+
+      <!-- Gateway 内部处理 -->
+      <rect x="90" y="82" width="50" height="18" rx="3" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+      <text x="115" y="94" font-size="8" fill="#94a3b8" text-anchor="middle">解密/验证</text>
+      <rect x="90" y="106" width="50" height="18" rx="3" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+      <text x="115" y="118" font-size="8" fill="#94a3b8" text-anchor="middle">Profile解析</text>
+
+      <!-- ② ensure -->
+      <text x="7" y="150" font-size="9" fill="#059669" font-weight="600">②</text>
+      <line x1="142" y1="156" x2="241" y2="156" stroke="#8b5cf6" stroke-width="1.2" marker-end="url(#ar2)"/>
+      <text x="192" y="149" font-size="8" fill="#8b5cf6" text-anchor="middle">POST /profiles/ensure</text>
+
+      <!-- Controller 查 DB -->
+      <rect x="213" y="162" width="54" height="16" rx="3" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+      <text x="240" y="173" font-size="8" fill="#94a3b8" text-anchor="middle">查 DB</text>
+
+      <!-- ③ 创建 -->
+      <text x="7" y="200" font-size="9" fill="#059669" font-weight="600">③</text>
+      <line x1="245" y1="206" x2="348" y2="206" stroke="#059669" stroke-width="1.2" marker-end="url(#ar3)"/>
+      <text x="296" y="199" font-size="8" fill="#059669" text-anchor="middle">创建 Profile 目录</text>
+
+      <!-- nginx reload -->
+      <line x1="352" y1="222" x2="454" y2="222" stroke="#059669" stroke-width="1.2" marker-end="url(#ar3)"/>
+      <text x="403" y="215" font-size="8" fill="#059669" text-anchor="middle">nginx reload</text>
+
+      <!-- hermes profile create -->
+      <line x1="352" y1="240" x2="568" y2="240" stroke="#059669" stroke-width="1.2" marker-end="url(#ar3)"/>
+      <text x="460" y="233" font-size="8" fill="#059669" text-anchor="middle">hermes profile create</text>
+
+      <!-- 返回就绪 -->
+      <path d="M 352 258 Q 300 258, 248 258" stroke="#94a3b8" stroke-width="1" fill="none" marker-end="url(#arRet)"/>
+      <text x="300" y="252" font-size="8" fill="#94a3b8" text-anchor="middle">← profile 就绪</text>
+
+      <!-- ④ 返回 port -->
+      <path d="M 245 276 Q 195 276, 145 276" stroke="#94a3b8" stroke-width="1" fill="none" marker-end="url(#arRet)"/>
+      <text x="195" y="269" font-size="8" fill="#94a3b8" text-anchor="middle">← port + profile_name</text>
+
+      <!-- ⑤ 转发 -->
+      <text x="7" y="316" font-size="9" fill="#3b82f6" font-weight="600">④</text>
+      <line x1="142" y1="322" x2="348" y2="322" stroke="#3b82f6" stroke-width="1.2" marker-end="url(#ar)"/>
+      <text x="245" y="315" font-size="8" fill="#3b82f6" text-anchor="middle">POST /chat/completions (X-Hermes-Profile)</text>
+
+      <!-- Nginx 路由 -->
+      <line x1="352" y1="340" x2="454" y2="340" stroke="#3b82f6" stroke-width="1.2" marker-end="url(#ar)"/>
+      <text x="403" y="333" font-size="8" fill="#3b82f6" text-anchor="middle">路由到对应端口</text>
+
+      <!-- Hermes 推理 -->
+      <line x1="458" y1="358" x2="568" y2="358" stroke="#3b82f6" stroke-width="1.2" marker-end="url(#ar)"/>
+      <rect x="538" y="366" width="70" height="16" rx="3" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+      <text x="573" y="377" font-size="8" fill="#94a3b8" text-anchor="middle">AI 推理 + 回复</text>
+
+      <!-- ⑤ 回复 -->
+      <text x="7" y="410" font-size="9" fill="#22c55e" font-weight="600">⑤</text>
+      <path d="M 572 416 Q 500 416, 460 416" stroke="#22c55e" stroke-width="1" fill="none" marker-end="url(#arRet)"/>
+      <path d="M 458 430 Q 400 430, 355 430" stroke="#22c55e" stroke-width="1" fill="none" marker-end="url(#arRet)"/>
+      <path d="M 352 444 Q 250 444, 145 444" stroke="#22c55e" stroke-width="1" fill="none" marker-end="url(#arRet)"/>
+      <text x="250" y="438" font-size="8" fill="#22c55e" text-anchor="middle">← AI 回复内容</text>
+
+      <!-- WeCom 回推 -->
+      <line x1="142" y1="460" x2="46" y2="460" stroke="#22c55e" stroke-width="1.2" marker-end="url(#arRet)"/>
+      <text x="92" y="454" font-size="8" fill="#22c55e" text-anchor="middle">← WeCom API 回推</text>
+    </svg>
+  </div>
+  <div class="alert alert-warning" style="margin-top:4px">
+    <strong>注意：</strong>步骤②（/profiles/ensure）是<strong>幂等</strong>的——Profile 已存在时直接返回已有端口，
+    不会重复创建或影响已有会话。这也是"多 Profile 动态创建"的核心入口。
+  </div>
+</div>
+
+<!-- ═══════ Slide 9: 三用户并行 ═══════ -->
+<div class="slide">
+  <h1>🔄 完整示例：三用户并行对话</h1>
+  <p class="subtitle">企业微信 → 门店助手 Agent → 三个用户同时访问互不干扰</p>
+  <table>
+    <tr><th>WeCom 用户</th><th>绑定用户</th><th>Profile 名称</th><th>端口</th></tr>
+    <tr><td>GuoRan（店长）</td><td>staff_a</td><td style="font-family:monospace">d38e436e-f664d6-83c83c77</td><td>8645</td></tr>
+    <tr><td>MengLiang（店员）</td><td>staff_b</td><td style="font-family:monospace">d38e436e-f664d6-c79cfbd0</td><td>8646</td></tr>
+    <tr><td>LiaoQiWang（管理员）</td><td>admin</td><td style="font-family:monospace">d38e436e-f664d6-c246cea4</td><td>8644</td></tr>
+  </table>
+
+  <div class="diagram-box" style="margin-top:8px">
+    <svg width="640" height="180" xmlns="http://www.w3.org/2000/svg">
+      <!-- 3 路并行 -->
+      <rect x="10" y="20" width="90" height="22" rx="5" fill="#1e293b" stroke="#3b82f6" stroke-width="1"/>
+      <text x="55" y="35" font-size="10" fill="#3b82f6" text-anchor="middle">GuoRan</text>
+      <line x1="100" y1="31" x2="190" y2="31" stroke="#3b82f6" stroke-width="1.2" marker-end="url(#ar)"/>
+
+      <rect x="10" y="70" width="90" height="22" rx="5" fill="#1e293b" stroke="#22c55e" stroke-width="1"/>
+      <text x="55" y="85" font-size="10" fill="#22c55e" text-anchor="middle">MengLiang</text>
+      <line x1="100" y1="81" x2="190" y2="81" stroke="#22c55e" stroke-width="1.2" marker-end="url(#ar)"/>
+
+      <rect x="10" y="120" width="90" height="22" rx="5" fill="#1e293b" stroke="#f59e0b" stroke-width="1"/>
+      <text x="55" y="135" font-size="10" fill="#f59e0b" text-anchor="middle">LiaoQiWang</text>
+      <line x1="100" y1="131" x2="190" y2="131" stroke="#f59e0b" stroke-width="1.2" marker-end="url(#ar)"/>
+
+      <!-- Gateway -->
+      <rect x="190" y="8" width="100" height="164" rx="8" fill="#8b5cf6"/>
+      <text x="240" y="90" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">Gateway</text>
+      <text x="240" y="110" font-size="10" fill="#ddd6fe" text-anchor="middle">ProfileResolver</text>
+
+      <!-- 箭头到 Pod -->
+      <line x1="290" y1="31" x2="360" y2="31" stroke="#3b82f6" stroke-width="1.2"/>
+      <line x1="290" y1="81" x2="360" y2="81" stroke="#22c55e" stroke-width="1.2"/>
+      <line x1="290" y1="131" x2="360" y2="131" stroke="#f59e0b" stroke-width="1.2"/>
+
+      <!-- 引擎 Pod -->
+      <rect x="360" y="5" width="120" height="170" rx="8" fill="#dc2626"/>
+      <text x="420" y="24" font-size="11" fill="#fff" text-anchor="middle" font-weight="600">门店助手 Pod</text>
+
+      <!-- Nginx -->
+      <rect x="370" y="30" width="100" height="20" rx="4" fill="#f59e0b"/>
+      <text x="420" y="44" font-size="10" fill="#fff" text-anchor="middle">Nginx 反向代理</text>
+
+      <!-- Profile 框 -->
+      <rect x="370" y="58" width="100" height="24" rx="5" fill="#1e293b" stroke="#3b82f6" stroke-width="1"/>
+      <text x="420" y="74" font-size="10" fill="#3b82f6" text-anchor="middle">Profile A · 8645</text>
+
+      <rect x="370" y="88" width="100" height="24" rx="5" fill="#1e293b" stroke="#22c55e" stroke-width="1"/>
+      <text x="420" y="104" font-size="10" fill="#22c55e" text-anchor="middle">Profile B · 8646</text>
+
+      <rect x="370" y="118" width="100" height="24" rx="5" fill="#1e293b" stroke="#f59e0b" stroke-width="1"/>
+      <text x="420" y="134" font-size="10" fill="#f59e0b" text-anchor="middle">Profile C · 8644</text>
+
+      <!-- 标注 -->
+      <text x="510" y="40" font-size="10" fill="#3b82f6">查库存</text>
+      <text x="510" y="80" font-size="10" fill="#22c55e">今日销量</text>
+      <text x="510" y="120" font-size="10" fill="#f59e0b">员工管理</text>
+      <text x="510" y="160" font-size="11" fill="#22c55e" font-weight="600">✅ 三个用户并行互不干扰</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══════ Slide 10: 幂等性 ═══════ -->
+<div class="slide">
+  <h1>🛡️ 幂等性与容错</h1>
+  <p class="subtitle">Profile 创建是幂等的，重复请求不会产生重复 Profile</p>
+
+  <h3>幂等创建流程</h3>
+  <pre style="margin-top:4px">def ensure_profile(req):
+    # 1. 先查数据库，按 profile_name 精确匹配
+    existing = db.query(AgentProfile).where(
+        profile_name=req.profile_name,
+        agent_id=req.agent_id
+    ).first()
+
+    # 2. 已存在且端口有效 → 直接返回（不重复创建）
+    if existing and existing.internal_port:
+        return existing    # 瞬间返回，零开销
+
+    # 3. 不存在 → 创建新 Profile
+    port = allocate_port(deployment)
+    create_hermes_profile(agent_id, profile_name, port)
+    return {profile_name, port, created=True}</pre>
+
+  <div class="card-grid" style="grid-template-columns:1fr 1fr 1fr">
+    <div class="card">
+      <div class="tag tag-green">确定性命名</div>
+      <div class="card-title">同名 = 同 Profile</div>
+      <div class="card-body">名称含 user_id 哈希，相同用户 + 相同 Agent → 确定性的同名 Profile，天然幂等</div>
+    </div>
+    <div class="card">
+      <div class="tag tag-blue">毫秒级返回</div>
+      <div class="card-title">已存在即返回</div>
+      <div class="card-body">Profile 已存在时直接返回端口号，不修改数据库，不影响已有会话</div>
+    </div>
+    <div class="card">
+      <div class="tag tag-orange">恢复能力</div>
+      <div class="card-title">引擎重启后自动重建</div>
+      <div class="card-body">Pod 重启后 Profile 目录由 PVC 保留，只需重启 gateway 进程即恢复</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ Slide 11: 生命周期 ═══════ -->
+<div class="slide">
+  <h1>🔄 生命周期管理</h1>
+  <p class="subtitle">Agent 和 Profile 的完整状态流转</p>
+  <div class="diagram-box">
+    <svg width="520" height="200" xmlns="http://www.w3.org/2000/svg">
+      <marker id="ar4" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#94a3b8"/></marker>
+      <rect x="200" y="6" width="72" height="30" rx="6" fill="#6366f1"/>
+      <text x="236" y="26" font-size="12" fill="#fff" text-anchor="middle" font-weight="600">PENDING</text>
+
+      <rect x="200" y="56" width="72" height="30" rx="6" fill="#3b82f6"/>
+      <text x="236" y="76" font-size="12" fill="#fff" text-anchor="middle" font-weight="600">DEPLOYING</text>
+
+      <rect x="200" y="106" width="72" height="30" rx="6" fill="#22c55e"/>
+      <text x="236" y="126" font-size="12" fill="#fff" text-anchor="middle" font-weight="600">RUNNING</text>
+
+      <rect x="56" y="106" width="72" height="30" rx="6" fill="#f59e0b"/>
+      <text x="92" y="126" font-size="12" fill="#fff" text-anchor="middle" font-weight="600">SUSPENDED</text>
+
+      <rect x="56" y="160" width="72" height="30" rx="6" fill="#64748b"/>
+      <text x="92" y="180" font-size="12" fill="#fff" text-anchor="middle" font-weight="600">ARCHIVED</text>
+
+      <line x1="236" y1="36" x2="236" y2="52" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#ar4)"/>
+      <text x="258" y="50" font-size="9" fill="#64748b">deploy()</text>
+
+      <line x1="236" y1="86" x2="236" y2="102" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#ar4)"/>
+      <text x="258" y="100" font-size="9" fill="#64748b">Pod Ready</text>
+
+      <line x1="200" y1="121" x2="132" y2="121" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#ar4)"/>
+      <text x="166" y="114" font-size="9" fill="#f59e0b">30min 空闲</text>
+
+      <line x1="92" y1="136" x2="92" y2="156" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#ar4)"/>
+      <text x="112" y="152" font-size="9" fill="#64748b">24h 后</text>
+
+      <line x1="132" y1="121" x2="200" y2="121" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="166" y="134" font-size="9" fill="#22c55e">重新部署</text>
+    </svg>
+  </div>
+
+  <table>
+    <tr><th>部署状态</th><th>Profile</th><th>K8s Pod</th><th>数据位置</th><th>触发条件</th></tr>
+    <tr><td>PENDING</td><td>—</td><td>无</td><td>无</td><td>Agent 创建后未部署</td></tr>
+    <tr><td>DEPLOYING</td><td>—</td><td>创建中</td><td>—</td><td>Controller.deploy()</td></tr>
+    <tr><td>RUNNING</td><td>活跃</td><td>Running</td><td>Pod 内 PVC</td><td>Pod 就绪</td></tr>
+    <tr><td>SUSPENDED</td><td>已存档</td><td>Scale=0</td><td>MinIO</td><td>30min 空闲 → 自动暂停</td></tr>
+    <tr><td>ARCHIVED</td><td>已归档</td><td>已删除</td><td>MinIO 归档</td><td>暂停后 24h → 自动销毁</td></tr>
+  </table>
+  <div class="alert alert-success" style="margin-top:6px">
+    <strong>数据持久化：</strong>SUSPEND 时引擎数据通过 <code>kubectl exec tar</code> 打包存档到 MinIO；
+    DESTROY 时只清理 K8s 资源，归档数据保留在 MinIO 中可恢复。
+  </div>
+</div>
+
+<!-- ═══════ Slide 12: 配置与 API ═══════ -->
+<div class="slide">
+  <h1>⚙️ 配置参数 & API 清单</h1>
+
+  <h3>EngineInstance 关键参数</h3>
+  <table>
+    <tr><th style="width:200px">参数</th><th style="width:50px">默认</th><th>说明</th></tr>
+    <tr><td style="white-space:nowrap"><code>idle_suspend_minutes</code></td><td>30</td><td>引擎空闲多少分钟后自动暂停（存档 + scale=0）</td></tr>
+    <tr><td style="white-space:nowrap"><code>idle_destroy_hours</code></td><td>24</td><td>暂停后多少小时销毁 K8s 资源（归档数据保留）</td></tr>
+    <tr><td style="white-space:nowrap"><code>max_profiles_per_pod</code></td><td>20</td><td>单个 Pod 最大 Profile 数。超过时自动创建新 Pod</td></tr>
+    <tr><td style="white-space:nowrap"><code>min_replicas</code> / <code>max_replicas</code></td><td>1 / 5</td><td>引擎 Pod 自动扩缩容范围</td></tr>
+  </table>
+
+  <h3>本次实现相关 API</h3>
+  <table>
+    <tr><th style="width:50px">服务</th><th style="width:46px">方法</th><th>路径</th><th style="width:130px">说明</th></tr>
+    <tr><td rowspan="2">Gateway</td><td>POST</td><td><code>/api/gateway/channel/{type}/{id}/callback</code></td><td>IM 渠道回调</td></tr>
+    <tr><td>GET</td><td><code>/api/gateway/channel/{type}/{id}/callback</code></td><td>URL 验证</td></tr>
+    <tr><td rowspan="5">Controller</td><td>POST</td><td><code>/api/controller/profiles/ensure</code></td><td>幂等创建 Profile</td></tr>
+    <tr><td>POST</td><td><code>/api/controller/profiles</code></td><td>创建 Profile</td></tr>
+    <tr><td>POST</td><td><code>/api/controller/agents/{id}/deploy</code></td><td>部署 Agent</td></tr>
+    <tr><td>GET</td><td><code>/api/controller/engine-instances/{id}/pods</code></td><td>Pod 列表</td></tr>
+    <tr><td>GET</td><td><code>/api/controller/engine-instances/{id}/pods/{n}/logs</code></td><td>Pod 日志</td></tr>
+    <tr><td rowspan="2">Manager</td><td>GET/POST/DELETE</td><td><code>/api/manager/users/{id}/im-bindings</code></td><td>IM 绑定管理</td></tr>
+    <tr><td>GET/POST/PUT/DELETE</td><td><code>/api/manager/agents/{id}/channels</code></td><td>渠道配置</td></tr>
+  </table>
+</div>
+
+<!-- ═══════ Slide 13: 验证方法 ═══════ -->
+<div class="slide">
+  <h1>✅ 验证方法</h1>
+  <p class="subtitle">从数据库、引擎 Pod、前端、模拟器 4 个维度验证</p>
+  <div class="card-grid" style="grid-template-columns:1fr 1fr">
+    <div class="card">
+      <div class="tag tag-purple">数据库</div>
+      <div class="card-title">Query agent_profiles</div>
+      <div class="card-body">
+<pre style="margin:4px 0;padding:6px;font-size:10px">SELECT profile_name, internal_port
+FROM agent_profiles
+WHERE agent_id = 'd38e436e-...';</pre>
+        <p>每条消息是否创建了独立 Profile</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tag tag-blue">引擎 Pod</div>
+      <div class="card-title">查看 Profile 数据</div>
+      <div class="card-body">
+<pre style="margin:4px 0;padding:6px;font-size:10px">kubectl exec deploy/engine-xxx -- \
+  ls /opt/data/profiles/
+kubectl exec deploy/engine-xxx -- \
+  sqlite3 /opt/data/profiles/xxx/state.db \
+  "SELECT COUNT(*) FROM sessions"</pre>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tag tag-green">Admin 前端</div>
+      <div class="card-title">UI 验证路径</div>
+      <div class="card-body">
+        <ol style="font-size:12px;padding-left:16px">
+          <li>资源池详情 → Pod 管理 Tab → Pod 列表</li>
+          <li>Pod 日志 Tab → 引擎实时日志</li>
+          <li>用户管理 → 编辑用户 → IM 绑定</li>
+        </ol>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tag tag-orange">模拟器</div>
+      <div class="card-title">IM 回调模拟器</div>
+      <div class="card-body">
+        <p><code>scripts/im_test_simulator.py</code></p>
+        <ol style="font-size:12px;padding-left:16px">
+          <li>选择 Agent + 输入不同 user_id</li>
+          <li>发送 WeCom 消息</li>
+          <li>检查 agent_profiles 表确认隔离</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <h3>现有数据（云上）</h3>
+  <table>
+    <tr><th>WeCom 用户</th><th>内部用户</th><th>Profile 目录</th><th>端口</th><th>会话数</th></tr>
+    <tr><td>LiaoQiWang</td><td>admin</td><td><code>.../d38e436e-f664d6-c246cea4/</code></td><td>8644</td><td>1（57 条消息）</td></tr>
+    <tr><td>GuoRan</td><td>staff_a</td><td><code>.../d38e436e-f664d6-83c83c77/</code></td><td>8645</td><td>—</td></tr>
+    <tr><td>MengLiang</td><td>staff_b</td><td><code>.../d38e436e-f664d6-c79cfbd0/</code></td><td>8646</td><td>—</td></tr>
+  </table>
+</div>
+
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let current = 0;
+
+function showSlide(idx) {
+  slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+  document.getElementById('pageIndicator').textContent = `${idx + 1} / ${slides.length}`;
+  document.getElementById('prevBtn').disabled = idx === 0;
+  document.getElementById('nextBtn').disabled = idx === slides.length - 1;
+}
+
+function nextSlide() { if (current < slides.length - 1) { current++; showSlide(current); } }
+function prevSlide() { if (current > 0) { current--; showSlide(current); } }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+});
+
+showSlide(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+version: '1.0'
+name: build-manager
+displayName: 构建_Manager_服务
+triggers:
+  trigger: manual
+variables:
+  VERSION: "0.6.3"
+stages:
+  - name: build
+    displayName: 构建_Manager_镜像
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: build@docker
+        name: manager
+        displayName: Manager_API
+        type: account
+        repository: ${REGISTRY}
+        username: ${REGISTRY_USERNAME}
+        password: ${REGISTRY_PASSWORD}
+        tag: unionagents/manager:${VERSION}
+        dockerfile: ./services/manager/Dockerfile
+        context: .
+        artifacts: []
+        isCache: true
+        processorType:
+          - amd64
+        parameter: {}
+        notify: []
+        strategy:
+          retry: '0'

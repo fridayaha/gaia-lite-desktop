@@ -1,0 +1,566 @@
+x-logging: &default-logging
+  options:
+    max-size: "10m"
+    max-file: "3"
+  driver: json-file
+
+# ── Resource limits for constrained machines ──
+x-resources: &dev-resources
+  mem_limit: 512m
+  mem_reservation: 256m
+  cpus: "1.0"
+
+x-resources-heavy: &heavy-resources
+  mem_limit: 1g
+  mem_reservation: 512m
+  cpus: "1.5"
+
+# 国产库 JDBC 驱动（multi-source-data-fusion-design.md §6.1.2）放在 infra/jars/，
+# bind-mount 到 SeaTunnel lib 与 Gravitino 各 catalog libs。选用独立类名驱动包，
+# 避免与官方 PG/MySQL 驱动同名类冲突：
+#   opengaussjdbc-506 (com.huawei.opengauss.jdbc.Driver) — openGauss/GaussDB
+#     不含 org/postgresql/Driver.class，与 postgresql-42.x 共存无冲突
+#   kingbase8-8.6.1 (com.kingbase8.Driver) — 人大金仓
+#   oceanbase-client-2.4.14 (com.oceanbase.jdbc.Driver) — OceanBase MySQL 模式
+# 达梦 DmJdbcDriver18 已内置于 seatunnel 镜像。注意 YAML 不允许序列里 alias 引用
+# 序列，故 SeaTunnel master/worker 各自内联挂载（重复但可靠）。
+
+services:
+  # ── RustFS (S3-compatible object storage) ──
+  rustfs:
+    image: rustfs/rustfs:latest
+    container_name: ontology-rustfs
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9002:9001"
+    environment:
+      RUSTFS_ACCESS_KEY: minioadmin
+      RUSTFS_SECRET_KEY: minioadmin
+      RUSTFS_CONSOLE_ENABLE: "false"  # disable web console
+    volumes:
+      - rustfs_data:/data
+    command: server /data --console-address :9002
+    <<: *heavy-resources
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:9000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    logging: *default-logging
+
+  # ── PostgreSQL (business ontology metadata + PostGIS + TimescaleDB) ──
+  # Graph-reasoning 特性 (§5.5): 换一体镜像 ngosang/timescaledb-postgis，
+  # PostGIS（静态空间属性）+ TimescaleDB（动态时序超表）共存于同一 PG 实例。
+  # 保留原 postgresql.conf / init 脚本挂载，新增 extensions 初始化脚本。
+  # 内存调大：PostGIS+TimescaleDB 扩展驻留需要更多内存。
+  postgres:
+    image: ngosang/timescaledb-postgis:2.24.0-pg16-postgis3.6
+    container_name: ontology-postgres
+    restart: unless-stopped
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ontology
+      POSTGRES_PASSWORD: ontology
+      POSTGRES_DB: ontology
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./config/postgres/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./infra/init-pg-extensions.sql:/docker-entrypoint-initdb.d/00-extensions.sql
+      - ./infra/init-pg-schema.sql:/docker-entrypoint-initdb.d/01-init-schema.sql
+      - ./infra/gravitino-pg-schema.sql:/docker-entrypoint-initdb.d/02-gravitino-schema.sql
+    <<: *heavy-resources
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ontology"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    logging: *default-logging
+
+  # ── Gravitino (physical asset registry + Iceberg REST Catalog) ──
+  gravitino:
+    image: apache/gravitino:1.3.0
+    container_name: ontology-gravitino
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+      - "9001:9001"
+    environment:
+      GRAVITINO_SERVER_WEBSERVER_HTTP_PORT: 8090
+      JAVA_TOOL_OPTIONS: "-Xms512m -Xmx1024m"
+      # ── PostgreSQL Entity Store (persistent, survives container restart) ──
+      GRAVITINO_ENTITY_STORE: relational
+      GRAVITINO_ENTITY_STORE_RELATIONAL: JDBCBackend
+      GRAVITINO_ENTITY_STORE_RELATIONAL_JDBC_URL: jdbc:postgresql://postgres:5432/ontology?currentSchema=gravitino_store
+      GRAVITINO_ENTITY_STORE_RELATIONAL_JDBC_DRIVER: org.postgresql.Driver
+      GRAVITINO_ENTITY_STORE_RELATIONAL_JDBC_USER: ontology
+      GRAVITINO_ENTITY_STORE_RELATIONAL_JDBC_PASSWORD: ontology
+      # ── Iceberg REST Catalog: jdbc backend (PG 持久化) ──
+      # aux service 模式下配置文件 *.conf 不被加载，必须用 env 传全部参数。
+      # 详见 docs/bugfix/gravitino-1.3.0-upgrade.md
+      GRAVITINO_ICEBERG_REST_CATALOG_BACKEND: jdbc
+      GRAVITINO_ICEBERG_REST_CATALOG_BACKEND_NAME: ontology
+      GRAVITINO_ICEBERG_REST_WAREHOUSE: s3://ontology-warehouse
+      GRAVITINO_ICEBERG_REST_IO_IMPL: org.apache.iceberg.aws.s3.S3FileIO
+      GRAVITINO_ICEBERG_REST_S3_ENDPOINT: http://rustfs:9000
+      # ⚠️ Gravitino 1.3.0 rewrite_gravitino_server_config.py 的映射 key 是
+      # S3_ACCESS_KEY / S3_SECRET_KEY（无 _ID / _ACCESS 后缀），用错名字凭证不会被
+      # 写进 gravitino.conf，导致 Iceberg REST server 建表时 S3FileIO 拿不到凭证
+      # 返回 5xx（Unable to load AWS credentials）。详见 docs/bugfix/gravitino-1.3.0-upgrade.md
+      GRAVITINO_ICEBERG_REST_S3_ACCESS_KEY: minioadmin
+      GRAVITINO_ICEBERG_REST_S3_SECRET_KEY: minioadmin
+      GRAVITINO_ICEBERG_REST_S3_REGION: us-east-1
+      GRAVITINO_ICEBERG_REST_S3_PATH_STYLE_ACCESS: "true"
+      GRAVITINO_ICEBERG_REST_CLIENT_REGION: us-east-1
+      # jdbc backend 必需：元数据持久化到 PG（Iceberg 标准 iceberg_tables 表）
+      GRAVITINO_ICEBERG_REST_URI: jdbc:postgresql://postgres:5432/ontology
+      GRAVITINO_ICEBERG_REST_JDBC_DRIVER: org.postgresql.Driver
+      GRAVITINO_ICEBERG_REST_JDBC_USER: ontology
+      GRAVITINO_ICEBERG_REST_JDBC_PASSWORD: ontology
+      GRAVITINO_ICEBERG_REST_JDBC_INITIALIZE: "true"
+    volumes:
+      # MySQL 官方 JDBC 驱动（jdbc-mysql catalog 联邦 MySQL 源必需）
+      # Gravitino 1.3.0 entrypoint 的 symlink glob 只认 mysql-connector-java-*.jar（旧名），
+      # 官方驱动现名 mysql-connector-j-*.jar 匹配不到，故直接挂到 catalog libs（单文件挂载不遮蔽）
+      - ./infra/jars/mysql-connector-j-8.4.0.jar:/opt/gravitino/catalogs/jdbc-mysql/libs/mysql-connector-j-8.4.0.jar:ro
+      # 国产库 JDBC 驱动（multi-source-data-fusion-design.md §6.1.2）
+      # openGauss/GaussDB/金仓 走 jdbc-postgresql provider，OceanBase 走 jdbc-mysql
+      - ./infra/jars/opengaussjdbc-506.0.T35.jar:/opt/gravitino/catalogs/jdbc-postgresql/libs/opengaussjdbc-506.0.T35.jar:ro
+      - ./infra/jars/kingbase8-8.6.1.jar:/opt/gravitino/catalogs/jdbc-postgresql/libs/kingbase8-8.6.1.jar:ro
+      - ./infra/jars/oceanbase-client-2.4.14.jar:/opt/gravitino/catalogs/jdbc-mysql/libs/oceanbase-client-2.4.14.jar:ro
+    # 不自定义 command —— 用镜像默认 ENTRYPOINT（docker-entrypoint.sh），
+    # 它会：① rewrite conf（env → gravitino.conf，含 entity store + iceberg-rest aux service）
+    #       ② symlink jdbc-drivers/postgresql-*.jar 到 libs/（entity store 用 PG 驱动）
+    #       ③ exec gravitino.sh run（单进程，aux service 内嵌 iceberg-rest 到 9001）
+    # 旧的双脚本模式（gravitino.sh start + gravitino-iceberg-rest-server.sh start）绕过 entrypoint，
+    # 导致 rewrite 不执行、entity store 退回 H2（重启丢 metalake）。详见 gravitino.yaml 注释。
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rustfs:
+        condition: service_healthy
+    <<: *heavy-resources
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/metrics"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    logging: *default-logging
+
+  # ── Doris FE (index acceleration, frontend) ──
+  doris-fe:
+    image: apache/doris:fe-4.0.5
+    container_name: ontology-doris-fe
+    restart: unless-stopped
+    ports:
+      - "9030:9030"
+      - "8030:8030"
+    environment:
+      FE_CURRENT_IP: "172.18.0.10"
+      FE_CURRENT_PORT: "9010"
+      FE_MASTER_IP: "172.18.0.10"
+      FE_MASTER_PORT: "9010"
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx512m"
+    volumes:
+      - ./config/doris/fe.conf:/opt/apache-doris/fe/conf/fe.conf
+      - doris_fe_data:/opt/apache-doris/fe
+    networks:
+      default:
+        ipv4_address: 172.18.0.10
+    <<: *heavy-resources
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8030/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    logging: *default-logging
+
+  # ── Doris BE (index acceleration, backend) ──
+  doris-be:
+    image: apache/doris:be-4.0.5
+    container_name: ontology-doris-be
+    restart: unless-stopped
+    ports:
+      - "9050:9050"
+    environment:
+      FE_MASTER_IP: "172.18.0.10"
+      FE_MASTER_PORT: "9010"
+      BE_IP: "172.18.0.20"
+      BE_PORT: "9050"
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx512m"
+    volumes:
+      - ./config/doris/be.conf:/opt/apache-doris/be/conf/be.conf
+      - doris_be_data:/opt/apache-doris/be
+    depends_on:
+      doris-fe:
+        condition: service_healthy
+    networks:
+      default:
+        ipv4_address: 172.18.0.20
+    mem_limit: 3g
+    mem_reservation: 1g
+    cpus: "1.5"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8040/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    logging: *default-logging
+
+  # ── Trino (federated query engine) ──
+  trino:
+    image: trinodb/trino:478
+    container_name: ontology-trino
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      JAVA_TOOL_OPTIONS: "-Xms512m -Xmx768m -Daws.region=us-east-1"
+      CATALOG_MANAGEMENT: dynamic
+      AWS_REGION: us-east-1
+    volumes:
+      - ./config/trino/gravitino:/usr/lib/trino/plugin/gravitino
+      - ./config/trino/catalog/gravitino.properties:/etc/trino/catalog/gravitino.properties
+      - ./config/trino/catalog/iceberg.properties:/etc/trino/catalog/iceberg.properties
+      # TEMPORARY: native PG connector to bypass Gravitino jsonb/external-type
+      # limitation (1.2.0/1.3.0 均未修复：PG jsonb 仍映射为 ExternalType)。
+      # pgnative 暂不可移除，待社区在 PG TypeConverter 增加 jsonb→JSON 映射。
+      # 详见 docs/bugfix/gravitino-1.3.0-upgrade.md
+      - ./config/trino/catalog/pgnative.properties:/etc/trino/catalog/pgnative.properties
+    depends_on:
+      gravitino:
+        condition: service_healthy
+    mem_limit: 1536m
+    mem_reservation: 768m
+    cpus: "1.5"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/v1/info"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    logging: *default-logging
+
+  # ── Kafka (real-time index sync bus, KRaft combined mode) ──
+  kafka:
+    image: apache/kafka:4.3.0
+    container_name: ontology-kafka
+    restart: unless-stopped
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      # Auto-create topics when SeaTunnel writes to action_*
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_NUM_PARTITIONS: 3
+      KAFKA_DEFAULT_REPLICATION_FACTOR: "1"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: "1"
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: "0"
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    <<: *dev-resources
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+    logging: *default-logging
+
+  # ── SeaTunnel Zeta Master (pipeline engine) ──
+  seatunnel-master:
+    image: apache/seatunnel:2.3.13
+    container_name: ontology-seatunnel-master
+    restart: unless-stopped
+    ports:
+      - "5801:5801"
+    environment:
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx256m"
+      AWS_REGION: us-east-1
+    # entrypoint shim strips the conflicting openGauss JDBC driver before
+    # the Zeta node starts (see infra/seatunnel-entrypoint.sh).
+    entrypoint: ["/usr/local/bin/seatunnel-entrypoint.sh"]
+    command: ["/opt/seatunnel/bin/seatunnel-cluster.sh", "-r", "master"]
+    volumes:
+      - ./config/seatunnel/seatunnel.yaml:/opt/seatunnel/config/seatunnel.yaml
+      - ./config/seatunnel/hazelcast-master.yaml:/opt/seatunnel/config/hazelcast-master.yaml
+      - ./config/seatunnel/jobs:/opt/seatunnel/jobs
+      - ./infra/seatunnel-entrypoint.sh:/usr/local/bin/seatunnel-entrypoint.sh:ro
+      - ./infra/jars/opengaussjdbc-506.0.T35.jar:/opt/seatunnel/lib/opengaussjdbc-506.0.T35.jar:ro
+      - ./infra/jars/kingbase8-8.6.1.jar:/opt/seatunnel/lib/kingbase8-8.6.1.jar:ro
+      - ./infra/jars/oceanbase-client-2.4.14.jar:/opt/seatunnel/lib/oceanbase-client-2.4.14.jar:ro
+    depends_on:
+      gravitino:
+        condition: service_healthy
+    <<: *dev-resources
+    logging: *default-logging
+
+  # ── SeaTunnel Zeta Worker (pipeline executor) ──
+  seatunnel-worker:
+    image: apache/seatunnel:2.3.13
+    container_name: ontology-seatunnel-worker
+    restart: unless-stopped
+    environment:
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx256m"
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: minioadmin
+      AWS_SECRET_ACCESS_KEY: minioadmin
+      AWS_ENDPOINT_URL_S3: http://rustfs:9000
+    entrypoint: ["/usr/local/bin/seatunnel-entrypoint.sh"]
+    command: ["/opt/seatunnel/bin/seatunnel-cluster.sh", "-r", "worker"]
+    volumes:
+      - ./config/seatunnel/seatunnel.yaml:/opt/seatunnel/config/seatunnel.yaml
+      - ./config/seatunnel/hazelcast-worker.yaml:/opt/seatunnel/config/hazelcast-worker.yaml
+      - ./config/seatunnel/jobs:/opt/seatunnel/jobs
+      - ./infra/seatunnel-entrypoint.sh:/usr/local/bin/seatunnel-entrypoint.sh:ro
+      - ./infra/jars/opengaussjdbc-506.0.T35.jar:/opt/seatunnel/lib/opengaussjdbc-506.0.T35.jar:ro
+      - ./infra/jars/kingbase8-8.6.1.jar:/opt/seatunnel/lib/kingbase8-8.6.1.jar:ro
+      - ./infra/jars/oceanbase-client-2.4.14.jar:/opt/seatunnel/lib/oceanbase-client-2.4.14.jar:ro
+    depends_on:
+      seatunnel-master:
+        condition: service_started
+    <<: *dev-resources
+    logging: *default-logging
+
+  # ── Database migration (one-shot init container) ──
+  # 运行 alembic upgrade head 建出 public 业务表，完成后退出。
+  # api 容器 depends_on migrate（condition: service_completed_successfully），
+  # 确保 api 启动前 schema 已就绪。职责分离：迁移与 app 解耦。
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ontology-migrate
+    restart: "no"
+    environment:
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_USER: ontology
+      PG_PASSWORD: ontology
+      PG_DATABASE: ontology
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: [".venv/bin/alembic", "upgrade", "head"]
+    <<: *dev-resources
+
+  # ── Ontology API (lightweight Python) ──
+  # Better Auth Server (ADR-016/017 Phase 5) — authentication service.
+  # Handles local users + enterprise SSO + JWT issuance (EdDSA/Ed25519,
+  # exposed at /api/auth/jwks). Gaia FastAPI verifies the JWT via Authlib
+  # using JWKS (not the shared secret). Shares Gaia PostgreSQL (independent
+  # better_auth schema). Optional — dev mode (X-User-Id header) works without
+  # this service. Run `npx @better-auth/cli migrate` once after first start
+  # to create the better_auth tables (user/session/account/verification/
+  # organization/member/invitation/ssoProvider/jwks).
+  better-auth:
+    build:
+      context: ./auth-server
+      dockerfile: Dockerfile
+    container_name: gaia-better-auth
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://ontology:ontology@postgres:5432/ontology
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-change-me-in-production}
+      BETTER_AUTH_URL: http://localhost:3000
+      TRUSTED_ORIGINS: ${TRUSTED_ORIGINS:-http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174,http://127.0.0.1:5180}
+      # JIT auto-provisioning: when a user registers via Better Auth, the
+      # databaseHooks.user.create.after hook calls Gaia POST /identity/users
+      # to auto-create a Gaia user record. GAIA_API_URL points to the Gaia
+      # API (container name `api` in docker-compose network). GAIA_PROVISION_TOKEN
+      # must match Gaia's settings.gaia_provision_token; empty = JIT disabled
+      # (admin creates Gaia users manually via the identity page).
+      GAIA_API_URL: ${GAIA_API_URL:-http://api:8000}
+      GAIA_PROVISION_TOKEN: ${GAIA_PROVISION_TOKEN:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging: *default-logging
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ontology-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_USER: ontology
+      PG_PASSWORD: ontology
+      PG_DATABASE: ontology
+      GRAVITINO_HOST: gravitino
+      GRAVITINO_PORT: 8090
+      ICEBERG_REST_URI: http://gravitino:9001/iceberg
+      ICEBERG_WAREHOUSE: s3://ontology-warehouse/
+      S3_ENDPOINT: http://rustfs:9000
+      S3_ACCESS_KEY_ID: minioadmin
+      S3_SECRET_ACCESS_KEY: minioadmin
+      S3_PATH_STYLE_ACCESS: "true"
+      S3_REGION: us-east-1
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: minioadmin
+      AWS_SECRET_ACCESS_KEY: minioadmin
+      AWS_ENDPOINT_URL: http://rustfs:9000
+      S3_ENDPOINT_OVERRIDE: http://rustfs:9000
+      DORIS_HOST: doris-fe
+      DORIS_PORT: 9030
+      DORIS_FE_HTTP_PORT: "8030"
+      DORIS_USER: root
+      TRINO_HOST: trino
+      TRINO_PORT: 8080
+      TRINO_USER: ontology-api
+      TRINO_CATALOG: gravitino
+      TRINO_SCHEMA: ontology
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SEATUNNEL_HOST: seatunnel-master
+      SEATUNNEL_REST_PORT: 5801
+      # Kestra (Pipeline Builder, ADR-018 D1)
+      KESTRA_HOST: kestra
+      KESTRA_PORT: 8080
+      KESTRA_PASSWORD: ""
+      APP_LOG_LEVEL: INFO
+      # ADR-016 permission governance (Phase 5): Better Auth integration.
+      # AUTHZ_DEV_MODE=false + BETTER_AUTH_URL set → PrincipalService verifies
+      # Better Auth-issued JWTs via JWKS (EdDSA/Ed25519, {url}/api/auth/jwks).
+      # Dev mode (true) uses X-User-Id headers — the docker-compose default.
+      AUTHZ_DEV_MODE: ${AUTHZ_DEV_MODE:-true}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-}
+      BETTER_AUTH_JWT_ISSUER: ${BETTER_AUTH_JWT_ISSUER:-}
+      BETTER_AUTH_JWT_AUDIENCE: ${BETTER_AUTH_JWT_AUDIENCE:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    <<: *dev-resources
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    logging: *default-logging
+
+  # ── Kestra (Pipeline Builder, ADR-018 D1/D6) ──
+  # Single-container mode: webserver + scheduler + executor + worker all in one.
+  # JDBC backend reuses existing PostgreSQL (independent "kestra" schema,
+  # auto-created on first startup). DuckDB plugin is auto-installed on first
+  # boot (see infra/kestra-entrypoint.sh).
+  kestra:
+    image: kestra/kestra:latest
+    container_name: ontology-kestra
+    restart: unless-stopped
+    ports:
+      - "28080:8080"  # host:28080 → container:8080（主机的8080已被Trino占用）
+    environment:
+      MICRONAUT_SECURITY_ENABLED: "true"
+      KESTRA_CONFIGURATION: |
+        datasources:
+          postgres:
+            url: jdbc:postgresql://postgres:5432/ontology?currentSchema=kestra
+            driverClassName: org.postgresql.Driver
+            username: ontology
+            password: ontology
+        kestra:
+          repository:
+            type: postgres
+          storage:
+            type: local
+            local:
+              basePath: /app/storage
+          queue:
+            type: postgres
+          tasks:
+            tmpDir:
+              path: /tmp/kestra-wd/tmp
+          url: http://localhost:28080/
+    entrypoint: ["/usr/local/bin/kestra-entrypoint.sh"]
+    command: ["server", "standalone", "--worker-thread", "4"]
+    volumes:
+      - kestra_data:/app
+      - ./infra/kestra-entrypoint.sh:/usr/local/bin/kestra-entrypoint.sh:ro
+      - ./infra/extensions/:/opt/kestra/extensions/:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    <<: *heavy-resources
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1/configs"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    logging: *default-logging
+
+  # ── Neo4j (Graph Layer, graph-reasoning-design.md §4, §5.5) ──
+  # 独立服务，按需启停：`docker compose --profile graph up -d neo4j`。
+  # Graph Layer 存实体关系、多跳遍历、路径推理；数据是 object_state/links 的
+  # 派生投影（可全量重建）。C14: Neo4j 独立服务不复用 PG 实例。
+  neo4j:
+    image: neo4j:5-community
+    container_name: gaia-neo4j
+    restart: unless-stopped
+    profiles: ["graph"]  # docker compose --profile graph up
+    ports:
+      - "7474:7474"  # HTTP browser
+      - "7687:7687"  # Bolt
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-change-me}
+      NEO4J_PLUGINS: '["apoc"]'
+      # Neo4j 5.x 事务内存上限（C9 防线四资源隔离）。配置名在 5.x 为
+      # db.memory.transaction.total.max（旧名 dbms.memory.transaction.* 已废）。
+      NEO4J_db_memory_transaction_total_max: 512MB
+      # 时区对齐宿主机，避免时态边时间窗口偏差。
+      TZ: Asia/Shanghai
+    volumes:
+      - neo4j_data:/data
+    <<: *heavy-resources
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p ${NEO4J_PASSWORD:-change-me} 'RETURN 1' || exit 1"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    logging: *default-logging
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.18.0.0/16"
+          gateway: "172.18.0.1"
+
+volumes:
+  rustfs_data:
+  postgres_data:
+  neo4j_data:
+  kafka_data:
+  doris_fe_data:
+  doris_be_data:
+  kestra_data:

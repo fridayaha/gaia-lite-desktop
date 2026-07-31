@@ -1,0 +1,118 @@
+# Skill Engine 服务 — 技能开发/调试引擎（Node.js Fastify :8004）
+# 本地 k3s 开发部署。manager 默认 skill_engine_base_url=http://skill-engine:8004，
+# 故 Service 名必须为 skill-engine、端口 8004。
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: skill-engine-workspaces
+  namespace: unionagents
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skill-engine
+  namespace: unionagents
+  labels:
+    app: skill-engine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: skill-engine
+  template:
+    metadata:
+      labels:
+        app: skill-engine
+    spec:
+      containers:
+        - name: skill-engine
+          image: unionagents/skill-engine:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8004
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: skill-engine-secret
+                  key: database-url
+            - name: WORKSPACE_BASE_DIR
+              value: /data/workspaces
+            - name: LOG_LEVEL
+              value: info
+            # pi SDK 启动时默认做版本检查/telemetry（联网），在无外网环境会致
+            # createAgentSession 挂起 → worker 30s 超时。离线模式跳过这些网络调用。
+            - name: PI_OFFLINE
+              value: "1"
+            - name: PI_SKIP_VERSION_CHECK
+              value: "1"
+            - name: PI_TELEMETRY
+              value: "0"
+            # ── Phase 5 LLM 凭证：运行时向 manager 拉取（key 不落 pod env）──
+            # skill-engine 启动时用 UA_INTERNAL_TOKEN 调 manager 内部端点
+            # /api/manager/internal/skill-engine/litellm-key 取 {api_key, base_url}，
+            # 注入 worker 子进程 env（不写 pod env、不落盘）。manager 宕机则 worker 无 LLM。
+            # UA_INTERNAL_TOKEN 须与 manager 的 UA_INTERNAL_TOKEN 一致（此处用与 manager
+            # 部署相同的字面值；TODO: 后续统一收进 secret，避免明文散落多 manifest）。
+            - name: MANAGER_BASE_URL
+              value: http://manager:8002
+            - name: UA_INTERNAL_TOKEN
+              value: wr4S4Be2CTATHr3gumCBfnF8PXGEpy0JjcpEg-tOKC0
+            - name: SKILL_ENGINE_MODEL
+              value: deepseek-v4-flash
+            - name: SKILL_ENGINE_PROVIDER
+              value: litellm
+            # REDIS_URL 未配置：消息缓存降级（本地冒烟可接受；生产需接 redis）
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          volumeMounts:
+            - name: workspace-data
+              mountPath: /data/workspaces
+          readinessProbe:
+            httpGet:
+              path: /api/skill-engine/workspaces
+              port: 8004
+              # X-Actor-Id 头由 manager 代理注入；直连探针给一个占位头避免 422
+              httpHeaders:
+                - name: x-actor-id
+                  value: healthz
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /api/skill-engine/workspaces
+              port: 8004
+              httpHeaders:
+                - name: x-actor-id
+                  value: healthz
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 3
+      volumes:
+        - name: workspace-data
+          persistentVolumeClaim:
+            claimName: skill-engine-workspaces
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: skill-engine
+  namespace: unionagents
+spec:
+  ports:
+    - port: 8004
+      targetPort: 8004
+  selector:
+    app: skill-engine
