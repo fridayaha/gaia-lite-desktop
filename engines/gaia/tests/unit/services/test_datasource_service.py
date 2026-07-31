@@ -457,6 +457,39 @@ class TestExplore:
             assert tbl.columns == []
 
     @pytest.mark.asyncio
+    async def test_explore_csv_uses_current_database_as_catalog(
+        self, service, mock_metadata, mock_engine, monkeypatch
+    ):
+        """lite CSV explore 用 current_database() 作 catalog（非硬编码 'main'）。
+
+        回归：CSV 经 CREATE TABLE AS SELECT 导入 DuckDB 主库，duckdb_tables()
+        的 database_name 是文件 stem（如 'warehouse'），硬编码 'main' 会致
+        list_tables('main', ...) 查空。explore 应调 engine.current_database()
+        拿正确 catalog 再 list_tables。
+        """
+        from ontology.config.settings import settings
+
+        monkeypatch.setattr(settings, "edition", "lite")
+
+        ds = _make_ds("sample_csv", "csv")
+        ds.connector_config = {"path": "/tmp/sample.csv"}
+        mock_metadata.get_datasource.return_value = ds
+        # CSV 主库 database_name 由 current_database() 查得
+        mock_engine.current_database = AsyncMock(return_value="warehouse")
+        mock_engine.list_tables.return_value = ["sample_csv"]
+
+        result = await service.explore("sample_csv")
+
+        # current_database 必须被调（CSV 路径）
+        mock_engine.current_database.assert_awaited_once()
+        # list_tables 用的 catalog 是 current_database() 返回值，不是 'main'
+        mock_engine.list_tables.assert_awaited_once()
+        catalog_arg = mock_engine.list_tables.call_args.args[0]
+        assert catalog_arg == "warehouse"
+        assert len(result.tables) == 1
+        assert result.tables[0].name == "sample_csv"
+
+    @pytest.mark.asyncio
     async def test_describe_table_mysql_prefers_gravitino_rest(self, service, mock_metadata, mock_catalog):
         """JDBC sources (MySQL) prefer Gravitino REST — preserves column casing + PK."""
         mock_metadata.get_datasource.return_value = _make_ds(connector_type="mysql")

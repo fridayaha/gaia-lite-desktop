@@ -606,23 +606,27 @@ class DataSourceService(MetadataOwnerMixin):
         """
         return cast("DuckDBEngine", self.engine)
 
-    def _lite_catalog_and_schema(self, ds: Any, database: str) -> tuple[str, str]:
+    async def _lite_catalog_and_schema(self, ds: Any, database: str) -> tuple[str, str]:
         """lite 版（B4）：推导 DuckDB catalog 名 + 默认 schema。
 
-        catalog = ``src_<api_name>``（ATTACH 别名，PG/MySQL/SQLite）；CSV 走主库
-        （catalog='' 即 DuckDB 默认 main 库，list_tables 用 database_name='memory'/
-        实际主库——CSV explore 由 to_duckdb_attach 导入主库表后查 main）。
+        catalog = ``src_<api_name>``（ATTACH 别名，PG/MySQL/SQLite）；CSV 走主库表
+        （``CREATE TABLE AS SELECT`` 导入），catalog = 主库 ``database_name``——即
+        DuckDB 文件名 stem（如 ``warehouse.duckdb`` → ``'warehouse'``），由
+        ``engine.current_database()`` 查得。**不是** ``'main'``：``'main'`` 是 DuckDB
+        默认 schema 名，``duckdb_tables()`` 的 ``database_name`` 列对主库表是文件
+        stem，硬编码 ``'main'`` 会致 ``list_tables('main', ...)`` 查空。
         schema 由 connector.default_schema() 推导（PG=public、MySQL=配置 database、
         CSV/SQLite=main），database 参数覆盖。
         """
         from ontology.plugins.connectors import ConnectorRegistry
 
         ct = ds.connector_type.lower()
-        # CSV 走主库表（无 src_ 前缀），catalog='main'（DuckDB 主库名）；其余走 ATTACH
-        # 别名 src_<api_name>。
         if ct in ("csv", "csv_file"):
-            catalog_name = "main"
+            # CSV 走主库表（无 src_ 前缀），catalog=主库 database_name（文件 stem）。
+            # 经 self._duckdb（cast 到 DuckDBEngine）访问专属 current_database()。
+            catalog_name = await self._duckdb.current_database()
         else:
+            # 其余走 ATTACH 别名 src_<api_name>。
             catalog_name = f"src_{ds.api_name.lower()}"
         if database:
             schema = database
@@ -644,7 +648,7 @@ class DataSourceService(MetadataOwnerMixin):
         if settings.edition == "lite":
             # B4: lite 版经 DuckDBEngine 查 ATTACH 后的 src_<api_name> catalog
             # （CSV 走主库表）。catalog/schema 由 connector 推导，无 Gravitino 自愈。
-            catalog_name, schema = self._lite_catalog_and_schema(ds, database)
+            catalog_name, schema = await self._lite_catalog_and_schema(ds, database)
             try:
                 table_names = await self.engine.list_tables(catalog_name, schema)
             except DataSourceUnreachableError as exc:
@@ -752,7 +756,7 @@ class DataSourceService(MetadataOwnerMixin):
         if settings.edition == "lite":
             # B4: lite 版经 DuckDB DESCRIBE（duckdb_engine.describe_table 返回
             # column_name/column_type/null）。无 PK 信息（DuckDB DESCRIBE 不暴露）。
-            catalog_name, schema = self._lite_catalog_and_schema(ds, database)
+            catalog_name, schema = await self._lite_catalog_and_schema(ds, database)
             try:
                 rows = await self.engine.describe_table(catalog_name, schema, table)
             except DataSourceUnreachableError as exc:
@@ -924,7 +928,7 @@ class DataSourceService(MetadataOwnerMixin):
         if settings.edition == "lite":
             # B4: lite 版经 DuckDB SELECT * ... LIMIT（duckdb_engine.sample_data）。
             # DuckDB 原生支持各源类型，无 external(...) 不可解析列问题，直接 SELECT *。
-            catalog_name, schema = self._lite_catalog_and_schema(ds, database)
+            catalog_name, schema = await self._lite_catalog_and_schema(ds, database)
             try:
                 return await self.engine.sample_data(catalog_name, schema, table, limit)
             except DataSourceUnreachableError as exc:

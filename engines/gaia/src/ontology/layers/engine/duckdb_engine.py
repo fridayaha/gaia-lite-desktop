@@ -164,6 +164,18 @@ class DuckDBEngine:
     # Data Source Exploration Helpers（对齐 TrinoQueryEngine 契约）
     # ═════════════════════════════════════════════════════════════
 
+    async def current_database(self) -> str:
+        """返回主库的 database_name（DuckDB 文件名 stem）。
+
+        ``duckdb_tables()`` 的 ``database_name`` 列对主库表是文件连接的 stem
+        （如 ``warehouse.duckdb`` → ``'warehouse'``），**不是** DuckDB 默认
+        schema 名 ``'main'``。CSV 数据源走主库表（CREATE TABLE AS SELECT），
+        explore/describe/sample 需用此值作 catalog_name 过滤，否则
+        ``list_tables('main', ...)`` 查空。
+        """
+        rows = await self.query("SELECT current_database() AS db")
+        return rows[0]["db"] if rows else ""
+
     async def list_tables(self, catalog: str, schema: str = "") -> list[str]:
         """列出 catalog（ATTACH 别名）下的表。
 

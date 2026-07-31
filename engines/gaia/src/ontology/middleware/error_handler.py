@@ -12,6 +12,7 @@ from ontology.core.exceptions import (
     CatalogNotRegisteredError,
     ConflictError,
     DataSourceUnreachableError,
+    EditionUnavailableError,
     ForbiddenError,
     NotFoundError,
     OntologyError,
@@ -63,6 +64,13 @@ async def ontology_error_handler(request: Request, exc: OntologyError) -> JSONRe
         # The query engine service itself is down. 503 = service unavailable.
         status_code = 503
         detail = str(exc)
+    elif isinstance(exc, EditionUnavailableError):
+        # 当前 edition 不支持该 Layer/能力（lite 砍掉 catalog/Iceberg/MANAGED
+        # 托管表等）。501 Not Implemented：服务端不实现此能力，区别于 503 临时
+        # 不可用——lite 是永久不实现。前端据此提示「当前版本不支持此功能」
+        # 而非「服务器错误」。
+        status_code = 501
+        detail = str(exc)
     else:
         status_code = 500
         detail = "Internal server error"
@@ -80,6 +88,7 @@ async def ontology_error_handler(request: Request, exc: OntologyError) -> JSONRe
         DataSourceUnreachableError: "DATASOURCE_UNREACHABLE",
         CatalogNotRegisteredError: "CATALOG_NOT_REGISTERED",
         TrinoUnavailableError: "TRINO_UNAVAILABLE",
+        EditionUnavailableError: "EDITION_UNAVAILABLE",
     }.get(type(exc), "ONTOLOGY_ERROR")
 
     return JSONResponse(

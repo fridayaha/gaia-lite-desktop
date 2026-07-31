@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 from ontology.core.exceptions import (
     ConflictError,
     DataSourceUnreachableError,
+    EditionUnavailableError,
     ForbiddenError,
     NotFoundError,
     OntologyError,
@@ -122,3 +123,26 @@ class TestOntologyErrorHandler:
         body = resp.json()
         assert body["error_type"] == "TrinoUnavailableError"
         assert body["code"] == "TRINO_UNAVAILABLE"
+
+    def test_edition_unavailable_maps_501(self, app, client):
+        """EditionUnavailableError → 501 + EDITION_UNAVAILABLE code.
+
+        Regression: lite 版砍掉的能力（MANAGED 托管表 / catalog / Iceberg 等）
+        被访问时必须返 501 Not Implemented（服务端不实现此能力，区别于 503
+        临时不可用——lite 是永久不实现），而非落 else 分支返 500。前端据此
+        提示「当前版本不支持此功能」而非「服务器错误」。
+        """
+
+        @app.get("/test_edition")
+        async def raise_edition():
+            raise EditionUnavailableError(
+                "lite 版不支持托管表（MANAGED），请使用虚拟表（VIRTUAL）",
+                code="EDITION_UNAVAILABLE",
+            )
+
+        resp = client.get("/test_edition")
+        assert resp.status_code == 501
+        body = resp.json()
+        assert body["error_type"] == "EditionUnavailableError"
+        assert body["code"] == "EDITION_UNAVAILABLE"
+        assert "MANAGED" in body["detail"]

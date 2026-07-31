@@ -81,6 +81,17 @@ class TestAttachDetach:
         rows = await attached_src.query("SELECT * FROM src.main.remote_t ORDER BY x")
         assert rows == [{"x": 10, "label": "ten"}, {"x": 20, "label": "twenty"}]
 
+    async def test_current_database_returns_file_stem(self, engine):
+        """current_database() 返回主库 database_name（DuckDB 文件名 stem）。
+
+        CSV explore 用它作 catalog_name——duckdb_tables() 的 database_name
+        对主库表是文件名 stem（warehouse.duckdb → 'warehouse'），非 'main'。
+        回归：lite CSV 数据源 explore 返 tables=[] 是因为 catalog 硬编码 'main'
+        与实际 database_name 不符。
+        """
+        db = await engine.current_database()
+        assert db == "test"  # tmp_path/test.duckdb 的 stem
+
     async def test_list_tables_with_schema(self, attached_src):
         tables = await attached_src.list_tables("src", "main")
         assert tables == ["remote_t"]
